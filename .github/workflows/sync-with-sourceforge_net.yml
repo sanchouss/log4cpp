@@ -1,0 +1,78 @@
+# This git branch sync_with_sourceforge exists solely for running Git Action
+name: sync_with_sourceforge_net_workflow    # Workflow works and updates master only if branch master_sync is absent at the moment of starting
+
+env:
+  GITHUB_BRANCH_TO_BE_SYNC: master_sync     # intermediate branch to try out, eventually equal to master if everything goes well
+
+on:
+  workflow_dispatch:  # Enables manual run from GitHub UI, but being alone trigger will not be accessible
+  push:                # Therefore push doubles it
+    branches:
+      sync_with_sourceforge
+
+jobs:
+  sync-with-sourceforge_net_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: master
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add remote sourceforge.net
+        run: git remote add sourceforge.net git://git.code.sf.net/p/log4cpp/codegit
+
+      - name: Fetch sourceforge.net
+        run: git fetch sourceforge.net
+
+      - name: Checkout branch based on github's master
+        run: |
+          git fetch     # get names of branches
+          # either create local sync branch from existing remote or create new sync branch from master
+          if git checkout -b ${{ env.GITHUB_BRANCH_TO_BE_SYNC }} origin/${{ env.GITHUB_BRANCH_TO_BE_SYNC }}; then
+            echo "Sync branch is already in repo, fetching it..."   # this (branch A) flow will fail in the end of script
+            git pull origin ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}
+          else
+            echo "Sync branch is not yet in repo, creating..."      # this (branch B) flow updates master well
+            git checkout -b ${{ env.GITHUB_BRANCH_TO_BE_SYNC }} master
+          fi
+          echo "Commit hash: $(git branch --show-current) $(git rev-parse HEAD)"
+
+      - name: Merge upstream changes from sourceforge's master into ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}
+        run: |
+          git rebase sourceforge.net/master
+          echo "Commit hash: $(git branch --show-current) $(git rev-parse HEAD)"
+
+# (branch A), failing
+#      - name: Push sync branch (GitHub CLI)
+#        run: |
+#          gh auth setup-git
+#          git push origin ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge fresh upstream changes from ${{ env.GITHUB_BRANCH_TO_BE_SYNC }} into github's master
+        run: |
+          # Rebase of master 
+          # git rebase ${{ env.GITHUB_BRANCH_TO_BE_SYNC }} master
+          git fetch origin master:master
+          echo "Common hash: $(git merge-base master master_sync)"      # empty in (branch A)?? proper value in (branch B)
+          git checkout master
+          echo "Common hash: $(git merge-base master master_sync)"      # empty in (branch A)?? proper value in (branch B)
+          echo "Commit hash: $(git branch --show-current) $(git rev-parse HEAD)"
+          git merge ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}     # fails in (branch A) with fatal: refusing to merge unrelated histories, why?
+          echo "Commit hash: $(git branch --show-current) $(git rev-parse HEAD)"
+          git branch -d ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}
+
+      - name: Push master branch (GitHub CLI)
+        run: |
+          gh auth setup-git
+          git push origin master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
