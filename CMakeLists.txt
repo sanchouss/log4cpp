@@ -9,7 +9,9 @@
 # (4) To install either "make install" or "make install DESTDIR=<your directory>"
 # (5) Need to include changes in include/log4cpp/Portability.hh for OSX to build
 
+cmake_minimum_required(VERSION 3.10)
 PROJECT ( LOG4CPP )
+include(GNUInstallDirs)
 
 INCLUDE_DIRECTORIES ( include )
 INCLUDE_DIRECTORIES ( . )
@@ -96,5 +98,5 @@ INSTALL (
 
 INSTALL (
   TARGETS ${LOG4CPP_LIBRARY_NAME}
-  ARCHIVE
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
