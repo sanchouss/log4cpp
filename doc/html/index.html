@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html><head>
+<html lang="en"><head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"><title>Log for C++ Project</title>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
@@ -24,9 +24,9 @@ Page on Sourceforge</a>
 <li> <a title="What is log4cpp?" href="#whatis">What
 is log4cpp?</a> </li>
 <li> <a title="Download" href="#download">Download</a></li>
-<li =""><a title="License" href="#license">License</a>
+<li><a title="License" href="#license">License</a>
 </li>
-<li =""><a title="API Documentation" href="#apidoc">API Documentation</a> </li>
+<li><a title="API Documentation" href="#apidoc">API Documentation</a> </li>
 <li><a title="FAQ" href="#faq">FAQ</a>
 </li>
 </ul>
@@ -90,13 +90,13 @@ the source tar-ball is as simple as
 <div class="chapter">
 <h2><a id="building">Building Log4cpp</a></h2>
 <h3><a id="buildlinux">Autoconf</a></h3>
-<p>As of version 0.2.0 log4cpp can be build using autoconf on
-platforms
-that support it. Simply do:
-</p>
+<p>The project uses <a href="https://www.gnu.org/software/automake/">GNU Autotools</a> as primary build system. CMake is secondary option.</p>
+<p>If file <code>./configuzre</code> is absent in project directory (as when the code is checked out from repository), run the following:</p>
+<pre class="code">./autogen.sh<br></pre>
+	This will create <code>./configure</code> and the necessary <code>Makefile.in</code>'s. Then:
 <pre class="code">./configure<br>make<br>make check<br>make install<br></pre>
-<p>This will install log4cpp under /usr/local. To install in
-another location specify --prefix=&lt;location&gt; when
+<p>This will build and install log4cpp under <code>/usr/local</code>. To install in
+another location specify option <code>--prefix=&lt;location&gt;</code> when
 running configure.
 </p>
 <h3>Options for ./configure</h3>
@@ -563,23 +563,24 @@ Log file A3.log is rolled over as soon as it reaches limit of 200 bytes, 1 backu
 <div class="chapter">
 <h2><a id="git">Git Repository</a></h2>
 <p>
-log4cpp is moved to git <a href="https://sourceforge.net/p/log4cpp/codegit/">SourceForge Git page</a> since version 1.1.1, cvs is stale now.
+Log4cpp is moved to git <a href="https://sourceforge.net/p/log4cpp/codegit/">SourceForge Git page</a> since version 1.1.1, CVS repo is stale now.
 </p>
-<p>Log4cpp of older versions is also available through CVS, see the <a href="https://sourceforge.net/p/log4cpp/code/">SourceForge CVS page</a> for instructions.</p>
-<small>
-CVS had two branches:
-<table>
-<tbody><tr><td>MAIN</td><td>for log4cpp development</td></tr>
-<tr><td>BRANCH_MAINT_0_2</td><td>for maintainance of log4cpp-stable (0.2.x)</td></tr>
-</tbody></table><br>
-</small>
-Each release will receive a tag named REL_x_y_z.
-<p></p>
-<p>To start working with a freshly checked out log4cpp revision, run <b>./autogen.sh</b>
- first. This will create ./configure and the necessary Makefile.in's. 
-You'll need at least autoconf 2.50, automake 1.6.0 and libtool 1.4.
-</p> 
-<a href="#begin">^</a>
+	Each release will receive a tag named REL_x_y_z.
+	<p></p>
+	<p>The project uses <a href="https://www.gnu.org/software/automake/">GNU Autotools</a> build system.
+		To start working with a freshly checked out log4cpp repository, run <b><code>./autogen.sh</code></b>
+		first. This will create <code>./configure</code> and the necessary <code>Makefile.in</code>'s.
+		You'll need at least autoconf 2.50, automake 1.6.0 and libtool 1.4.
+	</p>
+	<p>Log4cpp of older versions (prior to version 1.1.1) is available also with CVS, see the <a href="https://sourceforge.net/p/log4cpp/code/">SourceForge CVS page</a> for instructions.</p>
+	<small>
+		CVS had two branches:
+		<table>
+			<tbody><tr><td>MAIN</td><td>for log4cpp development</td></tr>
+			<tr><td>BRANCH_MAINT_0_2</td><td>for maintainance of log4cpp-stable (0.2.x)</td></tr>
+			</tbody></table><br>
+	</small>
+	<a href="#begin">^</a>
 </div>
 
 <div class="chapter">
@@ -630,6 +631,11 @@ WARNING: releases from the development branch are a 'work in progress' and may f
 <dt>1.1rc3 - development branch (18 October 2012)</dt>
 <dd>Created build projects for MSVC10 (VS2010).</dd>
 <dd>Small code fixes.</dd>
+</dl>
+
+<dl>
+<dt>1.0 - master branch (03 September 2007)</dt>
+<dd>Stable 1.0 release.</dd>
 </dl>
 
 <dl>
@@ -736,14 +742,14 @@ previous ones. (Version update should have been done in 0.2.4).</dd>
 <dt>0.2.0 (10 December 2000)</dt>
 <dd>log4cpp now uses autoconf and automake.</dd>
 </dl>
-<p></p>
+<p><a href="https://sourceforge.net/p/log4cpp/codegit/ref/master/tags/">Git tags</a></p>
 </small>
 <a href="#begin">^</a>
 </div>
 
 <div class="chapter">
 <h2><a id="status">Status</a></h2>
-<p>The latest stable release is 1.1.2</p>
+<p>The latest stable release is 1.1.4</p>
 <small>
 <p>log4cpp is moved to git since version 1.1.1, cvs is stale since then</p>
 <p>As of version 0.3.0 log4cpp has a separate 'stable' and 'development' branches.
