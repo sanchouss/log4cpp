@@ -12,4 +12,6 @@ Compiled source #
 Makefile.in
 Makefile
 *.log
-
+.idea/
+autom4te.cache/
+build/
