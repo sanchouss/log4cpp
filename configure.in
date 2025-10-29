@@ -1,8 +1,8 @@
-AC_INIT(log4cpp, 1.1)
+AC_INIT([log4cpp],[1.1])
 
 # autoconf 2.50 or higher to rebuild aclocal.m4, because the
 # AC_CREATE_PREFIX_CONFIG_H macro needs the AS_DIRNAME macro.
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 
 #
 # +1 : ? : +1  == new interface that does not break old one
@@ -30,7 +30,7 @@ AC_ARG_WITH(idsa, [  --with-idsa             include idsa support])
 AC_CANONICAL_HOST
 
 AC_ARG_ENABLE(debug,
-    AC_HELP_STRING(--enable-debug, [Have GCC compile with symbols (Default = no)]),
+    AS_HELP_STRING([--enable-debug],[Have GCC compile with symbols (Default = no)]),
                    enable_debug=$enableval, enable_debug=no)
 
 if test "$enable_debug" = "yes" ; then
@@ -41,7 +41,7 @@ else
     GCC_CXXFLAGS="$CXXFLAGS"
 fi
 
-AM_PROG_LIBTOOL
+LT_INIT
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
