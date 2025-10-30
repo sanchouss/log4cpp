@@ -1,6 +1,7 @@
-2025-10-29 13:15  sanchouss_
+2025-10-30 13:15  sanchouss_
 	* Follow up with the fix for change from discussion 48226
 	* Update scripts for GNU Autotools shipped with the log4cpp distribution to their fresh versions
+	* Fixes for compilation warnings and spellings caught by Debian Patch
 
 2024-08-23 21:31  sanchouss_
 	* Discussion 48226 by Andrew E Page. Alter CMakeLists to allow installation paths for x86 and arm64 be different so that cross-compilation on single host is possible.
