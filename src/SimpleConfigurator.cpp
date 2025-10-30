@@ -210,8 +210,8 @@ namespace log4cpp {
                 
                 try {
                     category.setPriority(log4cpp::Priority::getPriorityValue(priority));
-                } catch(std::invalid_argument) {
-                    throw ConfigureFailure("Invalid priority ("+priority+") in logging configuration file for category: "+categoryName);
+                } catch(const std::invalid_argument&) {
+                    throw ConfigureFailure("Invalid priority (" + priority + ") in logging configuration file for category: " + categoryName);
                 }
             }
             else if (nextCommand.compare("category") == 0) {
