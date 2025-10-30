@@ -28,7 +28,7 @@ namespace log4cpp
    {
       const_iterator i = creators_.find(class_name);
       if (i != creators_.end())
-         throw std::invalid_argument("Creator for Triggering event evaluator with type name '" + class_name + "' allready registered");
+         throw std::invalid_argument("Creator for Triggering event evaluator with type name '" + class_name + "' already registered");
 
       creators_[class_name] = create_function;
    }
