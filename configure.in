@@ -1,8 +1,9 @@
 AC_INIT([log4cpp],[1.1])
 
-# autoconf 2.50 or higher to rebuild aclocal.m4, because the
-# AC_CREATE_PREFIX_CONFIG_H macro needs the AS_DIRNAME macro.
-AC_PREREQ([2.71])
+# autoconf 2.50 minimum required until 2025 to rebuild aclocal.m4, because the
+# AC_CREATE_PREFIX_CONFIG_H macro needs the AS_DIRNAME macro; since then only
+# few uses of modern macros are added
+AC_PREREQ([2.59])
 
 #
 # +1 : ? : +1  == new interface that does not break old one
@@ -18,6 +19,11 @@ AC_SUBST(LT_VERSION)
 #AC_CONFIG_SRCDIR(configure.in)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(include/config.h)
+# Autotools 2.63+ automatically handle the m4 directory, earlier fallback to AC_SUBST
+m4_ifdef([AC_CONFIG_MACRO_DIR],
+  [AC_CONFIG_MACRO_DIR([m4])],
+  [AC_SUBST([ACLOCAL_AMFLAGS], ["-I m4"])]
+)
 
 AM_INIT_AUTOMAKE
 
@@ -41,7 +47,10 @@ else
     GCC_CXXFLAGS="$CXXFLAGS"
 fi
 
-LT_INIT
+m4_ifdef([LT_INIT],
+  [LT_INIT],
+  [AM_PROG_LIBTOOL]
+)
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
