@@ -15,7 +15,7 @@ for C++ Project
 Page on Sourceforge</a>
 </span> &nbsp;|
 <span>Last Published:
-2025-10-30</span> &nbsp;|</div>
+2025-11-08</span> &nbsp;|</div>
 <hr class="delimiter">
 <div id="projectpage">
 <div id="navigationpanel" class="lightbackground">
@@ -25,6 +25,12 @@ Page on Sourceforge</a>
 is log4cpp?</a> </li>
 <li> <a title="Download" href="#download">Download</a></li>
 <li><a title="Building" href="#building">Building</a></li>
+	<ul>
+		<li><a title="Linux/*nix" href="#buildlinux">Linux/*nix, Autoconf</a> </li>
+		<li><a title="Linux/*nix" href="#buildcmake">Linux/*nix, CMake</a> </li>
+		<li><a title="Windows, prj files" href="#buildwindowsprj">Windows, prj files</a> </li>
+		<li><a title="Windows, CMake" href="#buildwindowscmake">Windows, CMake</a> </li>
+	</ul>
 <li><a title="License" href="#license">License</a>
 </li>
 <li><a title="API Doxygen" href="#apidoxy">API Doxygen</a> </li>
@@ -38,10 +44,6 @@ is log4cpp?</a> </li>
 example</a> </li>
 <li><a title="Properties file example" href="#propfile">Properties
 file example</a></li>
-<ul>
-<li>&nbsp; <a title="Linux/*nix" href="#buildlinux">Linux/*nix</a> </li>
-<li>&nbsp; <a title="Windows" href="#buildwindows">Windows</a> </li>
-</ul>
 </ul>
 <h5>Development</h5>
 <ul>
@@ -92,7 +94,8 @@ the source tar-ball is as simple as
 <div class="chapter">
 <h2><a id="building">Building Log4cpp</a></h2>
 <h3><a id="buildlinux">Autoconf</a></h3>
-<p>The project uses <a href="https://www.gnu.org/software/automake/">GNU Autotools</a> as primary build system. CMake is secondary option.</p>
+<p>The project uses <a href="https://www.gnu.org/software/automake/">GNU Autotools</a> as primary build system.
+	<a href="#buildcmake">CMake</a> is secondary option.</p>
 <p>If file <code>./configure</code> is absent in project directory (as when the code is checked out from repository), run the following:</p>
 <pre class="code">./autogen.sh<br></pre>
 	This will create <code>./configure</code> and the necessary <code>Makefile.in</code>'s. Then:
@@ -182,7 +185,7 @@ Also static libraries appear not to work. In short do:
 </dd>
 </dl>
 <dl>
-<dt><a id="buildwindows">Win32 - VS2010</a></dt>
+<dt><a id="buildwindowsprj">Win32 - VS2010</a></dt>
 <dd>Use the workspace and project files in subdirectory msvc10.
 (You may need to adjust include/log4cpp/config-win32.h and the project
 files to your particular needs)</dd>
@@ -225,7 +228,7 @@ only.
 <dd>1) Copy the src and include directory (including all its
 contents and subdirectories) onto your OpenVMS system.</dd>
 <dd>2) Compile each source file (*.CPP and *.C in the src
-directory) one by one by the following command,
+directory) one by one with the following command,
 <pre class="code">cxx /include=("/a1\$dkb0/user/tony/project/log4cpp/include") /define=(__USE_STD_IOSTREAM,__OPENVMS__) /repository=a1$dkb0:[user.tony.project.log4cpp.repository] APPENDER.CPP<br>cxx /include=("/a1\$dkb0/user/tony/project/log4cpp/include") /define=(__USE_STD_IOSTREAM,__OPENVMS__) /repository=a1$dkb0:[user.tony.project.log4cpp.repository] APPENDERSKELETON.CPP<br></pre>
 ...etc<br>
 Please substitute a correct path for your include directory. A
@@ -246,6 +249,23 @@ A1$DKB0:[USER.TONY.PROJECT.LOG4CPP.REPOSITORY].<br>
 </dd>
 </dl>
 </dl>
+
+<h3><a id="buildcmake">CMake</a></h3>
+	<p>Browse into the source code catalog (<code>log4cpp</code>) and run the following for Release build:</p>
+	<pre class="code">
+cmake -S . -B build_release -DCMAKE_BUILD_TYPE=Release<br>
+cmake --build build_release
+	</pre>
+	This will create <code>./build_release</code>, compile and build libraries into it.
+	<p>Debug build is analogous:</p>
+	<pre class="code">
+cmake -S . -B build_debug -DCMAKE_BUILD_TYPE=Debug<br>
+cmake --build build_debug
+	</pre>
+	<h3><a id="buildwindowscmake">Windows, CMake</a></h3>
+	<p>On Windows MS Visual Studio can open <code>log4cpp</code> catalog and detect that it is a CMake project.</p>
+	<p>Works since log4cpp 1.1.5. </p>
+
 <a href="#begin">^</a>
 </div>
 
@@ -605,7 +625,10 @@ WARNING: releases from the development branch are a 'work in progress' and may f
 <small>
 
 <dl>
-<dt>1.1.5rc2 - master branch (30 October 2025)</dt>
+<dt>1.1.5rc3 - master branch (08 November 2025)</dt>
+<dd>Cmake script update: support release and debug build types (defaults to release); build both static and shared libraries; pass necessary cpp macros for debug</dd>
+<dd>MS Visual Studio 2022 can open log4cpp as CMake Project</dd>
+<dd>Address bug #158; Add path to m4 macros for autoreconf in GNU Autotools scripts</dd>
 <dd>Discussion 48226 by Andrew E Page. Alter CMakeLists to allow installation paths for x86 and arm64 be different so that cross-compilation on single host is possible.</dd>
 <dd>Update scripts for GNU Autotools shipped with the log4cpp distribution to their fresh versions</dd>
 <dd>Fixes for compilation warnings and spellings caught by Debian Patch</dd>

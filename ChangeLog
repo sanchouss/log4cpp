@@ -1,3 +1,8 @@
+2025-11-08 22:37  sanchouss_
+	* Cmake script update: support release and debug build types (defaults to release); build both static and shared libraries; pass necessary cpp macros for debug
+	* MS Visual Studio 2022 can open log4cpp as CMake Project
+	* Address bug #158; Add path to m4 macros for autoreconf in GNU Autotools scripts
+
 2025-10-30 13:15  sanchouss_
 	* Follow up with the fix for change from discussion 48226
 	* Update scripts for GNU Autotools shipped with the log4cpp distribution to their fresh versions
