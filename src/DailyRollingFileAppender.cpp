@@ -1,6 +1,8 @@
 /*
  * DailyRollingFileAppender.cpp
  *
+ * Copyright 2015, Alexander Perepelkin. All rights reserved.
+ *
  * See the COPYING file for the terms of usage and distribution.
  */
 
