@@ -21,8 +21,7 @@ Page on Sourceforge</a>
 <div id="navigationpanel" class="lightbackground">
 <h5>About log4cpp</h5>
 <ul>
-<li> <a title="What is log4cpp?" href="#whatis">What
-is log4cpp?</a> </li>
+<li> <a title="What is log4cpp?" href="#whatis">What is log4cpp?</a> </li>
 <li> <a title="Download" href="#download">Download</a></li>
 <li><a title="Building" href="#building">Building</a></li>
 	<ul>
@@ -263,8 +262,24 @@ cmake -S . -B build_debug -DCMAKE_BUILD_TYPE=Debug<br>
 cmake --build build_debug
 	</pre>
 	<h3><a id="buildwindowscmake">Windows, CMake</a></h3>
-	<p>On Windows MS Visual Studio can open <code>log4cpp</code> catalog and detect that it is a CMake project.</p>
-	<p>Works since log4cpp 1.1.5. </p>
+	<p><b>MS Visual Studio 2022</b> can open <code>log4cpp</code> directly as a CMake project.
+		Use <code>File → Open → CMake...</code> menu items to choose <code>log4cpp/CMakeLists.txt</code> file and start CMake generation.
+		After generation is finished, choose <code>Build → Build All</code> to build <code>log4cpp</code> libs.
+		<br>Note: Make sure not to use project files intended for older MSVC versions (<code>msvc10, msvc7, msvc6</code>).
+		If such files are used, you may encounter build error like: (<code>Platform Toolset = 'v100') cannot be found</code>.
+	</p>
+	<p><b>Embarcadero RAD Studio 12</b> can build <code>log4cpp</code> project using its bundled version of CMake, provided via the RAD Package Manager.
+		Make sure that Embarcadero's CMake (and not another installation) is used.
+		Open <b>RAD Studio Command Prompt</b> and run commands to build <code>log4cpp</code> libs:</p>
+	<p>Release:</p>
+	<pre class="code">
+cmake.exe -G Ninja -S . -B build_release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
+cmake --build build_release --config Release -v	</pre>
+	<p>Debug:</p>
+	<pre class="code">
+cmake.exe -G Ninja -S . -B build_debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
+cmake --build build_debug --config Debug -v	</pre>
+	<p><i>Works since log4cpp 1.1.5. </i></p>
 
 <a href="#begin">^</a>
 </div>
@@ -809,7 +824,8 @@ fixes only, new features will go into 0.3.x and eventually 0.4.x.</p> </small>
 <p>Coding on Log4cpp was initiated by me (Bastiaan Bakker) late 2000. 
 Since then other people have joined the project or contributed code:
 </p><table>
-<tbody><tr><td>Cedric Le Goater &lt;cedric(at)legoater.com&gt;</td><td>autoconf setup, various improvements</td></tr>
+<tbody>
+<tr><td>Cedric Le Goater &lt;cedric(at)legoater.com&gt;</td><td>autoconf setup, various improvements</td></tr>
 <tr><td>Marc Welz &lt;marc(at)jade.cs.uct.ac.za&gt;</td><td>IdsaAppender</td></tr>
 <tr><td>Lynn Owen &lt;opl(at)agoby.com&gt;</td><td>MSVC++ support</td></tr>
 <tr><td>Steve Ostlind &lt;s.ostlind(at)pentasafe.com&gt;</td><td>MSVC++ support, various fixes</td></tr>
