@@ -1,3 +1,6 @@
+2025-11-13 20:48  sanchouss_
+	* CMake script update; support for Embarcadero RAD Studio 12
+
 2025-11-08 22:37  sanchouss_
 	* Cmake script update: support release and debug build types (defaults to release); build both static and shared libraries; pass necessary cpp macros for debug
 	* MS Visual Studio 2022 can open log4cpp as CMake Project
