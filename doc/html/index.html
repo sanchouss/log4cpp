@@ -15,7 +15,7 @@ for C++ Project
 Page on Sourceforge</a>
 </span> &nbsp;|
 <span>Last Published:
-2025-11-15</span> &nbsp;|</div>
+2025-11-17</span> &nbsp;|</div>
 <hr class="delimiter">
 <div id="projectpage">
 <div id="navigationpanel" class="lightbackground">
@@ -262,23 +262,31 @@ cmake -S . -B build_debug -DCMAKE_BUILD_TYPE=Debug<br>
 cmake --build build_debug
 	</pre>
 	<h3><a id="buildwindowscmake">Windows, CMake</a></h3>
+	<h4>MS Visual Studio 2022</h4>
+	<blockquote>
 	<p><b>MS Visual Studio 2022</b> can open <code>log4cpp</code> directly as a CMake project.
 		Use <code>File → Open → CMake...</code> menu items to choose <code>log4cpp/CMakeLists.txt</code> file and start CMake generation.
 		After generation is finished, choose <code>Build → Build All</code> to build <code>log4cpp</code> libs.
 		<br>Note: Make sure not to use project files intended for older MSVC versions (<code>msvc10, msvc7, msvc6</code>).
 		If such files are used, you may encounter build error like: (<code>Platform Toolset = 'v100') cannot be found</code>.
 	</p>
-	<p><b>Embarcadero RAD Studio 12</b> can build <code>log4cpp</code> project using its bundled version of CMake, provided via the RAD Package Manager.
-		Make sure that Embarcadero's CMake (and not another installation) is used.
+	</blockquote>
+	<h4>Embarcadero RAD Studio 12</h4>
+	<blockquote>
+	<p><b>Embarcadero RAD Studio 12</b> can build <code>log4cpp</code> project using its bundled version of CMake, provided via the RAD Package Manager.<br>
+		Make sure that Embarcadero's CMake (and not another installation) is used for command line.
+		Ninja generator will be used as build system, you can get <code>ninja-win.zip</code> at
+		<a href="https://ninja-build.org/">Ninja site</a> and extract the executable into catalog included into PATH environment variable.<br>
 		Open <b>RAD Studio Command Prompt</b> and run commands to build <code>log4cpp</code> libs:</p>
 	<p>Release:</p>
 	<pre class="code">
 cmake.exe -G Ninja -S . -B build_release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
-cmake --build build_release --config Release -v	</pre>
+cmake.exe --build build_release --config Release -v	</pre>
 	<p>Debug:</p>
 	<pre class="code">
 cmake.exe -G Ninja -S . -B build_debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
-cmake --build build_debug --config Debug -v	</pre>
+cmake.exe --build build_debug --config Debug -v	</pre>
+	</blockquote>
 	<p><i>Works since log4cpp 1.1.5. </i></p>
 
 <a href="#begin">^</a>
