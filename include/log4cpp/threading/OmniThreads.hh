@@ -18,12 +18,12 @@
 namespace log4cpp {
     namespace threading {
         /**
-         * Return an identifier for the current thread. What these 
-         * identifiers look like is completely up to the underlying 
+         * Return an identifier for the current thread. What these
+         * identifiers look like is completely up to the underlying
          * thread library. OmniThreads returns the POSIX thread Id.
          **/
         std::string getThreadId();
-        
+
         /**
          * A simple, non recursive Mutex.
          * Equivalent to Boost.Threads boost::mutex
@@ -32,65 +32,66 @@ namespace log4cpp {
 
         /**
          * A simple "resource acquisition is initialization" idiom type lock
-         * for Mutex. 
+         * for Mutex.
          * Equivalent to Boost.Threads boost::scoped_lock.
          **/
         typedef omni_mutex_lock ScopedLock;
 
-        /** 
+        /**
          * This class holds Thread local data of type T, i.e. for each
-         * thread a ThreadLocalDataHolder holds 0 or 1 instance of T. 
-         * The held object must be heap allocated and will be deleted 
+         * thread a ThreadLocalDataHolder holds 0 or 1 instance of T.
+         * The held object must be heap allocated and will be deleted
          * upon termination of the thread to wich it belongs.
-         * This is an omni_threads based equivalent of Boost.Threads 
+         * This is an omni_threads based equivalent of Boost.Threads
          * thread_specific_ptr<T> class.
          **/
-        template<typename T> class ThreadLocalDataHolder {
-            public:
+        template <typename T> class ThreadLocalDataHolder {
+          public:
             typedef T data_type;
 
-            inline ThreadLocalDataHolder() :
-                _key(omni_thread::allocate_key()) {};
+            inline ThreadLocalDataHolder() : _key(omni_thread::allocate_key()) {};
 
             inline ~ThreadLocalDataHolder() {};
-            
+
             /**
              * Obtains the Object held for the current thread.
              * @return a pointer to the held Object or NULL if no
              * Object has been set for the current thread.
              **/
             inline T* get() const {
-                Holder* holder = dynamic_cast<Holder*>(
-                    ::omni_thread::self()->get_value(_key));
+                Holder* holder = dynamic_cast<Holder*>(::omni_thread::self()->get_value(_key));
                 return (holder) ? holder->data : NULL;
             };
 
             /**
-             * Obtains the Object held for the current thread. 
+             * Obtains the Object held for the current thread.
              * Initially each thread holds NULL.
              * @return a pointer to the held Object or NULL if no
              * Object has been set for the current thread.
              **/
-            inline T* operator->() const { return get(); };
+            inline T* operator->() const {
+                return get();
+            };
 
             /**
              * Obtains the Object held for the current thread.
              * @pre get() != NULL
              * @return a reference to the held Object.
              **/
-            inline T& operator*() const { return *get(); };
+            inline T& operator*() const {
+                return *get();
+            };
 
             /**
              * Releases the Object held for the current thread.
              * @post get() == NULL
-             * @return a pointer to the Object thas was held for 
+             * @return a pointer to the Object thas was held for
              * the current thread or NULL if no Object was held.
              **/
             inline T* release() {
                 T* result = NULL;
-                Holder* holder = dynamic_cast<Holder*>(
-                    ::omni_thread::self()->get_value(_key));
-              
+                Holder* holder = dynamic_cast<Holder*>(::omni_thread::self()->get_value(_key));
+
                 if (holder) {
                     result = holder->data;
                     holder->data = NULL;
@@ -100,14 +101,13 @@ namespace log4cpp {
             };
 
             /**
-             * Sets a new Object to be held for the current thread. A 
+             * Sets a new Object to be held for the current thread. A
              * previously set Object will be deleted.
              * @param p the new object to hold.
              * @post get() == p
              **/
             inline void reset(T* p = NULL) {
-                Holder* holder = dynamic_cast<Holder*>(
-                    ::omni_thread::self()->get_value(_key));
+                Holder* holder = dynamic_cast<Holder*>(::omni_thread::self()->get_value(_key));
                 if (holder) {
                     if (holder->data)
                         delete holder->data;
@@ -119,19 +119,23 @@ namespace log4cpp {
                 }
             };
 
-            private:            
+          private:
             class Holder : public omni_thread::value_t {
-                public:
+              public:
                 Holder(data_type* data) : data(data) {};
-                virtual ~Holder() { if (data) delete (data); };
+                virtual ~Holder() {
+                    if (data)
+                        delete (data);
+                };
                 data_type* data;
-                private:
+
+              private:
                 Holder(const Holder& other);
                 Holder& operator=(const Holder& other);
             };
 
-            omni_thread::key_t _key;            
+            omni_thread::key_t _key;
         };
-    }
-}
+    } // namespace threading
+} // namespace log4cpp
 #endif

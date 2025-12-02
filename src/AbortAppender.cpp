@@ -8,17 +8,15 @@
  */
 
 #include "PortabilityImpl.hh"
+#include <cstdlib>
 #include <log4cpp/AbortAppender.hh>
 #include <log4cpp/FactoryParams.hh>
-#include <cstdlib>
 #include <memory>
 
 namespace log4cpp {
 
-    AbortAppender::AbortAppender(const std::string& name) : 
-        AppenderSkeleton(name) {
-    }
-    
+    AbortAppender::AbortAppender(const std::string& name) : AppenderSkeleton(name) {}
+
     AbortAppender::~AbortAppender() {
         close();
     }
@@ -34,7 +32,7 @@ namespace log4cpp {
     bool AbortAppender::reopen() {
         return true;
     }
-      
+
     bool AbortAppender::requiresLayout() const {
         return false;
     }
@@ -43,10 +41,9 @@ namespace log4cpp {
         return;
     }
 
-    std::LOG4CPP_UNIQUE_PTR<Appender> create_abort_appender(const FactoryParams& params)
-    {
-       std::string name;
-       params.get_for("abort appender").required("name", name);
-       return std::LOG4CPP_UNIQUE_PTR<Appender>(new AbortAppender(name));
+    std::LOG4CPP_UNIQUE_PTR<Appender> create_abort_appender(const FactoryParams& params) {
+        std::string name;
+        params.get_for("abort appender").required("name", name);
+        return std::LOG4CPP_UNIQUE_PTR<Appender>(new AbortAppender(name));
     }
-}
+} // namespace log4cpp

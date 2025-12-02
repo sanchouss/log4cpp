@@ -12,35 +12,32 @@
 
 #include <stdlib.h>
 
-#include <log4cpp/Category.hh>
 #include <log4cpp/Appender.hh>
-#include <log4cpp/OstreamAppender.hh>
+#include <log4cpp/BasicLayout.hh>
+#include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/Layout.hh>
-#include <log4cpp/BasicLayout.hh>
-#include <log4cpp/Priority.hh>
 #include <log4cpp/NDC.hh>
+#include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/PatternLayout.hh>
+#include <log4cpp/Priority.hh>
 
 #include <log4cpp/PropertyConfigurator.hh>
 
-double calcPi()
-{
+double calcPi() {
     double denominator = 3.0;
     double retVal = 4.0;
     long i;
-    for (i = 0; i < 50000000l; i++)
-    {
+    for (i = 0; i < 50000000l; i++) {
         retVal = retVal - (4.0 / denominator);
         denominator += 2.0;
-        retVal = retVal + (4.0 /denominator);
+        retVal = retVal + (4.0 / denominator);
         denominator += 2.0;
     }
     return retVal;
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     try {
         /* looking for the init file in $srcdir is a requirement of
            automake's distcheck target.
@@ -49,26 +46,22 @@ int main(int argc, char* argv[])
         std::string initFileName;
         if (srcdir == NULL) {
             initFileName = "./testConfig.log4cpp.properties";
-        }
-        else {
+        } else {
             initFileName = std::string(srcdir) + "/testConfig.log4cpp.properties";
         }
         log4cpp::PropertyConfigurator::configure(initFileName);
-    } catch(log4cpp::ConfigureFailure& f) {
+    } catch (log4cpp::ConfigureFailure& f) {
         std::cout << "Configure Problem " << f.what() << std::endl;
         return -1;
     }
 
     log4cpp::Category& root = log4cpp::Category::getRoot();
 
-    log4cpp::Category& sub1 = 
-        log4cpp::Category::getInstance(std::string("sub1"));
+    log4cpp::Category& sub1 = log4cpp::Category::getInstance(std::string("sub1"));
 
-    log4cpp::Category& sub2 = 
-        log4cpp::Category::getInstance(std::string("sub1.sub2"));
+    log4cpp::Category& sub2 = log4cpp::Category::getInstance(std::string("sub1.sub2"));
 
-    log4cpp::Category& sub3 =
-        log4cpp::Category::getInstance(std::string("sub1.sub2.sub3"));
+    log4cpp::Category& sub3 = log4cpp::Category::getInstance(std::string("sub1.sub2.sub3"));
 
     root.error("root error");
     root.warn("root warn");
@@ -96,8 +89,7 @@ int main(int argc, char* argv[])
     sub2.error("%s %s %d", "test", "vform", 123);
     sub2.warnStream() << "streamed warn";
 
-    sub2 << log4cpp::Priority::WARN << "warn2.." << "..warn3..value=" << 0 
-         << log4cpp::eol << "..warn4";
+    sub2 << log4cpp::Priority::WARN << "warn2.." << "..warn3..value=" << 0 << log4cpp::eol << "..warn4";
 
     sub3 << log4cpp::Priority::INFO << "Very long config string follows";
 
@@ -105,4 +97,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

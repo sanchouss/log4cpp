@@ -12,28 +12,26 @@
 #include <boost/version.hpp>
 #if BOOST_VERSION > 103400
 
-#include "Portability.hh"
 #include "LayoutAppender.hh"
+#include "Portability.hh"
 
-namespace log4cpp
-{
-   class LOG4CPP_EXPORT SmptAppender : public LayoutAppender
-   {
+namespace log4cpp {
+    class LOG4CPP_EXPORT SmptAppender : public LayoutAppender {
       public:
-         struct mail_params;
+        struct mail_params;
 
-         SmptAppender(const std::string& name, const std::string& host, const std::string& from, 
-                      const std::string& to, const std::string& subject);
-         virtual ~SmptAppender();
-         virtual void close() { }
-      
+        SmptAppender(const std::string& name, const std::string& host, const std::string& from, const std::string& to,
+                     const std::string& subject);
+        virtual ~SmptAppender();
+        virtual void close() {}
+
       protected:
-         virtual void _append(const LoggingEvent& event);
+        virtual void _append(const LoggingEvent& event);
 
       private:
-         mail_params * mail_params_;
-   };
-}
+        mail_params* mail_params_;
+    };
+} // namespace log4cpp
 
 #endif // BOOST_VERSION >= 103400
 #endif // LOG4CPP_HAS_BOOST

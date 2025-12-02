@@ -9,28 +9,27 @@
 #ifndef _LOG4CPP_THREADING_PTHREADS_HH
 #define _LOG4CPP_THREADING_PTHREADS_HH
 
-#include <log4cpp/Portability.hh>
-#include <stdio.h>
-#include <pthread.h>
-#include <string>
 #include <assert.h>
-
+#include <log4cpp/Portability.hh>
+#include <pthread.h>
+#include <stdio.h>
+#include <string>
 
 namespace log4cpp {
     namespace threading {
 
-        /** 
+        /**
          * returns the thread ID
          **/
         std::string getThreadId();
-        
+
         /**
          **/
         class Mutex {
-            private:
+          private:
             pthread_mutex_t mutex;
 
-            public:
+          public:
             inline Mutex() {
                 ::pthread_mutex_init(&mutex, NULL);
             }
@@ -47,21 +46,20 @@ namespace log4cpp {
                 ::pthread_mutex_destroy(&mutex);
             }
 
-            private:
+          private:
             Mutex(const Mutex& m);
-            Mutex& operator=(const Mutex &m);
+            Mutex& operator=(const Mutex& m);
         };
 
         /**
          *	definition of ScopedLock;
          **/
         class ScopedLock {
-            private:
+          private:
             Mutex& _mutex;
 
-            public:
-            inline ScopedLock(Mutex& mutex) :
-                _mutex(mutex) {
+          public:
+            inline ScopedLock(Mutex& mutex) : _mutex(mutex) {
                 _mutex.lock();
             }
 
@@ -71,55 +69,59 @@ namespace log4cpp {
         };
 
         /**
-         * 
+         *
          **/
-        template<typename T> class ThreadLocalDataHolder {
-            private:            
-            pthread_key_t _key;              
+        template <typename T> class ThreadLocalDataHolder {
+          private:
+            pthread_key_t _key;
 
-            public:
+          public:
             typedef T data_type;
 
             inline ThreadLocalDataHolder() {
-                ::pthread_key_create(&_key, freeHolder);         
+                ::pthread_key_create(&_key, freeHolder);
             }
 
-            inline static void freeHolder(void *p) {
+            inline static void freeHolder(void* p) {
                 assert(p != NULL);
-                delete reinterpret_cast<T *>(p);
-             }
+                delete reinterpret_cast<T*>(p);
+            }
 
             inline ~ThreadLocalDataHolder() {
-                T *data = get();
-                if (data != NULL) { 
+                T* data = get();
+                if (data != NULL) {
                     delete data;
                 }
                 ::pthread_key_delete(_key);
             }
-            
+
             inline T* get() const {
-                return reinterpret_cast<T *>(::pthread_getspecific(_key)); 
+                return reinterpret_cast<T*>(::pthread_getspecific(_key));
             }
 
-            inline T* operator->() const { return get(); }
-            inline T& operator*() const { return *get(); }
+            inline T* operator->() const {
+                return get();
+            }
+            inline T& operator*() const {
+                return *get();
+            }
 
             inline T* release() {
                 T* result = get();
-                ::pthread_setspecific(_key, NULL); 
+                ::pthread_setspecific(_key, NULL);
 
                 return result;
             }
 
             inline void reset(T* p = NULL) {
-                T *data = get();
+                T* data = get();
                 if (data != NULL) {
                     delete data;
                 }
-                ::pthread_setspecific(_key, p); 
+                ::pthread_setspecific(_key, p);
             }
         };
 
-    }
-}
+    } // namespace threading
+} // namespace log4cpp
 #endif

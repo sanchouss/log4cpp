@@ -19,13 +19,12 @@ namespace log4cpp {
        @since 0.3.2
      **/
     class LOG4CPP_EXPORT BasicConfigurator {
-    public:
-
+      public:
         /**
-           Performs a minimal configuration of log4cpp.  
+           Performs a minimal configuration of log4cpp.
          **/
         static void configure();
- };
-}
+    };
+} // namespace log4cpp
 
 #endif

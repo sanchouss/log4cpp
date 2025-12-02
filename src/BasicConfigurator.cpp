@@ -8,10 +8,10 @@
 #include "PortabilityImpl.hh"
 
 #ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
+#include <io.h>
 #endif
 #ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
+#include <unistd.h>
 #endif
 
 #include <cstdio>
@@ -29,7 +29,4 @@ namespace log4cpp {
         root.addAppender(new FileAppender("_", ::dup(fileno(stdout))));
     }
 
-}
-
-
-
+} // namespace log4cpp

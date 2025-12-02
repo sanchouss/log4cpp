@@ -44,10 +44,6 @@ namespace log4cpp {
 #endif
     }
 
-    TimeStamp::TimeStamp(unsigned int seconds, unsigned int microSeconds) :
-        _seconds(seconds),
-        _microSeconds(microSeconds) {
-    }
-}
-
-
+    TimeStamp::TimeStamp(unsigned int seconds, unsigned int microSeconds)
+        : _seconds(seconds), _microSeconds(microSeconds) {}
+} // namespace log4cpp

@@ -10,11 +10,5 @@
 
 namespace log4cpp {
 
-    ConfigureFailure::ConfigureFailure(const std::string& reason) :
-        std::runtime_error(reason) {
-    }
-}
-
-
-
-
+    ConfigureFailure::ConfigureFailure(const std::string& reason) : std::runtime_error(reason) {}
+} // namespace log4cpp

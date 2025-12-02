@@ -10,15 +10,15 @@
 #include "PortabilityImpl.hh"
 
 #ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
+#include <io.h>
 #endif
 #ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
+#include <unistd.h>
 #endif
 
 #include <cstdio>
-#include <log4cpp/HierarchyMaintainer.hh>
 #include <log4cpp/FileAppender.hh>
+#include <log4cpp/HierarchyMaintainer.hh>
 
 namespace log4cpp {
 
@@ -28,8 +28,7 @@ namespace log4cpp {
         return defaultMaintainer;
     }
 
-    HierarchyMaintainer::HierarchyMaintainer() {
-    }
+    HierarchyMaintainer::HierarchyMaintainer() {}
 
     HierarchyMaintainer::~HierarchyMaintainer() {
         shutdown();
@@ -42,14 +41,14 @@ namespace log4cpp {
     }
 
     Category* HierarchyMaintainer::_getExistingInstance(const std::string& name) {
-	Category* result = NULL;
+        Category* result = NULL;
 
         CategoryMap::iterator i = _categoryMap.find(name);
         if (_categoryMap.end() != i) {
             result = (*i).second;
         }
 
-	return result;
+        return result;
     }
 
     Category& HierarchyMaintainer::getInstance(const std::string& name) {
@@ -61,8 +60,8 @@ namespace log4cpp {
     Category& HierarchyMaintainer::_getInstance(const std::string& name) {
         Category* result;
         result = _getExistingInstance(name);
-        
-        if (NULL == result) {            
+
+        if (NULL == result) {
             if (name == "") {
                 result = new Category(name, NULL, Priority::INFO);
             } else {
@@ -75,8 +74,8 @@ namespace log4cpp {
                 }
                 Category& parent = _getInstance(parentName);
                 result = new Category(name, &parent, Priority::NOTSET);
-            }	  
-            _categoryMap[name] = result; 
+            }
+            _categoryMap[name] = result;
         }
         return *result;
     }
@@ -86,7 +85,7 @@ namespace log4cpp {
 
         threading::ScopedLock lock(_categoryMutex);
         {
-            for(CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
+            for (CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
                 categories->push_back((*i).second);
             }
         }
@@ -97,36 +96,30 @@ namespace log4cpp {
     void HierarchyMaintainer::shutdown() {
         threading::ScopedLock lock(_categoryMutex);
         {
-            for(CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
+            for (CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
                 ((*i).second)->removeAllAppenders();
             }
         }
-        
-        try
-        {
-           for(handlers_t::const_iterator i = handlers_.begin(), last = handlers_.end(); i != last; ++i)
-              (**i)();
+
+        try {
+            for (handlers_t::const_iterator i = handlers_.begin(), last = handlers_.end(); i != last; ++i)
+                (**i)();
+        } catch (...) {
         }
-        catch(...)
-        {
-        }
-        
     }
 
-    void HierarchyMaintainer::register_shutdown_handler(shutdown_fun_ptr handler)
-    {
-        handlers_.push_back(handler); 
+    void HierarchyMaintainer::register_shutdown_handler(shutdown_fun_ptr handler) {
+        handlers_.push_back(handler);
     }
 
     void HierarchyMaintainer::deleteAllCategories() {
         threading::ScopedLock lock(_categoryMutex);
         {
-            for(CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
+            for (CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
                 delete ((*i).second);
             }
-			_categoryMap.clear();
+            _categoryMap.clear();
         }
     }
 
-
-}
+} // namespace log4cpp

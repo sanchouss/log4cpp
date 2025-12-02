@@ -16,7 +16,7 @@ namespace log4cpp {
             return std::string("thread1");
         }
 
-    }
-}
+    } // namespace threading
+} // namespace log4cpp
 
 #endif // LOG4CPP_HAVE_THREADING

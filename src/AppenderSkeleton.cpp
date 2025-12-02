@@ -12,21 +12,18 @@
 
 namespace log4cpp {
 
-    AppenderSkeleton::AppenderSkeleton(const std::string& name) :
-        Appender(name),
-        _threshold(Priority::NOTSET),
-        _filter(NULL) {
-    }
+    AppenderSkeleton::AppenderSkeleton(const std::string& name)
+        : Appender(name), _threshold(Priority::NOTSET), _filter(NULL) {}
 
     AppenderSkeleton::~AppenderSkeleton() {
         if (_filter)
             delete _filter;
     }
-    
+
     bool AppenderSkeleton::reopen() {
         return true;
     }
-    
+
     void AppenderSkeleton::doAppend(const LoggingEvent& event) {
         if ((Priority::NOTSET == _threshold) || (event.priority <= _threshold)) {
             if (!_filter || (_filter->decide(event) != Filter::DENY)) {
@@ -38,23 +35,22 @@ namespace log4cpp {
     void AppenderSkeleton::setThreshold(Priority::Value priority) {
         _threshold = priority;
     }
-    
+
     Priority::Value AppenderSkeleton::getThreshold() {
         return _threshold;
     }
-    
+
     void AppenderSkeleton::setFilter(Filter* filter) {
         if (_filter != filter) {
             if (_filter)
                 delete _filter;
-            
+
             _filter = filter;
         }
     }
-    
+
     Filter* AppenderSkeleton::getFilter() {
         return _filter;
     }
-    
-}
 
+} // namespace log4cpp

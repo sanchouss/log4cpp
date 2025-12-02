@@ -12,15 +12,11 @@
 
 namespace log4cpp {
 
-    FixedContextCategory::FixedContextCategory(const std::string& name,
-                                               const std::string& context) : 
-        Category(name, Category::getInstance(name).getParent()),
-        _delegate(Category::getInstance(name)),
-        _context(context) {
-    }
+    FixedContextCategory::FixedContextCategory(const std::string& name, const std::string& context)
+        : Category(name, Category::getInstance(name).getParent()), _delegate(Category::getInstance(name)),
+          _context(context) {}
 
-    FixedContextCategory::~FixedContextCategory() {
-    }
+    FixedContextCategory::~FixedContextCategory() {}
 
     void FixedContextCategory::setContext(const std::string& context) {
         _context = context;
@@ -33,7 +29,7 @@ namespace log4cpp {
     Priority::Value FixedContextCategory::getPriority() const LOG4CPP_NOTHROW {
         return Category::getPriority();
     }
-   
+
     Priority::Value FixedContextCategory::getChainedPriority() const LOG4CPP_NOTHROW {
         Priority::Value result = getPriority();
 
@@ -43,21 +39,20 @@ namespace log4cpp {
 
         return result;
     }
-    
+
     void FixedContextCategory::addAppender(Appender* appender) LOG4CPP_NOTHROW {
         // XXX do nothing for now
     }
-    
+
     void FixedContextCategory::addAppender(Appender& appender) {
         // XXX do nothing for now
     }
-    
+
     Appender* FixedContextCategory::getAppender() const {
         return _delegate.getAppender();
     }
-    
-    Appender* FixedContextCategory::getAppender(const std::string& name)
-    const {
+
+    Appender* FixedContextCategory::getAppender(const std::string& name) const {
         return _delegate.getAppender(name);
     }
 
@@ -72,13 +67,12 @@ namespace log4cpp {
     bool FixedContextCategory::ownsAppender() const LOG4CPP_NOTHROW {
         return false;
     }
-    
+
     bool FixedContextCategory::ownsAppender(Appender* appender) const LOG4CPP_NOTHROW {
         return false;
     }
-    
-    void FixedContextCategory::callAppenders(const LoggingEvent& event)
-            LOG4CPP_NOTHROW {
+
+    void FixedContextCategory::callAppenders(const LoggingEvent& event) LOG4CPP_NOTHROW {
         _delegate.callAppenders(event);
     }
 
@@ -91,10 +85,9 @@ namespace log4cpp {
     }
 
     void FixedContextCategory::_logUnconditionally2(Priority::Value priority,
-            const std::string& message) LOG4CPP_NOTHROW {
+                                                    const std::string& message) LOG4CPP_NOTHROW {
         LoggingEvent event(getName(), message, _context, priority);
         callAppenders(event);
     }
-    
-} 
 
+} // namespace log4cpp

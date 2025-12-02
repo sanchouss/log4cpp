@@ -10,35 +10,34 @@
 #ifndef _LOG4CPP_LAYOUTAPPENDER_HH
 #define _LOG4CPP_LAYOUTAPPENDER_HH
 
-#include <string>
-#include <log4cpp/Portability.hh>
 #include <log4cpp/AppenderSkeleton.hh>
 #include <log4cpp/BasicLayout.hh>
+#include <log4cpp/Portability.hh>
+#include <string>
 
 namespace log4cpp {
 
     /**
      * LayoutAppender is a common superclass for all Appenders that require
-     * a Layout. 
+     * a Layout.
      **/
     class LOG4CPP_EXPORT LayoutAppender : public AppenderSkeleton {
-        public:
-
+      public:
         typedef BasicLayout DefaultLayoutType;
 
         LayoutAppender(const std::string& name);
         virtual ~LayoutAppender();
-        
+
         /**
          * Check if the appender requires a layout. All LayoutAppenders do,
          * therefore this method returns true for all subclasses.
-         * 
+         *
          * @returns true.
          **/
         virtual bool requiresLayout() const;
         virtual void setLayout(Layout* layout = NULL);
 
-        protected:
+      protected:
         /**
          * Return the layout of the appender.
          * This method is the Layout accessor for subclasses of LayoutAppender.
@@ -46,10 +45,9 @@ namespace log4cpp {
          **/
         Layout& _getLayout();
 
-        private:
+      private:
         Layout* _layout;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_LAYOUTAPPENDER_HH
-

@@ -10,10 +10,10 @@
 #ifndef _LOG4CPP_OSTREAMAPPENDER_HH
 #define _LOG4CPP_OSTREAMAPPENDER_HH
 
-#include <log4cpp/Portability.hh>
-#include <string>
 #include <iostream>
 #include <log4cpp/LayoutAppender.hh>
+#include <log4cpp/Portability.hh>
+#include <string>
 
 namespace log4cpp {
 
@@ -21,18 +21,18 @@ namespace log4cpp {
      * OstreamAppender appends LoggingEvents to ostreams.
      **/
     class LOG4CPP_EXPORT OstreamAppender : public LayoutAppender {
-        public:
+      public:
         OstreamAppender(const std::string& name, std::ostream* stream);
         virtual ~OstreamAppender();
-        
+
         virtual bool reopen();
         virtual void close();
 
-        protected:
+      protected:
         virtual void _append(const LoggingEvent& event);
 
         std::ostream* _stream;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_OSTREAMAPPENDER_HH

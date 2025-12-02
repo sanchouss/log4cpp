@@ -6,35 +6,29 @@
  * See the COPYING file for the terms of usage and distribution.
  */
 
-#ifdef WIN32    // only available on Win32
+#ifdef WIN32 // only available on Win32
 
-#include <log4cpp/NTEventLogAppender.hh>
 #include <log4cpp/FactoryParams.hh>
+#include <log4cpp/NTEventLogAppender.hh>
 #include <memory>
 
 namespace log4cpp {
 
-    NTEventLogAppender::NTEventLogAppender(const std::string& name, const std::string& sourceName) :
-    AppenderSkeleton(name),
-    _strSourceName(sourceName),
-    _hEventSource(NULL)
-    {
+    NTEventLogAppender::NTEventLogAppender(const std::string& name, const std::string& sourceName)
+        : AppenderSkeleton(name), _strSourceName(sourceName), _hEventSource(NULL) {
         open();
     }
 
-    NTEventLogAppender::~NTEventLogAppender()
-    {
+    NTEventLogAppender::~NTEventLogAppender() {
         close();
     }
 
-    void NTEventLogAppender::open()
-    {
+    void NTEventLogAppender::open() {
         addRegistryInfo(_strSourceName.c_str());
         _hEventSource = ::RegisterEventSource(NULL, _strSourceName.c_str());
     }
 
-    void NTEventLogAppender::close()
-    {
+    void NTEventLogAppender::close() {
         if (_hEventSource) {
             ::DeregisterEventSource(_hEventSource);
         }
@@ -44,7 +38,7 @@ namespace log4cpp {
         close();
         open();
         return true;
-    }      
+    }
 
     bool NTEventLogAppender::requiresLayout() const {
         return false;
@@ -59,9 +53,8 @@ namespace log4cpp {
         ps[0] = event.message.c_str();
 
         const DWORD messageID = 0x1000;
-        ::ReportEvent(_hEventSource, getType(event.priority), 
-                  getCategory(event.priority), 
-                  messageID, NULL, 1, 0, ps, NULL);
+        ::ReportEvent(_hEventSource, getType(event.priority), getCategory(event.priority), messageID, NULL, 1, 0, ps,
+                      NULL);
     }
 
     /**
@@ -82,11 +75,11 @@ namespace log4cpp {
     WORD NTEventLogAppender::getType(Priority::Value priority) {
 
         WORD ret_val;
-  
+
         switch (priority) {
         case Priority::EMERG:
-          // FATAL is the same value as EMERG
-//        case Priority::FATAL:
+            // FATAL is the same value as EMERG
+            //        case Priority::FATAL:
         case Priority::ALERT:
         case Priority::CRIT:
         case Priority::ERROR:
@@ -105,27 +98,26 @@ namespace log4cpp {
         return ret_val;
     }
 
-    HKEY NTEventLogAppender::regGetKey(TCHAR *subkey, DWORD *disposition) {
+    HKEY NTEventLogAppender::regGetKey(TCHAR* subkey, DWORD* disposition) {
         HKEY hkey = 0;
-        RegCreateKeyEx(HKEY_LOCAL_MACHINE, subkey, 0, NULL, 
-            REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, 
-            &hkey, disposition);
+        RegCreateKeyEx(HKEY_LOCAL_MACHINE, subkey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &hkey,
+                       disposition);
         return hkey;
     }
 
-    void NTEventLogAppender::regSetString(HKEY hkey, TCHAR *name, TCHAR *value) {
+    void NTEventLogAppender::regSetString(HKEY hkey, TCHAR* name, TCHAR* value) {
         RegSetValueEx(hkey, name, 0, REG_SZ, (LPBYTE)value, lstrlen(value));
     }
 
-    void NTEventLogAppender::regSetDword(HKEY hkey, TCHAR *name, DWORD value) {
+    void NTEventLogAppender::regSetDword(HKEY hkey, TCHAR* name, DWORD value) {
         RegSetValueEx(hkey, name, 0, REG_DWORD, (LPBYTE)&value, sizeof(DWORD));
     }
 
     /*
      * Add this source with appropriate configuration keys to the registry.
      */
-    void NTEventLogAppender::addRegistryInfo(const char *source) {
-        const TCHAR *prefix = "SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\";
+    void NTEventLogAppender::addRegistryInfo(const char* source) {
+        const TCHAR* prefix = "SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\";
         DWORD disposition;
         HKEY hkey = 0;
         TCHAR subkey[256];
@@ -143,13 +135,12 @@ namespace log4cpp {
         return;
     }
 
-    std::LOG4CPP_UNIQUE_PTR<Appender> create_nt_event_log_appender(const FactoryParams& params)
-    {
-       std::string name, source_name;
-       params.get_for("nt event log appender").required("name", name)("source_name", source_name);
+    std::LOG4CPP_UNIQUE_PTR<Appender> create_nt_event_log_appender(const FactoryParams& params) {
+        std::string name, source_name;
+        params.get_for("nt event log appender").required("name", name)("source_name", source_name);
 
-       return std::LOG4CPP_UNIQUE_PTR<Appender>(new NTEventLogAppender(name, source_name));
+        return std::LOG4CPP_UNIQUE_PTR<Appender>(new NTEventLogAppender(name, source_name));
     }
-}
+} // namespace log4cpp
 
 #endif // WIN32

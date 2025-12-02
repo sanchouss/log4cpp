@@ -10,25 +10,24 @@
 #ifndef _LOG4CPP_STRINGQUEUEAPPENDER_HH
 #define _LOG4CPP_STRINGQUEUEAPPENDER_HH
 
-#include <log4cpp/Portability.hh>
-#include <string>
-#include <queue>
 #include <log4cpp/LayoutAppender.hh>
+#include <log4cpp/Portability.hh>
+#include <queue>
+#include <string>
 
 namespace log4cpp {
 
     /**
-     * This class puts log messages in an in-memory queue. Its primary use 
+     * This class puts log messages in an in-memory queue. Its primary use
      * is in test cases, but it may be useful elsewhere as well.
      *
      * @since 0.2.4
      **/
     class LOG4CPP_EXPORT StringQueueAppender : public LayoutAppender {
-        public:
-
+      public:
         StringQueueAppender(const std::string& name);
         virtual ~StringQueueAppender();
-        
+
         virtual bool reopen();
         virtual void close();
 
@@ -57,8 +56,7 @@ namespace log4cpp {
          **/
         virtual std::string popMessage();
 
-        protected:
-        
+      protected:
         /**
          * Appends the LoggingEvent to the queue.
          * @param event the LoggingEvent to layout and append to the queue.
@@ -67,6 +65,6 @@ namespace log4cpp {
 
         std::queue<std::string> _queue;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_STRINGQUEUEAPPENDER_HH

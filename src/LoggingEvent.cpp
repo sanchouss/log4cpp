@@ -12,15 +12,9 @@
 #include <log4cpp/threading/Threading.hh>
 
 namespace log4cpp {
-    
-    LoggingEvent::LoggingEvent(const std::string& categoryName, 
-                               const std::string& message,
-                               const std::string& ndc, 
-                               Priority::Value priority) :
-        categoryName(categoryName),
-        message(message),
-        ndc(ndc),
-        priority(priority),
-        threadName(threading::getThreadId()) {
-    }
-}
+
+    LoggingEvent::LoggingEvent(const std::string& categoryName, const std::string& message, const std::string& ndc,
+                               Priority::Value priority)
+        : categoryName(categoryName), message(message), ndc(ndc), priority(priority),
+          threadName(threading::getThreadId()) {}
+} // namespace log4cpp

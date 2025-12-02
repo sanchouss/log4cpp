@@ -16,7 +16,7 @@ namespace log4cpp {
             sprintf(buffer, "%d", ::omni_thread::self()->id());
             return std::string(buffer);
         };
-    }
-}
+    } // namespace threading
+} // namespace log4cpp
 
 #endif // LOG4CPP_HAVE_THREADING && LOG4CPP_USE_ONMITHREADS

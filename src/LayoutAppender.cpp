@@ -12,11 +12,9 @@
 
 namespace log4cpp {
 
-    LayoutAppender::LayoutAppender(const std::string& name) : 
-            AppenderSkeleton(name),
-            _layout(new DefaultLayoutType()) {
-    }
-    
+    LayoutAppender::LayoutAppender(const std::string& name)
+        : AppenderSkeleton(name), _layout(new DefaultLayoutType()) {}
+
     LayoutAppender::~LayoutAppender() {
         delete _layout;
     }
@@ -26,14 +24,14 @@ namespace log4cpp {
     }
 
     void LayoutAppender::setLayout(Layout* layout) {
-       if (layout != _layout) {
-	  Layout *oldLayout = _layout;
-	  _layout = (layout == NULL) ? new DefaultLayoutType() : layout;
-	  delete oldLayout;
-       }
+        if (layout != _layout) {
+            Layout* oldLayout = _layout;
+            _layout = (layout == NULL) ? new DefaultLayoutType() : layout;
+            delete oldLayout;
+        }
     }
 
     Layout& LayoutAppender::_getLayout() {
         return *_layout;
     }
-}
+} // namespace log4cpp

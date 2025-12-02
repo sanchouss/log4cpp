@@ -9,28 +9,27 @@
 #ifndef _LOG4CPP_IDSAAPPENDER_HH
 #define _LOG4CPP_IDSAAPPENDER_HH
 
-#include <log4cpp/Portability.hh>
-#include <string>
-#include <stdarg.h>
 #include <idsa.h>
 #include <log4cpp/AppenderSkeleton.hh>
+#include <log4cpp/Portability.hh>
+#include <stdarg.h>
+#include <string>
 
 namespace log4cpp {
 
     /**
-     * IdsaAppender is an Appender that sends LoggingEvents to the IDS/A 
-     * logger and reference monitor by Marc Welz. 
+     * IdsaAppender is an Appender that sends LoggingEvents to the IDS/A
+     * logger and reference monitor by Marc Welz.
      * See http://jade.cs.uct.ac.za/idsa/ for more information on IDS/A.
      **/
     class IdsaAppender : public AppenderSkeleton {
-        public:
-
+      public:
         /**
          * Instantiate an IdsaAppender with given name and name.
          * Unlike the syslog API, idsa allows multiple connections.
          * @param name The name of the Appender
          * @param idsaName The service parameter of idsa
-         **/         
+         **/
         IdsaAppender(const std::string& name, const std::string& idsaName);
         virtual ~IdsaAppender();
 
@@ -52,8 +51,7 @@ namespace log4cpp {
 
         virtual void setLayout(Layout* layout);
 
-        protected:
-        
+      protected:
         /**
          * Calls idsa_open().
          **/
@@ -67,10 +65,8 @@ namespace log4cpp {
 
         const std::string _idsaName;
 
-        IDSA_CONNECTION *_idsaConnection;
-
+        IDSA_CONNECTION* _idsaConnection;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_IDSAAPPENDER_HH
-

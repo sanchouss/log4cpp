@@ -18,7 +18,7 @@ namespace log4cpp {
      * A simple TimeStamp abstraction
      **/
     class LOG4CPP_EXPORT TimeStamp {
-        public:
+      public:
         /**
            Constructs a TimeStamp representing 'now'.
         **/
@@ -37,9 +37,9 @@ namespace log4cpp {
             return _seconds;
         };
 
-        /** 
+        /**
            Returns the 'subseconds' part of the TimeStamp in milliseconds,
-           getMilliSeconds() == getMicroSeconds() / 1000. 
+           getMilliSeconds() == getMicroSeconds() / 1000.
         **/
         inline int getMilliSeconds() const {
             return _microSeconds / 1000;
@@ -62,13 +62,12 @@ namespace log4cpp {
             return _startStamp;
         };
 
-        protected:
+      protected:
         static TimeStamp _startStamp;
 
         int _seconds;
         int _microSeconds;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_TIMESTAMP_HH
-

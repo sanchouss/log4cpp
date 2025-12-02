@@ -16,12 +16,12 @@
 #ifndef LOG4CPP_HAVE_SSTREAM
 
 namespace std {
-    std::string ostringstream::str() { 
-        (*this) << '\0'; 
-        std::string msg(ostrstream::str()); 
-        ostrstream::freeze(false); //unfreeze stream 
-        return msg;         
-    } 
-}
+    std::string ostringstream::str() {
+        (*this) << '\0';
+        std::string msg(ostrstream::str());
+        ostrstream::freeze(false); // unfreeze stream
+        return msg;
+    }
+} // namespace std
 
 #endif

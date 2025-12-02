@@ -8,34 +8,32 @@
 #if !defined(h_dd233b8b_5c59_4956_9393_6581c95f9779)
 #define h_dd233b8b_5c59_4956_9393_6581c95f9779
 
-#include <string>
-#include <map>
-#include <memory>
+#include "FactoryParams.hh"
 #include "Portability.hh"
 #include "TriggeringEventEvaluator.hh"
-#include "FactoryParams.hh"
+#include <map>
+#include <memory>
+#include <string>
 
-namespace log4cpp
-{
-   class LOG4CPP_EXPORT TriggeringEventEvaluatorFactory
-   {
+namespace log4cpp {
+    class LOG4CPP_EXPORT TriggeringEventEvaluatorFactory {
       public:
-         typedef FactoryParams params_t;
-         typedef std::LOG4CPP_UNIQUE_PTR<TriggeringEventEvaluator> (*create_function_t)(const params_t& params);
+        typedef FactoryParams params_t;
+        typedef std::LOG4CPP_UNIQUE_PTR<TriggeringEventEvaluator> (*create_function_t)(const params_t& params);
 
-         static TriggeringEventEvaluatorFactory& getInstance();
-         void registerCreator(const std::string& class_name, create_function_t create_function);
-         std::LOG4CPP_UNIQUE_PTR<TriggeringEventEvaluator> create(const std::string& class_name, const params_t& params);
-         bool registered(const std::string& class_name) const;
+        static TriggeringEventEvaluatorFactory& getInstance();
+        void registerCreator(const std::string& class_name, create_function_t create_function);
+        std::LOG4CPP_UNIQUE_PTR<TriggeringEventEvaluator> create(const std::string& class_name, const params_t& params);
+        bool registered(const std::string& class_name) const;
 
       private:
-         TriggeringEventEvaluatorFactory(){};
+        TriggeringEventEvaluatorFactory() {};
 
-         typedef std::map<std::string, create_function_t> creators_t;
-         typedef creators_t::const_iterator const_iterator;
+        typedef std::map<std::string, create_function_t> creators_t;
+        typedef creators_t::const_iterator const_iterator;
 
-         creators_t creators_;
-   };
-}
+        creators_t creators_;
+    };
+} // namespace log4cpp
 
 #endif // h_dd233b8b_5c59_4956_9393_6581c95f9779

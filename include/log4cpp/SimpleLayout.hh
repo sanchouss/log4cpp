@@ -10,16 +10,16 @@
 #ifndef _LOG4CPP_SIMPLELAYOUT_HH
 #define _LOG4CPP_SIMPLELAYOUT_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/Layout.hh>
+#include <log4cpp/Portability.hh>
 
 namespace log4cpp {
-    
+
     /**
-     * BasicLayout is a simple fixed format Layout implementation. 
+     * BasicLayout is a simple fixed format Layout implementation.
      **/
     class LOG4CPP_EXPORT SimpleLayout : public Layout {
-        public:
+      public:
         SimpleLayout();
         virtual ~SimpleLayout();
 
@@ -28,7 +28,7 @@ namespace log4cpp {
          * "priority - message"
          **/
         virtual std::string format(const LoggingEvent& event);
-    };        
-}
+    };
+} // namespace log4cpp
 
 #endif // _LOG4CPP_SIMPLELAYOUT_HH

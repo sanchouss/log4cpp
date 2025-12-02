@@ -12,10 +12,8 @@
 
 namespace log4cpp {
 
-    StringQueueAppender::StringQueueAppender(const std::string& name) : 
-        LayoutAppender(name) {
-    }
-    
+    StringQueueAppender::StringQueueAppender(const std::string& name) : LayoutAppender(name) {}
+
     StringQueueAppender::~StringQueueAppender() {
         close();
     }
@@ -30,7 +28,7 @@ namespace log4cpp {
 
     bool StringQueueAppender::reopen() {
         return true;
-    }      
+    }
 
     std::queue<std::string>& StringQueueAppender::getQueue() {
         return _queue;
@@ -44,7 +42,7 @@ namespace log4cpp {
         return getQueue().size();
     }
 
-    std::string StringQueueAppender::popMessage() {        
+    std::string StringQueueAppender::popMessage() {
         std::string message;
 
         if (!_queue.empty()) {
@@ -54,4 +52,4 @@ namespace log4cpp {
 
         return message;
     }
-}
+} // namespace log4cpp

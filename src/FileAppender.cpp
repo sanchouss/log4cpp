@@ -9,50 +9,39 @@
 
 #include "PortabilityImpl.hh"
 #ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
+#include <io.h>
 #endif
 #ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
+#include <unistd.h>
 #endif
 
+#include <log4cpp/Category.hh>
+#include <log4cpp/FactoryParams.hh>
+#include <log4cpp/FileAppender.hh>
 #include <memory>
 #include <stdio.h>
 #include <time.h>
-#include <log4cpp/FileAppender.hh>
-#include <log4cpp/Category.hh>
-#include <log4cpp/FactoryParams.hh>
 
 namespace log4cpp {
 
-    FileAppender::FileAppender(const std::string& name, 
-                               const std::string& fileName,
-                               bool append,
-                               mode_t mode) : 
-            LayoutAppender(name),
-            _fileName(fileName),
-            _flags(O_CREAT | O_APPEND | O_WRONLY),
-            _mode(mode) {
+    FileAppender::FileAppender(const std::string& name, const std::string& fileName, bool append, mode_t mode)
+        : LayoutAppender(name), _fileName(fileName), _flags(O_CREAT | O_APPEND | O_WRONLY), _mode(mode) {
         if (!append)
             _flags |= O_TRUNC;
         _fd = ::open(_fileName.c_str(), _flags, _mode);
     }
-    
-    FileAppender::FileAppender(const std::string& name, int fd) :
-        LayoutAppender(name),
-        _fileName(""),
-        _fd(fd),
-        _flags(O_CREAT | O_APPEND | O_WRONLY),
-        _mode(00644) {
-    }
-    
+
+    FileAppender::FileAppender(const std::string& name, int fd)
+        : LayoutAppender(name), _fileName(""), _fd(fd), _flags(O_CREAT | O_APPEND | O_WRONLY), _mode(00644) {}
+
     FileAppender::~FileAppender() {
         close();
     }
 
     void FileAppender::close() {
-        if (_fd!=-1) {
+        if (_fd != -1) {
             ::close(_fd);
-            _fd=-1;
+            _fd = -1;
         }
     }
 
@@ -89,25 +78,25 @@ namespace log4cpp {
             if (fd < 0)
                 return false;
             else {
-	        if (_fd != -1)
+                if (_fd != -1)
                     ::close(_fd);
                 _fd = fd;
                 return true;
             }
         } else {
             return true;
-        }      
+        }
     }
 
-   std::LOG4CPP_UNIQUE_PTR<Appender> create_file_appender(const FactoryParams& params)
-   {
-      std::string name, filename;
-      bool append = true;
-      mode_t mode = 664;
+    std::LOG4CPP_UNIQUE_PTR<Appender> create_file_appender(const FactoryParams& params) {
+        std::string name, filename;
+        bool append = true;
+        mode_t mode = 664;
 
-      params.get_for("file appender").required("name", name)("filename", filename)
-                                     .optional("append", append)("mode", mode);
+        params.get_for("file appender")
+            .required("name", name)("filename", filename)
+            .optional("append", append)("mode", mode);
 
-      return std::LOG4CPP_UNIQUE_PTR<Appender>(new FileAppender(name, filename, append, mode));
-   }
-}
+        return std::LOG4CPP_UNIQUE_PTR<Appender>(new FileAppender(name, filename, append, mode));
+    }
+} // namespace log4cpp

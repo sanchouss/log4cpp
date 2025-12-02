@@ -12,19 +12,21 @@
 #include <iostream>
 #include <log4cpp/Portability.hh>
 namespace log4cpp {
-	class LOG4CPP_EXPORT width {
-	private:
-		unsigned int size;
-	public:
-inline	width(unsigned int i) : size(i) {}
-friend LOG4CPP_EXPORT std::ostream& operator<< (std::ostream& os, const width& w);
-	};
-class LOG4CPP_EXPORT tab {
-	private:
-		unsigned int size;
-	public:
-inline	tab(unsigned int i) : size(i) {}
-friend LOG4CPP_EXPORT std::ostream& operator<< (std::ostream& os, const tab& w);
-	};
-}
+    class LOG4CPP_EXPORT width {
+      private:
+        unsigned int size;
+
+      public:
+        inline width(unsigned int i) : size(i) {}
+        friend LOG4CPP_EXPORT std::ostream& operator<<(std::ostream& os, const width& w);
+    };
+    class LOG4CPP_EXPORT tab {
+      private:
+        unsigned int size;
+
+      public:
+        inline tab(unsigned int i) : size(i) {}
+        friend LOG4CPP_EXPORT std::ostream& operator<<(std::ostream& os, const tab& w);
+    };
+} // namespace log4cpp
 #endif

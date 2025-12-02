@@ -13,28 +13,26 @@
 #include <iostream>
 
 #include <log4cpp/Category.hh>
-#include <log4cpp/PropertyConfigurator.hh>
 #include <log4cpp/HierarchyMaintainer.hh>
+#include <log4cpp/PropertyConfigurator.hh>
 
-#include <stdlib.h>
 #include <crtdbg.h>
+#include <stdlib.h>
 
 void testPropConfigRead() {
     std::string initFileName;
 #if defined(WIN32)
-        initFileName = "./log4cpp.nt.property";
+    initFileName = "./log4cpp.nt.property";
 #else
-        initFileName = "./log4cpp.property";
+    initFileName = "./log4cpp.property";
 #endif
     log4cpp::PropertyConfigurator::configure(initFileName);
 
     log4cpp::Category& root = log4cpp::Category::getRoot();
 
-    log4cpp::Category& sub1 = 
-        log4cpp::Category::getInstance(std::string("sub1"));
+    log4cpp::Category& sub1 = log4cpp::Category::getInstance(std::string("sub1"));
 
-    log4cpp::Category& sub2 = 
-        log4cpp::Category::getInstance(std::string("sub1.sub2"));
+    log4cpp::Category& sub2 = log4cpp::Category::getInstance(std::string("sub1.sub2"));
 
     root.error("root error");
     root.warn("root warn");
@@ -54,39 +52,37 @@ void testPropConfigRead() {
     sub2.warn("sub2 warn 7");
 
 #if defined(WIN32)
-    log4cpp::Category& nt = 
-        log4cpp::Category::getInstance(std::string("subNT"));
+    log4cpp::Category& nt = log4cpp::Category::getInstance(std::string("subNT"));
     nt.error("subNT error");
     nt.warn("subNT warn");
     nt.debug("subNT debug");
 #endif
 
-    log4cpp::Category::shutdownForced(); 
-//    log4cpp::Category::shutdown(); 
+    log4cpp::Category::shutdownForced();
+    //    log4cpp::Category::shutdown();
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 // _CRTDBG_MAP_ALLOC is for detecting memory leaks on Windows
 #ifdef _CRTDBG_MAP_ALLOC
-	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
     try {
-		// test single properties read
-		testPropConfigRead();
+        // test single properties read
+        testPropConfigRead();
 
-		// test few more instantiations and shutdowns by shutdownForced()
-		for (int i=0; i < 2; ++i) {
-			testPropConfigRead();
-		}
-    } catch(log4cpp::ConfigureFailure& f) {
+        // test few more instantiations and shutdowns by shutdownForced()
+        for (int i = 0; i < 2; ++i) {
+            testPropConfigRead();
+        }
+    } catch (log4cpp::ConfigureFailure& f) {
         std::cout << "Configure Problem " << f.what() << std::endl;
-        return -1; 
+        return -1;
     }
 
 #ifdef _CRTDBG_MAP_ALLOC
-	//_CrtDumpMemoryLeaks(); // would give detected leaks, since statically allocated objects were not freed yet
+    //_CrtDumpMemoryLeaks(); // would give detected leaks, since statically allocated objects were not freed yet
 #endif
-	return 0;
+    return 0;
 }

@@ -10,42 +10,39 @@
 #ifndef _LOG4CPP_FIXEDCONTEXTCATEGORY_HH
 #define _LOG4CPP_FIXEDCONTEXTCATEGORY_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/Category.hh>
+#include <log4cpp/Portability.hh>
 
 namespace log4cpp {
 
     /**
      * This Category subclass replaces the NDC field in LoggingEvents with
      * a fixed context string. All handling of Appenders, etc. is delgated
-     * to the 'normal' Category with the same name. Its intended use is 
-     * for object instances that serve a single client: they contruct a 
-     * FixedContextCategory with the client identifier as context. 
+     * to the 'normal' Category with the same name. Its intended use is
+     * for object instances that serve a single client: they contruct a
+     * FixedContextCategory with the client identifier as context.
      * Unlike with regular Category instances one has to explicitly create
-     * FixedContextCategory instances using the constructor. This also 
+     * FixedContextCategory instances using the constructor. This also
      * implies one has to take cake of destruction of the instance as well.
      * @since 0.2.4
      **/
     class LOG4CPP_EXPORT FixedContextCategory : public Category {
 
-        public:
-
+      public:
         /**
-         * Constructor 
+         * Constructor
          * @param name the fully qualified name of this Categories delegate
          * Category.
          * @param context the context to fill the NDC field of LoggingEvents
          * with.
          **/
-        FixedContextCategory(const std::string& name, 
-                             const std::string& context = "");
-        
-        
+        FixedContextCategory(const std::string& name, const std::string& context = "");
+
         /**
          * Destructor for Category.
          **/
         virtual ~FixedContextCategory();
-        
+
         /**
          * Set the context string used as NDC.
          * @param context the context string
@@ -66,14 +63,14 @@ namespace log4cpp {
 
         /**
          * Starting from this Category, search the category hierarchy for a
-         * set priority and return it. Otherwise, return the priority 
+         * set priority and return it. Otherwise, return the priority
          *  of the root category.
-         * 
+         *
          * <p>The Category class is designed so that this method executes as
          * quickly as possible.
          **/
         virtual Priority::Value getChainedPriority() const LOG4CPP_NOTHROW;
-        
+
         /**
          * For the moment this method does nothing.
          **/
@@ -92,7 +89,7 @@ namespace log4cpp {
         virtual Appender* getAppender() const;
 
         /**
-         * Returns the specified Appender for this Category, or NULL if 
+         * Returns the specified Appender for this Category, or NULL if
          * the Appender is not attached to this Category.
          * @since 0.2.7
          * @returns The Appender.
@@ -106,7 +103,7 @@ namespace log4cpp {
          **/
         virtual AppenderSet getAllAppenders() const;
 
-         /**
+        /**
          * Removes all appenders set for this Category. Currently a Category
          * can have only one appender, but this may change in the future.
          **/
@@ -122,22 +119,21 @@ namespace log4cpp {
          * FixedContextAppenders cannot own Appenders.
          * @returns false
          **/
-        virtual bool ownsAppender(Appender* appender)
-            const LOG4CPP_NOTHROW;
+        virtual bool ownsAppender(Appender* appender) const LOG4CPP_NOTHROW;
 
         /**
          * Call the appenders in the hierarchy starting at
          *  <code>this</code>.  If no appenders could be found, emit a
          * warning.
-         * 
+         *
          * <p>This method always calls all the appenders inherited form the
          * hierracy circumventing any evaluation of whether to log or not to
          * log the particular log request.
-         * 
+         *
          * @param event The LoggingEvent to log.
          **/
         virtual void callAppenders(const LoggingEvent& event) LOG4CPP_NOTHROW;
-        
+
         /**
          * Set the additivity flag for this Category instance.
          **/
@@ -145,30 +141,26 @@ namespace log4cpp {
 
         /**
          * Returns the additivity flag for this Category instance.
-         **/        
+         **/
         virtual bool getAdditivity() const LOG4CPP_NOTHROW;
 
-       protected:
-
-         /** 
+      protected:
+        /**
          * Unconditionally log a message with the specified priority.
          * @param priority The priority of this log message.
          * @param message string to write in the log file
-         **/  
-        virtual void _logUnconditionally2(Priority::Value priority, 
-                                          const std::string& message) LOG4CPP_NOTHROW;
+         **/
+        virtual void _logUnconditionally2(Priority::Value priority, const std::string& message) LOG4CPP_NOTHROW;
 
-        private:
-
+      private:
         /**
-         * The delegate category of this FixedContextCategory. 
+         * The delegate category of this FixedContextCategory.
          **/
         Category& _delegate;
 
         /** The context of this FixedContextCategory. */
-         std::string _context;
-
+        std::string _context;
     };
 
-}
+} // namespace log4cpp
 #endif // _LOG4CPP_FIXEDCONTEXTCATEGORY_HH

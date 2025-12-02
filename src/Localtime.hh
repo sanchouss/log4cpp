@@ -9,9 +9,8 @@
 
 #include <time.h>
 
-namespace log4cpp
-{
-   void localtime(const ::time_t* time, ::tm* t);
+namespace log4cpp {
+    void localtime(const ::time_t* time, ::tm* t);
 }
 
 #endif

@@ -11,60 +11,58 @@
 #include <unistd.h>
 #endif
 #ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
+#include <io.h>
 #endif
 #include <iostream>
 
-#include <string>
 #include <fstream>
+#include <string>
 
 #include <log4cpp/Category.hh>
 
 // appenders
-#include <log4cpp/Appender.hh>
-#include <log4cpp/OstreamAppender.hh>
-#include <log4cpp/FileAppender.hh>
-#include <log4cpp/RollingFileAppender.hh>
-#include <log4cpp/DailyRollingFileAppender.hh>
 #include <log4cpp/AbortAppender.hh>
+#include <log4cpp/Appender.hh>
+#include <log4cpp/DailyRollingFileAppender.hh>
+#include <log4cpp/FileAppender.hh>
+#include <log4cpp/OstreamAppender.hh>
+#include <log4cpp/RollingFileAppender.hh>
 #ifdef WIN32
-#include <log4cpp/Win32DebugAppender.hh>
 #include <log4cpp/NTEventLogAppender.hh>
+#include <log4cpp/Win32DebugAppender.hh>
 #endif
 #ifndef LOG4CPP_DISABLE_REMOTE_SYSLOG
 #include <log4cpp/RemoteSyslogAppender.hh>
 #endif // LOG4CPP_DISABLE_REMOTE_SYSLOG
 #ifdef LOG4CPP_HAVE_LIBIDSA
 #include <log4cpp/IdsaAppender.hh>
-#endif	// LOG4CPP_HAVE_LIBIDSA
+#endif // LOG4CPP_HAVE_LIBIDSA
 #ifdef LOG4CPP_HAVE_SYSLOG
 #include <log4cpp/SyslogAppender.hh>
 #endif
 
 // layouts
-#include <log4cpp/Layout.hh>
 #include <log4cpp/BasicLayout.hh>
-#include <log4cpp/SimpleLayout.hh>
+#include <log4cpp/Layout.hh>
 #include <log4cpp/PatternLayout.hh>
+#include <log4cpp/SimpleLayout.hh>
 
-#include <log4cpp/Priority.hh>
 #include <log4cpp/NDC.hh>
+#include <log4cpp/Priority.hh>
 
+#include <algorithm>
+#include <iterator>
 #include <list>
 #include <vector>
-#include <iterator>
-#include <algorithm>
 
 #include "PropertyConfiguratorImpl.hh"
 #include "StringUtil.hh"
 
 namespace log4cpp {
 
-    PropertyConfiguratorImpl::PropertyConfiguratorImpl() {
-    }
+    PropertyConfiguratorImpl::PropertyConfiguratorImpl() {}
 
-    PropertyConfiguratorImpl::~PropertyConfiguratorImpl() {
-    }
+    PropertyConfiguratorImpl::~PropertyConfiguratorImpl() {}
 
     void PropertyConfiguratorImpl::doConfigure(const std::string& initFileName) {
         std::ifstream initFile(initFileName.c_str());
@@ -76,7 +74,6 @@ namespace log4cpp {
         doConfigure(initFile);
     }
 
-
     void PropertyConfiguratorImpl::doConfigure(std::istream& in) {
         // parse the file to get all of the configuration
         _properties.load(in);
@@ -87,8 +84,7 @@ namespace log4cpp {
         getCategories(catList);
 
         // configure each category
-        for(std::vector<std::string>::const_iterator iter = catList.begin();
-            iter != catList.end(); ++iter) {
+        for (std::vector<std::string>::const_iterator iter = catList.begin(); iter != catList.end(); ++iter) {
             configureCategory(*iter);
         }
     }
@@ -99,11 +95,11 @@ namespace log4cpp {
         std::string prefix("appender");
         Properties::const_iterator from = _properties.lower_bound(prefix + '.');
         Properties::const_iterator to = _properties.lower_bound(prefix + '/');
-        for(Properties::const_iterator i = from; i != to; ++i) {
+        for (Properties::const_iterator i = from; i != to; ++i) {
             const std::string& key = (*i).first;
             const std::string& value = (*i).second;
             std::list<std::string> propNameParts;
-            std::back_insert_iterator<std::list<std::string> > pnpIt(propNameParts);
+            std::back_insert_iterator<std::list<std::string>> pnpIt(propNameParts);
             StringUtil::split(pnpIt, key, '.');
             std::list<std::string>::const_iterator i2 = propNameParts.begin();
             std::list<std::string>::const_iterator iEnd = propNameParts.end();
@@ -114,7 +110,7 @@ namespace log4cpp {
             const std::string appenderName = *i2++;
 
             /* WARNING, approaching lame code section:
-               skipping of the Appenders properties only to get them 
+               skipping of the Appenders properties only to get them
                again in instantiateAppender.
             */
             if (appenderName == currentAppender) {
@@ -123,19 +119,17 @@ namespace log4cpp {
                 if (i2 == iEnd) {
                     // a new appender
                     currentAppender = appenderName;
-                    _allAppenders[currentAppender] = 
-                        instantiateAppender(currentAppender);
+                    _allAppenders[currentAppender] = instantiateAppender(currentAppender);
                 } else {
                     throw ConfigureFailure(std::string("partial appender definition : ") + key);
                 }
-            }                            
+            }
         }
     }
 
     void PropertyConfiguratorImpl::configureCategory(const std::string& categoryName) {
         // start by reading the "rootCategory" key
-        std::string tempCatName = 
-            (categoryName == "rootCategory") ? categoryName : "category." + categoryName;
+        std::string tempCatName = (categoryName == "rootCategory") ? categoryName : "category." + categoryName;
 
         Properties::iterator iter = _properties.find(tempCatName);
 
@@ -143,12 +137,11 @@ namespace log4cpp {
             throw ConfigureFailure(std::string("Unable to find category: ") + tempCatName);
 
         // need to get the root instance of the category
-        Category& category = (categoryName == "rootCategory") ?
-            Category::getRoot() : Category::getInstance(categoryName);
+        Category& category =
+            (categoryName == "rootCategory") ? Category::getRoot() : Category::getInstance(categoryName);
 
-        
         std::list<std::string> tokens;
-        std::back_insert_iterator<std::list<std::string> > tokIt(tokens);
+        std::back_insert_iterator<std::list<std::string>> tokIt(tokens);
         StringUtil::split(tokIt, (*iter).second, ',');
         std::list<std::string>::const_iterator i = tokens.begin();
         std::list<std::string>::const_iterator iEnd = tokens.end();
@@ -160,31 +153,28 @@ namespace log4cpp {
                 if (priorityName != "") {
                     priority = Priority::getPriorityValue(priorityName);
                 }
-            } catch(std::invalid_argument& e) {
-                throw ConfigureFailure(std::string(e.what()) + 
-                    " for category '" + categoryName + "'");
+            } catch (std::invalid_argument& e) {
+                throw ConfigureFailure(std::string(e.what()) + " for category '" + categoryName + "'");
             }
         }
 
         try {
-        	category.setPriority(priority);
+            category.setPriority(priority);
         } catch (std::invalid_argument& e) {
-        	throw ConfigureFailure(std::string(e.what()) +
-                    " for category '" + categoryName + "'");
+            throw ConfigureFailure(std::string(e.what()) + " for category '" + categoryName + "'");
         }
 
         bool additive = _properties.getBool("additivity." + categoryName, true);
         category.setAdditivity(additive);
 
         category.removeAllAppenders();
-        for(/**/; i != iEnd; ++i) {           
+        for (/**/; i != iEnd; ++i) {
             std::string appenderName = StringUtil::trim(*i);
-            AppenderMap::const_iterator appIt = 
-                _allAppenders.find(appenderName);
+            AppenderMap::const_iterator appIt = _allAppenders.find(appenderName);
             if (appIt == _allAppenders.end()) {
                 // appender not found;
-                throw ConfigureFailure(std::string("Appender '") +
-                    appenderName + "' not found for category '" + categoryName + "'");
+                throw ConfigureFailure(std::string("Appender '") + appenderName + "' not found for category '" +
+                                       categoryName + "'");
             } else {
                 /* pass by reference, i.e. don't transfer ownership
                  */
@@ -197,43 +187,36 @@ namespace log4cpp {
         Appender* appender = NULL;
         std::string appenderPrefix = std::string("appender.") + appenderName;
 
-        // determine the type by the appenderName 
+        // determine the type by the appenderName
         Properties::iterator key = _properties.find(appenderPrefix);
         if (key == _properties.end())
             throw ConfigureFailure(std::string("Appender '") + appenderName + "' not defined");
-		
+
         std::string::size_type length = (*key).second.find_last_of(".");
-        std::string appenderType = (length == std::string::npos) ?
-            (*key).second : (*key).second.substr(length+1);
+        std::string appenderType = (length == std::string::npos) ? (*key).second : (*key).second.substr(length + 1);
 
         // and instantiate the appropriate object
         if (appenderType == "ConsoleAppender") {
             std::string target = _properties.getString(appenderPrefix + ".target", "stdout");
             std::transform(target.begin(), target.end(), target.begin(), ::tolower);
-            if(target.compare("stdout") == 0) {
+            if (target.compare("stdout") == 0) {
                 appender = new OstreamAppender(appenderName, &std::cout);
-            }
-            else if(target.compare("stderr") == 0) {
+            } else if (target.compare("stderr") == 0) {
                 appender = new OstreamAppender(appenderName, &std::cerr);
-            }
-            else{
+            } else {
                 throw ConfigureFailure(appenderName + "' has invalid target '" + target + "'");
             }
-        }
-        else if (appenderType == "FileAppender") {
+        } else if (appenderType == "FileAppender") {
             std::string fileName = _properties.getString(appenderPrefix + ".fileName", "foobar");
             bool append = _properties.getBool(appenderPrefix + ".append", true);
             appender = new FileAppender(appenderName, fileName, append);
-        }
-        else if (appenderType == "RollingFileAppender") {
+        } else if (appenderType == "RollingFileAppender") {
             std::string fileName = _properties.getString(appenderPrefix + ".fileName", "foobar");
-            size_t maxFileSize = _properties.getInt(appenderPrefix + ".maxFileSize", 10*1024*1024);
+            size_t maxFileSize = _properties.getInt(appenderPrefix + ".maxFileSize", 10 * 1024 * 1024);
             int maxBackupIndex = _properties.getInt(appenderPrefix + ".maxBackupIndex", 1);
             bool append = _properties.getBool(appenderPrefix + ".append", true);
-            appender = new RollingFileAppender(appenderName, fileName, maxFileSize, maxBackupIndex,
-                append);
-        }
-        else if (appenderType == "DailyRollingFileAppender") {
+            appender = new RollingFileAppender(appenderName, fileName, maxFileSize, maxBackupIndex, append);
+        } else if (appenderType == "DailyRollingFileAppender") {
             std::string fileName = _properties.getString(appenderPrefix + ".fileName", "foobar");
             unsigned int maxDaysKeep = _properties.getInt(appenderPrefix + ".maxDaysKeep", 0);
             bool append = _properties.getBool(appenderPrefix + ".append", true);
@@ -243,16 +226,17 @@ namespace log4cpp {
         else if (appenderType == "SyslogAppender") {
             std::string syslogName = _properties.getString(appenderPrefix + ".syslogName", "syslog");
             std::string syslogHost = _properties.getString(appenderPrefix + ".syslogHost", "localhost");
-            int facility = _properties.getInt(appenderPrefix + ".facility", -1) * 8; // * 8 to get LOG_KERN, etc. compatible values. 
+            int facility = _properties.getInt(appenderPrefix + ".facility", -1) *
+                           8; // * 8 to get LOG_KERN, etc. compatible values.
             int portNumber = _properties.getInt(appenderPrefix + ".portNumber", -1);
-            appender = new RemoteSyslogAppender(appenderName, syslogName, 
-                                                syslogHost, facility, portNumber);
+            appender = new RemoteSyslogAppender(appenderName, syslogName, syslogHost, facility, portNumber);
         }
 #endif // LOG4CPP_DISABLE_REMOTE_SYSLOG
 #ifdef LOG4CPP_HAVE_SYSLOG
         else if (appenderType == "LocalSyslogAppender") {
             std::string syslogName = _properties.getString(appenderPrefix + ".syslogName", "syslog");
-            int facility = _properties.getInt(appenderPrefix + ".facility", -1) * 8; // * 8 to get LOG_KERN, etc. compatible values. 
+            int facility = _properties.getInt(appenderPrefix + ".facility", -1) *
+                           8; // * 8 to get LOG_KERN, etc. compatible values.
             appender = new SyslogAppender(appenderName, syslogName, facility);
         }
 #endif // LOG4CPP_HAVE_SYSLOG
@@ -266,7 +250,7 @@ namespace log4cpp {
 
             appender = new IdsaAppender(appenderName, idsaname);
         }
-#endif	// LOG4CPP_HAVE_LIBIDSA
+#endif // LOG4CPP_HAVE_LIBIDSA
 
 #ifdef WIN32
         // win32 debug appender
@@ -278,10 +262,10 @@ namespace log4cpp {
             std::string source = _properties.getString(appenderPrefix + ".source", "foobar");
             appender = new NTEventLogAppender(appenderName, source);
         }
-#endif	// WIN32
+#endif // WIN32
         else {
-            throw ConfigureFailure(std::string("Appender '") + appenderName + 
-                                   "' has unknown type '" + appenderType + "'");
+            throw ConfigureFailure(std::string("Appender '") + appenderName + "' has unknown type '" + appenderType +
+                                   "'");
         }
 
         if (appender->requiresLayout()) {
@@ -294,10 +278,9 @@ namespace log4cpp {
             if (thresholdName != "") {
                 appender->setThreshold(Priority::getPriorityValue(thresholdName));
             }
-        } catch(std::invalid_argument& e) {
-	    delete appender;	// fix for #3109495
-            throw ConfigureFailure(std::string(e.what()) + 
-                " for threshold of appender '" + appenderName + "'");
+        } catch (std::invalid_argument& e) {
+            delete appender; // fix for #3109495
+            throw ConfigureFailure(std::string(e.what()) + " for threshold of appender '" + appenderName + "'");
         }
 
         return appender;
@@ -306,26 +289,21 @@ namespace log4cpp {
     void PropertyConfiguratorImpl::setLayout(Appender* appender, const std::string& appenderName) {
         // determine the type by appenderName
         std::string tempString;
-        Properties::iterator key = 
-            _properties.find(std::string("appender.") + appenderName + ".layout");
+        Properties::iterator key = _properties.find(std::string("appender.") + appenderName + ".layout");
 
         if (key == _properties.end())
-            throw ConfigureFailure(std::string("Missing layout property for appender '") + 
-                                   appenderName + "'");
-		
+            throw ConfigureFailure(std::string("Missing layout property for appender '") + appenderName + "'");
+
         std::string::size_type length = (*key).second.find_last_of(".");
-        std::string layoutType = (length == std::string::npos) ? 
-            (*key).second : (*key).second.substr(length+1);
- 
+        std::string layoutType = (length == std::string::npos) ? (*key).second : (*key).second.substr(length + 1);
+
         Layout* layout;
         // and instantiate the appropriate object
         if (layoutType == "BasicLayout") {
             layout = new BasicLayout();
-        }
-        else if (layoutType == "SimpleLayout") {
+        } else if (layoutType == "SimpleLayout") {
             layout = new SimpleLayout();
-        }
-        else if (layoutType == "PatternLayout") {
+        } else if (layoutType == "PatternLayout") {
             // need to read the properties to configure this one
             PatternLayout* patternLayout = new PatternLayout();
 
@@ -338,10 +316,9 @@ namespace log4cpp {
             }
 
             layout = patternLayout;
-        }
-        else {
-            throw ConfigureFailure(std::string("Unknown layout type '" + layoutType +
-                                               "' for appender '") + appenderName + "'");
+        } else {
+            throw ConfigureFailure(std::string("Unknown layout type '" + layoutType + "' for appender '") +
+                                   appenderName + "'");
         }
 
         appender->setLayout(layout);
@@ -362,9 +339,9 @@ namespace log4cpp {
         // then look for "category."
         std::string prefix("category");
         Properties::const_iterator from = _properties.lower_bound(prefix + '.');
-        Properties::const_iterator to = _properties.lower_bound(prefix + (char)('.' + 1)); 
+        Properties::const_iterator to = _properties.lower_bound(prefix + (char)('.' + 1));
         for (Properties::const_iterator iter = from; iter != to; iter++) {
             categories.push_back((*iter).first.substr(prefix.size() + 1));
         }
     }
-}
+} // namespace log4cpp

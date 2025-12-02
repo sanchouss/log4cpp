@@ -10,23 +10,22 @@
 #ifndef _LOG4CPP_ABORTAPPENDER_HH
 #define _LOG4CPP_ABORTAPPENDER_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/AppenderSkeleton.hh>
+#include <log4cpp/Portability.hh>
 
 namespace log4cpp {
 
     /**
      * This Appender causes the application to abort() upon the first append()
-     * call. 
+     * call.
      *
      * @since 0.3.5
      **/
     class LOG4CPP_EXPORT AbortAppender : public AppenderSkeleton {
-        public:
-
+      public:
         AbortAppender(const std::string& name);
         virtual ~AbortAppender();
-        
+
         virtual bool reopen();
         virtual void close();
 
@@ -38,9 +37,9 @@ namespace log4cpp {
 
         virtual void setLayout(Layout* layout);
 
-        protected:        
+      protected:
         virtual void _append(const LoggingEvent& event);
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_ABORTAPPENDER_HH

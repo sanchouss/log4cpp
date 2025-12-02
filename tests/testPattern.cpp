@@ -1,31 +1,29 @@
 // testLog4CPP.cpp : Derived from testCategory.cpp
 //
-#include <log4cpp/Category.hh>
+#include <iostream>
 #include <log4cpp/Appender.hh>
-#include <log4cpp/Priority.hh>
+#include <log4cpp/BasicConfigurator.hh>
+#include <log4cpp/Category.hh>
 #include <log4cpp/NDC.hh>
 #include <log4cpp/PatternLayout.hh>
-#include <log4cpp/BasicConfigurator.hh>
-#include <iostream>
+#include <log4cpp/Priority.hh>
 
-void test(std::string pattern, log4cpp::PatternLayout* layout, log4cpp::Category& cat)
-{
-    try {	
+void test(std::string pattern, log4cpp::PatternLayout* layout, log4cpp::Category& cat) {
+    try {
         layout->setConversionPattern(pattern);
         cat.error("message");
-    } catch(log4cpp::ConfigureFailure& f) {
+    } catch (log4cpp::ConfigureFailure& f) {
         std::cerr << "configure failure: " << f.what() << std::endl;
-    }	
-}                                                                              
+    }
+}
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     log4cpp::BasicConfigurator::configure();
     log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
     log4cpp::Category::getRoot().getAppender()->setLayout(layout);
 
     log4cpp::Category& cat = log4cpp::Category::getInstance("cat1");
-    
+
     log4cpp::NDC::push("ndc1");
 
     test("%% %r %c:%d (%R / %r) [%p] %x %m %% (%u) %n", layout, cat);
@@ -61,4 +59,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

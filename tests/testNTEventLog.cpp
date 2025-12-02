@@ -12,21 +12,18 @@
 
 #include <stdlib.h>
 
-#include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
+#include "log4cpp/Category.hh"
 #include "log4cpp/NTEventLogAppender.hh"
 #include "log4cpp/Priority.hh"
 
-int main(int argc, char* argv[])
-{
-    log4cpp::Appender* appender = 
-        new log4cpp::NTEventLogAppender("default", "testNTEventLog");
+int main(int argc, char* argv[]) {
+    log4cpp::Appender* appender = new log4cpp::NTEventLogAppender("default", "testNTEventLog");
 
-    log4cpp::Category& sub1 = 
-        log4cpp::Category::getInstance(std::string("sub1"));
+    log4cpp::Category& sub1 = log4cpp::Category::getInstance(std::string("sub1"));
     sub1.addAppender(appender);
     sub1.setPriority(log4cpp::Priority::DEBUG);
-    
+
     sub1.emerg("sub1 emerg");
     sub1.fatal("sub1 fatal");
     sub1.alert("sub1 alert");
@@ -43,4 +40,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

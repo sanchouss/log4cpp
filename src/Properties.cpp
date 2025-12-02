@@ -7,16 +7,14 @@
  */
 
 #include "Properties.hh"
-#include <cstdlib>
 #include "StringUtil.hh"
+#include <cstdlib>
 
 namespace log4cpp {
-    
-    Properties::Properties() {
-    }
 
-    Properties::~Properties() {
-    }
+    Properties::Properties() {}
+
+    Properties::~Properties() {}
 
     void Properties::load(std::istream& in) {
         clear();
@@ -25,27 +23,27 @@ namespace log4cpp {
         std::string leftSide, rightSide;
         char line[256];
         std::string::size_type length;
-        bool partiallyRead(false);	// fix for bug#137, for strings longer than 256 chars
+        bool partiallyRead(false); // fix for bug#137, for strings longer than 256 chars
 
         while (in) {
-        	if (in.getline(line, 256) || !in.bad()) {
-        		// either string is read fully or only partially (logical but not read/write error)
-        		if (partiallyRead)
-        			fullLine.append(line);
-        		else
-        			fullLine = line;
-        		partiallyRead = (in.fail() && !in.bad());
-        		if (partiallyRead && !in.eof()) {
-        			in.clear(in.rdstate() & ~std::ios::failbit);
-        			continue; // to get full line
-        		}
-        	} else {
-       			break;
-        	}
+            if (in.getline(line, 256) || !in.bad()) {
+                // either string is read fully or only partially (logical but not read/write error)
+                if (partiallyRead)
+                    fullLine.append(line);
+                else
+                    fullLine = line;
+                partiallyRead = (in.fail() && !in.bad());
+                if (partiallyRead && !in.eof()) {
+                    in.clear(in.rdstate() & ~std::ios::failbit);
+                    continue; // to get full line
+                }
+            } else {
+                break;
+            }
             /* if the line contains a # then it is a comment
-               if we find it anywhere other than the beginning, then we assume 
+               if we find it anywhere other than the beginning, then we assume
                there is a command on that line, and it we don't find it at all
-               we assume there is a command on the line (we test for valid 
+               we assume there is a command on the line (we test for valid
                command later) if neither is true, we continue with the next line
             */
             length = fullLine.find('#');
@@ -69,7 +67,7 @@ namespace log4cpp {
 
             /* handle the command by determining what object the left side
                refers to and setting the value given on the right
-               ASSUMPTIONS:  
+               ASSUMPTIONS:
                1. first object given  on left side is "log4j" or "log4cpp"
                2. all class names on right side are ignored because we
                probably cannot resolve them anyway.
@@ -77,8 +75,7 @@ namespace log4cpp {
 
             // strip off the "log4j" or "log4cpp"
             length = leftSide.find('.');
-            if (leftSide.substr(0, length) == "log4j" ||
-                leftSide.substr(0, length) == "log4cpp")
+            if (leftSide.substr(0, length) == "log4j" || leftSide.substr(0, length) == "log4cpp")
                 leftSide = leftSide.substr(length + 1);
 
             // add to the map of properties
@@ -87,11 +84,11 @@ namespace log4cpp {
     }
 
     void Properties::save(std::ostream& out) {
-        for(const_iterator i = begin(); i != end(); ++i) {
+        for (const_iterator i = begin(); i != end(); ++i) {
             out << (*i).first << "=" << (*i).second << std::endl;
         }
     }
-    
+
     int Properties::getInt(const std::string& property, int defaultValue) {
         const_iterator key = find(property);
         return (key == end()) ? defaultValue : std::atoi((*key).second.c_str());
@@ -102,8 +99,7 @@ namespace log4cpp {
         return (key == end()) ? defaultValue : ((*key).second == "true");
     }
 
-    std::string Properties::getString(const std::string& property, 
-                                      const char* defaultValue) {
+    std::string Properties::getString(const std::string& property, const char* defaultValue) {
         const_iterator key = find(property);
         return (key == end()) ? std::string(defaultValue) : (*key).second;
     }
@@ -118,7 +114,7 @@ namespace log4cpp {
             return;
         }
 
-        while(true) {
+        while (true) {
             result += value.substr(left, right - left);
             if (right == std::string::npos) {
                 break;
@@ -155,4 +151,4 @@ namespace log4cpp {
 
         value = result;
     }
-}
+} // namespace log4cpp

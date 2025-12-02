@@ -7,10 +7,10 @@
 #ifndef _LOG4CPP_ROLLINGFILEAPPENDER_HH
 #define _LOG4CPP_ROLLINGFILEAPPENDER_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/FileAppender.hh>
-#include <string>
+#include <log4cpp/Portability.hh>
 #include <stdarg.h>
+#include <string>
 
 namespace log4cpp {
 
@@ -20,13 +20,9 @@ namespace log4cpp {
        @since 0.3.1
     **/
     class LOG4CPP_EXPORT RollingFileAppender : public FileAppender {
-        public:
-        RollingFileAppender(const std::string& name, 
-                            const std::string& fileName,
-                            size_t maxFileSize = 10*1024*1024, 
-                            unsigned int maxBackupIndex = 1,
-                            bool append = true,
-                            mode_t mode = 00644);
+      public:
+        RollingFileAppender(const std::string& name, const std::string& fileName, size_t maxFileSize = 10 * 1024 * 1024,
+                            unsigned int maxBackupIndex = 1, bool append = true, mode_t mode = 00644);
 
         virtual void setMaxBackupIndex(unsigned int maxBackups);
         virtual unsigned int getMaxBackupIndex() const;
@@ -35,7 +31,7 @@ namespace log4cpp {
 
         virtual void rollOver();
 
-        protected:
+      protected:
         virtual void _append(const LoggingEvent& event);
 
         unsigned int _maxBackupIndex;
@@ -46,6 +42,6 @@ namespace log4cpp {
 
         size_t _maxFileSize;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_ROLLINGFILEAPPENDER_HH

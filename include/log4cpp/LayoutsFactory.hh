@@ -8,35 +8,32 @@
 #if !defined(h_409ac787_0acf_47ff_ac15_3e9024d40315)
 #define h_409ac787_0acf_47ff_ac15_3e9024d40315
 
-#include <string>
+#include "FactoryParams.hh"
+#include "Layout.hh"
+#include "Portability.hh"
 #include <map>
 #include <memory>
-#include "Portability.hh"
-#include "Layout.hh"
-#include "FactoryParams.hh"
+#include <string>
 
-namespace log4cpp
-{
-   class LOG4CPP_EXPORT LayoutsFactory
-   {
+namespace log4cpp {
+    class LOG4CPP_EXPORT LayoutsFactory {
       public:
-         typedef FactoryParams params_t;
-         typedef std::LOG4CPP_UNIQUE_PTR<Layout> (*create_function_t)(const params_t& params);
+        typedef FactoryParams params_t;
+        typedef std::LOG4CPP_UNIQUE_PTR<Layout> (*create_function_t)(const params_t& params);
 
-         static LayoutsFactory& getInstance();
-         void registerCreator(const std::string& class_name, create_function_t create_function);
-         std::LOG4CPP_UNIQUE_PTR<Layout> create(const std::string& class_name, const params_t& params);
-         bool registed(const std::string& class_name) const;
+        static LayoutsFactory& getInstance();
+        void registerCreator(const std::string& class_name, create_function_t create_function);
+        std::LOG4CPP_UNIQUE_PTR<Layout> create(const std::string& class_name, const params_t& params);
+        bool registed(const std::string& class_name) const;
 
       private:
-         LayoutsFactory(){};
+        LayoutsFactory() {};
 
-         typedef std::map<std::string, create_function_t> creators_t;
-         typedef creators_t::const_iterator const_iterator;
+        typedef std::map<std::string, create_function_t> creators_t;
+        typedef creators_t::const_iterator const_iterator;
 
-         creators_t creators_;
-   };
-}
-
+        creators_t creators_;
+    };
+} // namespace log4cpp
 
 #endif // h_409ac787_0acf_47ff_ac15_3e9024d40315

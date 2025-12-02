@@ -1,10 +1,10 @@
-#include <vector>
-#include "cppunit/TestRegistry.h"
-#include "cppunit/TextTestResult.h"
-#include "cppunit/Test.h"
-#include "cppunit/TestSuite.h"
-#include "log4cpp/NDC.hh"
 #include "NDCTest.hh"
+#include "cppunit/Test.h"
+#include "cppunit/TestRegistry.h"
+#include "cppunit/TestSuite.h"
+#include "cppunit/TextTestResult.h"
+#include "log4cpp/NDC.hh"
+#include <vector>
 
 int main(int argc, char** argv) {
     NDCTest<log4cpp::NDC> nDCTest("NDCTest<NDC>");
@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     nDCTest.registerTests(&suite);
 
     std::vector<CppUnit::Test*> tests = CppUnit::TestRegistry::getRegistry().getAllTests();
-    for(std::vector<CppUnit::Test*>::iterator i = tests.begin(); i != tests.end(); i++) {
+    for (std::vector<CppUnit::Test*>::iterator i = tests.begin(); i != tests.end(); i++) {
         (*i)->run(&result);
     }
 

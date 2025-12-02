@@ -17,7 +17,7 @@
 namespace log4cpp {
     namespace threading {
         std::string getThreadId();
-        
+
         /**
            Dummy type 'int' for Mutex. Yes, this adds a bit of overhead in
            the for of extra memory, but unfortunately 'void' is illegal.
@@ -29,22 +29,26 @@ namespace log4cpp {
         **/
         typedef int ScopedLock;
 
-        template<typename T> class ThreadLocalDataHolder {
-            public:
+        template <typename T> class ThreadLocalDataHolder {
+          public:
             typedef T data_type;
 
             inline ThreadLocalDataHolder() {};
             inline ~ThreadLocalDataHolder() {
-                if (_data) 
+                if (_data)
                     delete _data;
             };
-            
+
             inline T* get() const {
                 return _data;
             };
 
-            inline T* operator->() const { return get(); };
-            inline T& operator*() const { return *get(); };
+            inline T* operator->() const {
+                return get();
+            };
+            inline T& operator*() const {
+                return *get();
+            };
 
             inline T* release() {
                 T* result = _data;
@@ -54,14 +58,14 @@ namespace log4cpp {
             };
 
             inline void reset(T* p = NULL) {
-                if (_data) 
+                if (_data)
                     delete _data;
                 _data = p;
             };
 
-            private:            
-            T* _data;            
+          private:
+            T* _data;
         };
-    }
-}
+    } // namespace threading
+} // namespace log4cpp
 #endif

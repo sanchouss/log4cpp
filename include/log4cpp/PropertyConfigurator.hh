@@ -8,11 +8,11 @@
 #ifndef _LOG4CPP_PROPERTYCONFIGURATOR_HH
 #define _LOG4CPP_PROPERTYCONFIGURATOR_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/Export.hh>
+#include <log4cpp/Portability.hh>
 
+#include <log4cpp/Configurator.hh> // configure exceptions
 #include <string>
-#include <log4cpp/Configurator.hh>	// configure exceptions
 
 namespace log4cpp {
 
@@ -28,23 +28,23 @@ namespace log4cpp {
        log4j.category.sub1=A1
        log4j.category.sub2=INFO
        log4j.category.sub1.sub2=ERROR, A2
-       
+
        log4j.appender.rootAppender=org.apache.log4j.ConsoleAppender
        log4j.appender.rootAppender.layout=org.apache.log4j.BasicLayout
-       
+
        log4j.appender.A1=org.apache.log4j.FileAppender
        log4j.appender.A1.fileName=A1.log
        log4j.appender.A1.layout=org.apache.log4j.BasicLayout
-       
+
        log4j.appender.A2=org.apache.log4j.ConsoleAppender
        log4j.appender.A2.layout=org.apache.log4j.PatternLayout
        log4j.appender.A2.layout.ConversionPattern=The message %%m at time %%d%%n
        </PRE>
-       
+
        @since 0.3.2
     **/
     class LOG4CPP_EXPORT PropertyConfigurator {
-        public:
+      public:
         /**
          *
          * @param initFileName
@@ -53,6 +53,6 @@ namespace log4cpp {
          */
         static void configure(const std::string& initFileName);
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_PROPERTYCONFIGURATOR_HH

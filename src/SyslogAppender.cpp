@@ -10,20 +10,19 @@
 #include "PortabilityImpl.hh"
 #if LOG4CPP_HAVE_SYSLOG
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <log4cpp/SyslogAppender.hh>
 #include <log4cpp/FactoryParams.hh>
+#include <log4cpp/SyslogAppender.hh>
 #include <memory>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 namespace log4cpp {
 
     int SyslogAppender::toSyslogPriority(Priority::Value priority) {
-        static int priorities[8] = { LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_ERR,
-                                     LOG_WARNING, LOG_NOTICE, LOG_INFO, 
-                                     LOG_DEBUG };
+        static int priorities[8] = {LOG_EMERG,   LOG_ALERT,  LOG_CRIT, LOG_ERR,
+                                    LOG_WARNING, LOG_NOTICE, LOG_INFO, LOG_DEBUG};
         int result;
 
         priority++;
@@ -39,18 +38,12 @@ namespace log4cpp {
 
         return result;
     }
-        
 
-    SyslogAppender::SyslogAppender(const std::string& name, 
-                                   const std::string& syslogName, 
-                                   int facility) : 
-        LayoutAppender(name),
-        _syslogName(syslogName),
-        _facility(facility) 
-    {
+    SyslogAppender::SyslogAppender(const std::string& name, const std::string& syslogName, int facility)
+        : LayoutAppender(name), _syslogName(syslogName), _facility(facility) {
         open();
     }
-    
+
     SyslogAppender::~SyslogAppender() {
         close();
     }
@@ -74,15 +67,15 @@ namespace log4cpp {
         open();
         return true;
     }
-    
-    std::LOG4CPP_UNIQUE_PTR<Appender> create_syslog_appender(const FactoryParams& params)
-    {
-       std::string name, syslog_name;
-       int facility = 0;
-       params.get_for("syslog appender").required("name", name)("syslog_name", syslog_name)
-                                        .optional("facility", facility);
-       return std::LOG4CPP_UNIQUE_PTR<Appender>(new SyslogAppender(name, syslog_name, facility));
+
+    std::LOG4CPP_UNIQUE_PTR<Appender> create_syslog_appender(const FactoryParams& params) {
+        std::string name, syslog_name;
+        int facility = 0;
+        params.get_for("syslog appender")
+            .required("name", name)("syslog_name", syslog_name)
+            .optional("facility", facility);
+        return std::LOG4CPP_UNIQUE_PTR<Appender>(new SyslogAppender(name, syslog_name, facility));
     }
-}
+} // namespace log4cpp
 
 #endif // LOG4CPP_HAVE_SYSLOG

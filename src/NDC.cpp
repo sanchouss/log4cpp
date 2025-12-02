@@ -13,21 +13,15 @@
 
 namespace log4cpp {
 
-    NDC::DiagnosticContext::DiagnosticContext(const std::string& message) :
-        message(message),
-        fullMessage(message) {
-    }
+    NDC::DiagnosticContext::DiagnosticContext(const std::string& message) : message(message), fullMessage(message) {}
 
-    NDC::DiagnosticContext::DiagnosticContext(const std::string& message, 
-            const DiagnosticContext& parent) :
-        message(message),
-        fullMessage(parent.fullMessage + " " + message) {
-    }
+    NDC::DiagnosticContext::DiagnosticContext(const std::string& message, const DiagnosticContext& parent)
+        : message(message), fullMessage(parent.fullMessage + " " + message) {}
 
-	bool NDC::isUsedNDC = false;
-	const std::string NDC::emptyString = "";
+    bool NDC::isUsedNDC = false;
+    const std::string NDC::emptyString = "";
 
-	namespace {
+    namespace {
         threading::ThreadLocalDataHolder<NDC> _nDC;
     }
 
@@ -40,10 +34,10 @@ namespace log4cpp {
     }
 
     const std::string& NDC::get() {
-    	if (isUsedNDC)
-    		return getNDC()._get();
-    	else
-    		return emptyString;
+        if (isUsedNDC)
+            return getNDC()._get();
+        else
+            return emptyString;
     }
 
     size_t NDC::getDepth() {
@@ -59,8 +53,8 @@ namespace log4cpp {
     }
 
     void NDC::push(const std::string& message) {
-    	if (!isUsedNDC)
-    		isUsedNDC = true;
+        if (!isUsedNDC)
+            isUsedNDC = true;
         getNDC()._push(message);
     }
 
@@ -79,11 +73,9 @@ namespace log4cpp {
         return *nDC;
     }
 
-    NDC::NDC() {
-    }
+    NDC::NDC() {}
 
-    NDC::~NDC() {
-    }
+    NDC::~NDC() {}
 
     void NDC::_clear() {
         _stack.clear();
@@ -116,7 +108,7 @@ namespace log4cpp {
     void NDC::_push(const std::string& message) {
         if (_stack.empty()) {
             _stack.push_back(DiagnosticContext(message));
-        } else {            
+        } else {
             _stack.push_back(DiagnosticContext(message, _stack.back()));
         }
     }
@@ -125,4 +117,4 @@ namespace log4cpp {
         // XXX no maximum
     }
 
-}
+} // namespace log4cpp

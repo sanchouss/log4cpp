@@ -10,11 +10,11 @@
 #ifndef _LOG4CPP_THREADING_BOOSTTHREADS_HH
 #define _LOG4CPP_THREADING_BOOSTTHREADS_HH
 
-#include <log4cpp/Portability.hh>
-#include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
+#include <boost/thread/thread.hpp>
 #include <boost/thread/tss.hpp>
 #include <cstdio>
+#include <log4cpp/Portability.hh>
 #include <string>
 
 namespace log4cpp {
@@ -25,18 +25,22 @@ namespace log4cpp {
             sprintf(buffer, "not available");
             return std::string(buffer);
         };
-        
+
         typedef boost::mutex Mutex;
         typedef boost::mutex::scoped_lock ScopedLock;
 
-        template<typename T> class ThreadLocalDataHolder {
-            public:
+        template <typename T> class ThreadLocalDataHolder {
+          public:
             inline T* get() const {
                 return _localData.get();
             };
 
-            inline T* operator->() const { return _localData.get(); };
-            inline T& operator*() const { return *_localData.get(); };
+            inline T* operator->() const {
+                return _localData.get();
+            };
+            inline T& operator*() const {
+                return *_localData.get();
+            };
 
             inline T* release() {
                 return _localData.release();
@@ -46,10 +50,10 @@ namespace log4cpp {
                 _localData.reset(p);
             };
 
-            private:
+          private:
             boost::thread_specific_ptr<T> _localData;
         };
 
-    }
-}
+    } // namespace threading
+} // namespace log4cpp
 #endif

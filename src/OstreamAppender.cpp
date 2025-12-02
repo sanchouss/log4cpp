@@ -9,20 +9,18 @@
 
 #include "PortabilityImpl.hh"
 #ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
+#include <unistd.h>
 #endif
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <log4cpp/OstreamAppender.hh>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 namespace log4cpp {
 
-    OstreamAppender::OstreamAppender(const std::string& name, std::ostream* stream) : 
-        LayoutAppender(name),
-        _stream(stream) {
-    }
-    
+    OstreamAppender::OstreamAppender(const std::string& name, std::ostream* stream)
+        : LayoutAppender(name), _stream(stream) {}
+
     OstreamAppender::~OstreamAppender() {
         close();
     }
@@ -40,5 +38,5 @@ namespace log4cpp {
 
     bool OstreamAppender::reopen() {
         return true;
-    }      
-}
+    }
+} // namespace log4cpp

@@ -9,8 +9,8 @@
 
 #include "PortabilityImpl.hh"
 #include <log4cpp/BasicLayout.hh>
-#include <log4cpp/Priority.hh>
 #include <log4cpp/FactoryParams.hh>
+#include <log4cpp/Priority.hh>
 #include <memory>
 
 #ifdef LOG4CPP_HAVE_SSTREAM
@@ -19,25 +19,21 @@
 
 namespace log4cpp {
 
-    BasicLayout::BasicLayout() {
-    }
-    
-    BasicLayout::~BasicLayout() {
-    }
+    BasicLayout::BasicLayout() {}
+
+    BasicLayout::~BasicLayout() {}
 
     std::string BasicLayout::format(const LoggingEvent& event) {
         std::ostringstream message;
 
         const std::string& priorityName = Priority::getPriorityName(event.priority);
-        message << event.timeStamp.getSeconds() << " " << priorityName << " " 
-                << event.categoryName << " " << event.ndc << ": " 
-                << event.message << std::endl;
+        message << event.timeStamp.getSeconds() << " " << priorityName << " " << event.categoryName << " " << event.ndc
+                << ": " << event.message << std::endl;
 
         return message.str();
     }
 
-    std::LOG4CPP_UNIQUE_PTR<Layout> create_basic_layout(const FactoryParams& params)
-    {
-       return std::LOG4CPP_UNIQUE_PTR<Layout>(new BasicLayout);
+    std::LOG4CPP_UNIQUE_PTR<Layout> create_basic_layout(const FactoryParams& params) {
+        return std::LOG4CPP_UNIQUE_PTR<Layout>(new BasicLayout);
     }
-}
+} // namespace log4cpp

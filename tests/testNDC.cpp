@@ -1,5 +1,5 @@
-#include <iostream>
 #include "log4cpp/NDC.hh"
+#include <iostream>
 
 using namespace log4cpp;
 
@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
 
     NDC::push("context1");
     std::cout << "2. push context1: " << NDC::get() << std::endl;
-    
+
     NDC::push("context2");
     std::cout << "3. push context2: " << NDC::get() << std::endl;
     NDC::push("context3");
@@ -22,5 +22,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-    
-    

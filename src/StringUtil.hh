@@ -10,16 +10,15 @@
 #define _LOG4CPP_STRINGUTIL_HH
 
 #include "PortabilityImpl.hh"
-#include <string>
-#include <vector>
 #include <climits>
 #include <stdarg.h>
+#include <string>
+#include <vector>
 
 namespace log4cpp {
 
     class StringUtil {
-        public:
-
+      public:
         /**
            Returns a string contructed from the a format specifier
            and a va_list of arguments, analogously to vprintf(3).
@@ -45,11 +44,10 @@ namespace log4cpp {
            v.size() <= maxSegments.  The string is scanned from left to right
            so v[maxSegments - 1] may contain a string containing the delimiter
            character.
-	   @return The actual number of segments (limited by maxSegments).
+           @return The actual number of segments (limited by maxSegments).
         **/
-        static unsigned int split(std::vector<std::string>& v, 
-				  const std::string& s, char delimiter,
-				  unsigned int maxSegments = INT_MAX);
+        static unsigned int split(std::vector<std::string>& v, const std::string& s, char delimiter,
+                                  unsigned int maxSegments = INT_MAX);
         /**
            splits a string into string segments based on the given delimiter
            and assigns the segments through an output_iterator.
@@ -60,12 +58,11 @@ namespace log4cpp {
            @param maxSegments The maximum number of segments.
            @return The actual number of segments (limited by maxSegments).
         **/
-        template<typename T> static unsigned int split(T& output,
-                const std::string& s, char delimiter,
-                unsigned int maxSegments = INT_MAX) {
+        template <typename T>
+        static unsigned int split(T& output, const std::string& s, char delimiter, unsigned int maxSegments = INT_MAX) {
             std::string::size_type left = 0;
             unsigned int i;
-            for(i = 1; i < maxSegments; i++) {
+            for (i = 1; i < maxSegments; i++) {
                 std::string::size_type right = s.find(delimiter, left);
                 if (right == std::string::npos) {
                     break;
@@ -73,12 +70,11 @@ namespace log4cpp {
                 *output++ = s.substr(left, right - left);
                 left = right + 1;
             }
-            
+
             *output++ = s.substr(left);
             return i;
         }
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_STRINGUTIL_HH
-

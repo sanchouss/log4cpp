@@ -10,21 +10,21 @@
 #ifndef _LOG4CPP_LAYOUT_HH
 #define _LOG4CPP_LAYOUT_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/LoggingEvent.hh>
+#include <log4cpp/Portability.hh>
 #include <string>
 
 namespace log4cpp {
 
-/**
- * Extend this abstract class to create your own log layout format.
- **/
+    /**
+     * Extend this abstract class to create your own log layout format.
+     **/
     class LOG4CPP_EXPORT Layout {
-        public:
+      public:
         /**
          * Destructor for Layout.
          **/
-        virtual ~Layout() { };
+        virtual ~Layout() {};
 
         /**
          * Formats the LoggingEvent data to a string that appenders can log.
@@ -33,7 +33,7 @@ namespace log4cpp {
          * @returns an appendable string.
          **/
         virtual std::string format(const LoggingEvent& event) = 0;
-    };        
-}
+    };
+} // namespace log4cpp
 
 #endif // _LOG4CPP_LAYOUT_HH

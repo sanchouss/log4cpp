@@ -10,10 +10,10 @@
 #define _LOG4CPP_DAILYROLLINGFILEAPPENDER_HH
 
 #include <ctime>
-#include <log4cpp/Portability.hh>
 #include <log4cpp/FileAppender.hh>
-#include <string>
+#include <log4cpp/Portability.hh>
 #include <stdarg.h>
+#include <string>
 
 namespace log4cpp {
 
@@ -23,12 +23,10 @@ namespace log4cpp {
        @since 1.1.2
     **/
     class LOG4CPP_EXPORT DailyRollingFileAppender : public FileAppender {
-        public:
-        DailyRollingFileAppender(const std::string& name,
-                            const std::string& fileName,
-                            unsigned int maxDaysToKeep = maxDaysToKeepDefault,
-                            bool append = true,
-                            mode_t mode = 00644);
+      public:
+        DailyRollingFileAppender(const std::string& name, const std::string& fileName,
+                                 unsigned int maxDaysToKeep = maxDaysToKeepDefault, bool append = true,
+                                 mode_t mode = 00644);
 
         virtual void setMaxDaysToKeep(unsigned int maxDaysToKeep);
         virtual unsigned int getMaxDaysToKeep() const;
@@ -36,7 +34,8 @@ namespace log4cpp {
         virtual void rollOver();
 
         static unsigned int maxDaysToKeepDefault;
-        protected:
+
+      protected:
         virtual void _append(const LoggingEvent& event);
 
         unsigned int _maxDaysToKeep;
@@ -45,6 +44,6 @@ namespace log4cpp {
          */
         struct tm _logsTime;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_DAILYROLLINGFILEAPPENDER_HH

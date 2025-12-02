@@ -8,11 +8,11 @@
 
 #include "PortabilityImpl.hh"
 
+#include <log4cpp/FactoryParams.hh>
+#include <log4cpp/NDC.hh>
 #include <log4cpp/PatternLayout.hh>
 #include <log4cpp/Priority.hh>
-#include <log4cpp/NDC.hh>
 #include <log4cpp/TimeStamp.hh>
-#include <log4cpp/FactoryParams.hh>
 #include <memory>
 
 #ifdef LOG4CPP_HAVE_SSTREAM
@@ -21,10 +21,10 @@
 #include <strstream>
 #endif
 
-#include <iomanip>
-#include <ctime>
-#include <cstdlib>
 #include "Localtime.hh"
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
 
 #ifdef LOG4CPP_HAVE_INT64_T
 #ifdef LOG4CPP_HAVE_STDINT_H
@@ -37,10 +37,10 @@
 */
 
 #include <stdio.h>
- 
+
 std::ostream& operator<<(std::ostream& os, int64_t i) {
     char buf[20];
-    ::sprintf(buf,"%I64d", i);
+    ::sprintf(buf, "%I64d", i);
     return os << buf;
 }
 #endif // LOG4CPP_MISSING_INT64_OSTREAM_OP
@@ -49,15 +49,13 @@ std::ostream& operator<<(std::ostream& os, int64_t i) {
 namespace log4cpp {
 
     struct StringLiteralComponent : public PatternLayout::PatternComponent {
-        StringLiteralComponent(const std::string& literal) :
-            _literal(literal) {
-        }
+        StringLiteralComponent(const std::string& literal) : _literal(literal) {}
 
         virtual void append(std::ostringstream& out, const LoggingEvent& event) {
             out << _literal;
         }
 
-        private:
+      private:
         std::string _literal;
     };
 
@@ -66,7 +64,7 @@ namespace log4cpp {
             if (specifier == "") {
                 _precision = -1;
             } else {
-#ifdef LOG4CPP_HAVE_SSTREAM 
+#ifdef LOG4CPP_HAVE_SSTREAM
                 std::istringstream s(specifier);
 #else
                 std::istrstream s(specifier.c_str());
@@ -80,7 +78,7 @@ namespace log4cpp {
                 out << event.categoryName;
             } else {
                 std::string::size_type begin = std::string::npos;
-                for(int i = 0; i < _precision; i++) {
+                for (int i = 0; i < _precision; i++) {
                     begin = event.categoryName.rfind('.', begin - 2);
                     if (begin == std::string::npos) {
                         begin = 0;
@@ -95,7 +93,7 @@ namespace log4cpp {
             }
         }
 
-        private:
+      private:
         int _precision;
     };
 
@@ -145,7 +143,7 @@ namespace log4cpp {
             std::string::size_type pos = timeFormat.find("%l");
             if (pos == std::string::npos) {
                 _printMillis = false;
-                _timeFormat1 = timeFormat; 
+                _timeFormat1 = timeFormat;
             } else {
                 _printMillis = true;
                 _timeFormat1 = timeFormat.substr(0, pos);
@@ -161,9 +159,7 @@ namespace log4cpp {
             std::string timeFormat;
             if (_printMillis) {
                 std::ostringstream formatStream;
-                formatStream << _timeFormat1 
-                             << std::setw(3) << std::setfill('0')
-                             << event.timeStamp.getMilliSeconds()
+                formatStream << _timeFormat1 << std::setw(3) << std::setfill('0') << event.timeStamp.getMilliSeconds()
                              << _timeFormat2;
                 timeFormat = formatStream.str();
             } else {
@@ -173,7 +169,7 @@ namespace log4cpp {
             out << formatted;
         }
 
-        private:
+      private:
         std::string _timeFormat1;
         std::string _timeFormat2;
         bool _printMillis;
@@ -192,34 +188,25 @@ namespace log4cpp {
     struct MillisSinceEpochComponent : public PatternLayout::PatternComponent {
         virtual void append(std::ostringstream& out, const LoggingEvent& event) {
 #ifdef LOG4CPP_HAVE_INT64_T
-            int64_t t = event.timeStamp.getSeconds() -
-                TimeStamp::getStartTime().getSeconds();
+            int64_t t = event.timeStamp.getSeconds() - TimeStamp::getStartTime().getSeconds();
             t *= 1000;
-            t += event.timeStamp.getMilliSeconds() -
-                TimeStamp::getStartTime().getMilliSeconds();
-            
+            t += event.timeStamp.getMilliSeconds() - TimeStamp::getStartTime().getMilliSeconds();
+
             out << t;
 #else
-            double t = event.timeStamp.getSeconds() -
-                TimeStamp::getStartTime().getSeconds();
+            double t = event.timeStamp.getSeconds() - TimeStamp::getStartTime().getSeconds();
             t *= 1000;
-            t += event.timeStamp.getMilliSeconds() -
-                TimeStamp::getStartTime().getMilliSeconds();
-            
-            out << std::setiosflags(std::ios::fixed)
-                << std::setprecision(0) << t;
+            t += event.timeStamp.getMilliSeconds() - TimeStamp::getStartTime().getMilliSeconds();
+
+            out << std::setiosflags(std::ios::fixed) << std::setprecision(0) << t;
 #endif
         }
     };
 
     struct FormatModifierComponent : public PatternLayout::PatternComponent {
-        FormatModifierComponent(PatternLayout::PatternComponent* component,
-                                size_t minWidth, size_t maxWidth, bool alignLeft) :
-            _component(component) , 
-            _minWidth(minWidth),
-            _maxWidth(maxWidth),
-            _alignLeft(alignLeft) {
-        }
+        FormatModifierComponent(PatternLayout::PatternComponent* component, size_t minWidth, size_t maxWidth,
+                                bool alignLeft)
+            : _component(component), _minWidth(minWidth), _maxWidth(maxWidth), _alignLeft(alignLeft) {}
 
         virtual ~FormatModifierComponent() {
             delete _component;
@@ -244,7 +231,7 @@ namespace log4cpp {
             }
         }
 
-        private:
+      private:
         PatternLayout::PatternComponent* _component;
         size_t _minWidth;
         size_t _maxWidth;
@@ -259,7 +246,7 @@ namespace log4cpp {
     PatternLayout::PatternLayout() {
         try {
             setConversionPattern(DEFAULT_CONVERSION_PATTERN);
-        } catch(ConfigureFailure&) {
+        } catch (ConfigureFailure&) {
         }
     }
 
@@ -268,8 +255,7 @@ namespace log4cpp {
     }
 
     void PatternLayout::clearConversionPattern() {
-        for(ComponentVector::const_iterator i = _components.begin();
-            i != _components.end(); ++i) {
+        for (ComponentVector::const_iterator i = _components.begin(); i != _components.end(); ++i) {
             delete (*i);
         }
         _components.clear();
@@ -277,7 +263,7 @@ namespace log4cpp {
     }
 
     void PatternLayout::setConversionPattern(const std::string& conversionPattern) {
-#ifdef LOG4CPP_HAVE_SSTREAM 
+#ifdef LOG4CPP_HAVE_SSTREAM
         std::istringstream conversionStream(conversionPattern);
 #else
         std::istrstream conversionStream(conversionPattern.c_str());
@@ -299,16 +285,17 @@ namespace log4cpp {
                         conversionStream.putback(ch2);
                         conversionStream >> minWidth;
                         conversionStream.get(ch2);
-                    } 
+                    }
                     if (ch2 == '.') {
                         conversionStream >> maxWidth;
                     } else {
                         conversionStream.putback(ch2);
-                    }                        
+                    }
                 }
                 if (!conversionStream.get(ch)) {
                     std::ostringstream msg;
-                    msg << "unterminated conversion specifier in '" << conversionPattern << "' at index " << conversionStream.tellg();
+                    msg << "unterminated conversion specifier in '" << conversionPattern << "' at index "
+                        << conversionStream.tellg();
                     throw ConfigureFailure(msg.str());
                 }
                 std::string specPostfix = "";
@@ -317,7 +304,7 @@ namespace log4cpp {
                     char ch2;
                     if (conversionStream.get(ch2)) {
                         if (ch2 == '{') {
-                            while(conversionStream.get(ch2) && (ch2 != '}'))
+                            while (conversionStream.get(ch2) && (ch2 != '}'))
                                 specPostfix += ch2;
                         } else {
                             conversionStream.putback(ch2);
@@ -331,13 +318,11 @@ namespace log4cpp {
                 case 'm':
                     component = new MessageComponent();
                     break;
-                case 'n':
-                    {
-                        std::ostringstream endline;
-                        endline << std::endl;
-                        literal += endline.str();
-                    }
-                    break;
+                case 'n': {
+                    std::ostringstream endline;
+                    endline << std::endl;
+                    literal += endline.str();
+                } break;
                 case 'c':
                     component = new CategoryNameComponent(specPostfix);
                     break;
@@ -364,8 +349,9 @@ namespace log4cpp {
                     break;
                 default:
                     std::ostringstream msg;
-                    msg << "unknown conversion specifier '" << ch << "' in '" << conversionPattern << "' at index " << conversionStream.tellg();
-                    throw ConfigureFailure(msg.str());                    
+                    msg << "unknown conversion specifier '" << ch << "' in '" << conversionPattern << "' at index "
+                        << conversionStream.tellg();
+                    throw ConfigureFailure(msg.str());
                 }
                 if (component) {
                     if (!literal.empty()) {
@@ -397,42 +383,37 @@ namespace log4cpp {
     std::string PatternLayout::format(const LoggingEvent& event) {
         std::ostringstream message;
 
-        for(ComponentVector::const_iterator i = _components.begin();
-            i != _components.end(); ++i) {
+        for (ComponentVector::const_iterator i = _components.begin(); i != _components.end(); ++i) {
             (*i)->append(message, event);
         }
 
         return message.str();
     }
 
-    std::LOG4CPP_UNIQUE_PTR<Layout> create_pattern_layout(const FactoryParams& params)
-    {
-       std::string pattern;
-       params.get_for("pattern layout").optional("pattern", pattern);
-       std::LOG4CPP_UNIQUE_PTR<Layout> result(new PatternLayout);
-       PatternLayout* l = static_cast<PatternLayout*>(result.get());
-       if (pattern.empty() || pattern == "default")
-          return result;
+    std::LOG4CPP_UNIQUE_PTR<Layout> create_pattern_layout(const FactoryParams& params) {
+        std::string pattern;
+        params.get_for("pattern layout").optional("pattern", pattern);
+        std::LOG4CPP_UNIQUE_PTR<Layout> result(new PatternLayout);
+        PatternLayout* l = static_cast<PatternLayout*>(result.get());
+        if (pattern.empty() || pattern == "default")
+            return result;
 
-       if (pattern == "simple")
-       {
-          l->setConversionPattern(PatternLayout::SIMPLE_CONVERSION_PATTERN);
-          return result;
-       }
+        if (pattern == "simple") {
+            l->setConversionPattern(PatternLayout::SIMPLE_CONVERSION_PATTERN);
+            return result;
+        }
 
-       if (pattern == "basic")
-       {
-          l->setConversionPattern(PatternLayout::BASIC_CONVERSION_PATTERN);
-          return result;
-       }
+        if (pattern == "basic") {
+            l->setConversionPattern(PatternLayout::BASIC_CONVERSION_PATTERN);
+            return result;
+        }
 
-       if (pattern == "ttcc")
-       {
-          l->setConversionPattern(PatternLayout::TTCC_CONVERSION_PATTERN);
-          return result;
-       }
-       
-       l->setConversionPattern(pattern);
-       return result;
-   }
-}
+        if (pattern == "ttcc") {
+            l->setConversionPattern(PatternLayout::TTCC_CONVERSION_PATTERN);
+            return result;
+        }
+
+        l->setConversionPattern(pattern);
+        return result;
+    }
+} // namespace log4cpp

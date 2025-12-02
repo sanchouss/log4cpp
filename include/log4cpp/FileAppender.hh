@@ -10,27 +10,25 @@
 #ifndef _LOG4CPP_FILEAPPENDER_HH
 #define _LOG4CPP_FILEAPPENDER_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/LayoutAppender.hh>
-#include <string>
+#include <log4cpp/Portability.hh>
 #include <stdarg.h>
+#include <string>
 
 namespace log4cpp {
 
     class LOG4CPP_EXPORT FileAppender : public LayoutAppender {
-        public:
-
+      public:
         /**
            Constructs a FileAppender.
            @param name the name of the Appender.
-           @param fileName the name of the file to which the Appender has 
+           @param fileName the name of the file to which the Appender has
            to log.
            @param append whether the Appender has to truncate the file or
            just append to it if it already exists. Defaults to 'true'.
            @param mode file mode to open the logfile with. Defaults to 00644.
-        **/  
-        FileAppender(const std::string& name, const std::string& fileName,
-                     bool append = true, mode_t mode = 00644);
+        **/
+        FileAppender(const std::string& name, const std::string& fileName, bool append = true, mode_t mode = 00644);
 
         /**
            Constructs a FileAppender to an already open file descriptor.
@@ -39,12 +37,12 @@ namespace log4cpp {
         **/
         FileAppender(const std::string& name, int fd);
         virtual ~FileAppender();
-        
+
         /**
-           Reopens the logfile. 
+           Reopens the logfile.
            This can be useful for logfiles that are rotated externally,
            e.g. by logrotate. This method is a NOOP for FileAppenders that
-           have been constructed with a file descriptor.           
+           have been constructed with a file descriptor.
            @returns true if the reopen succeeded.
         **/
         virtual bool reopen();
@@ -56,8 +54,8 @@ namespace log4cpp {
 
         /**
            Sets the append vs truncate flag.
-           NB. currently the FileAppender opens the logfile in the 
-           constructor. Therefore this method is too late to influence the 
+           NB. currently the FileAppender opens the logfile in the
+           constructor. Therefore this method is too late to influence the
            first file opening. We'll need something similar to log4j's
            activateOptions().
            @param append false to truncate, true to append
@@ -79,7 +77,7 @@ namespace log4cpp {
         **/
         virtual mode_t getMode() const;
 
-        protected:
+      protected:
         virtual void _append(const LoggingEvent& event);
 
         const std::string _fileName;
@@ -87,6 +85,6 @@ namespace log4cpp {
         int _flags;
         mode_t _mode;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_FILEAPPENDER_HH

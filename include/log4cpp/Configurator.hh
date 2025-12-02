@@ -8,10 +8,10 @@
 #ifndef _LOG4CPP_CONFIGURATOR_HH
 #define _LOG4CPP_CONFIGURATOR_HH
 
-#include <log4cpp/Portability.hh>
 #include <log4cpp/Export.hh>
-#include <string>
+#include <log4cpp/Portability.hh>
 #include <stdexcept>
+#include <string>
 
 namespace log4cpp {
 
@@ -19,13 +19,13 @@ namespace log4cpp {
      * Exception class for configuration.
      */
     class LOG4CPP_EXPORT ConfigureFailure : public std::runtime_error {
-        public:
+      public:
         /**
          * Constructor.
          * @param reason String containing the description of the exception.
          */
         ConfigureFailure(const std::string& reason);
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_CONFIGURATOR_HH

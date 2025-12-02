@@ -10,12 +10,12 @@
 #ifndef _LOG4CPP_SYSLOGAPPENDER_HH
 #define _LOG4CPP_SYSLOGAPPENDER_HH
 
-#include <log4cpp/Portability.hh>
-#include <string>
-#include <stdarg.h>
-#include <syslog.h>
 #include <log4cpp/LayoutAppender.hh>
+#include <log4cpp/Portability.hh>
 #include <log4cpp/Priority.hh>
+#include <stdarg.h>
+#include <string>
+#include <syslog.h>
 
 namespace log4cpp {
 
@@ -23,8 +23,7 @@ namespace log4cpp {
      * SyslogAppender sends LoggingEvents to the local syslog system.
      **/
     class SyslogAppender : public LayoutAppender {
-        public:
-
+      public:
         /**
          * Translates a log4cpp priority to a syslog priority
          * @param priority The log4cpp priority.
@@ -34,15 +33,14 @@ namespace log4cpp {
 
         /**
          * Instantiate a SyslogAppender with given name and name and facility
-         * for syslog. Note that the C syslog API is process global, so 
-         * instantion of a second SyslogAppender will 'overwrite' the 
+         * for syslog. Note that the C syslog API is process global, so
+         * instantion of a second SyslogAppender will 'overwrite' the
          * syslog name of the first.
          * @param name The name of the Appender
          * @param syslogName The ident parameter in the openlog(3) call.
          * @param facility The syslog facility to log to. Defaults to LOG_USER.
-         **/         
-        SyslogAppender(const std::string& name, const std::string& syslogName, 
-                       int facility = LOG_USER);
+         **/
+        SyslogAppender(const std::string& name, const std::string& syslogName, int facility = LOG_USER);
         virtual ~SyslogAppender();
 
         /**
@@ -55,8 +53,7 @@ namespace log4cpp {
          **/
         virtual void close();
 
-       protected:
-        
+      protected:
         /**
          * Calls openlog(3).
          **/
@@ -71,6 +68,6 @@ namespace log4cpp {
         const std::string _syslogName;
         int _facility;
     };
-}
+} // namespace log4cpp
 
 #endif // _LOG4CPP_SYSLOGAPPENDER_HH

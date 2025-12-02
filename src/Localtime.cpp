@@ -4,34 +4,30 @@
  * See the COPYING file for the terms of usage and distribution.
  */
 
-#include <log4cpp/Portability.hh>
 #include "Localtime.hh"
-#include <time.h>
+#include <log4cpp/Portability.hh>
 #include <memory.h>
+#include <time.h>
 
-namespace log4cpp         
-{
+namespace log4cpp {
 
 #if defined(_MSC_VER) && defined(LOG4CPP_HAVE_LOCALTIME_R)
-   void localtime(const ::time_t* time, ::tm* t)
-   {
-      localtime_s(t, time);  
-   }
+    void localtime(const ::time_t* time, ::tm* t) {
+        localtime_s(t, time);
+    }
 #endif
 
 #if !defined(_MSC_VER) && defined(LOG4CPP_HAVE_LOCALTIME_R)
-   void localtime(const ::time_t* time, ::tm* t)
-   {
-      localtime_r(time, t);
-   }
+    void localtime(const ::time_t* time, ::tm* t) {
+        localtime_r(time, t);
+    }
 #endif
 
 #if !defined(LOG4CPP_HAVE_LOCALTIME_R)
-   void localtime(const ::time_t* time, ::tm* t)
-   {
-      ::tm* tmp = ::localtime(time);
-      memcpy(t, tmp, sizeof(::tm));
-   }
+    void localtime(const ::time_t* time, ::tm* t) {
+        ::tm* tmp = ::localtime(time);
+        memcpy(t, tmp, sizeof(::tm));
+    }
 #endif
 
-}
+} // namespace log4cpp

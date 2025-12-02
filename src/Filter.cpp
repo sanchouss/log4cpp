@@ -12,9 +12,7 @@
 
 namespace log4cpp {
 
-    Filter::Filter() :
-        _chainedFilter(NULL) {
-    }
+    Filter::Filter() : _chainedFilter(NULL) {}
 
     Filter::~Filter() {
         if (_chainedFilter)
@@ -25,7 +23,7 @@ namespace log4cpp {
         if (filter != _chainedFilter) {
             if (_chainedFilter)
                 delete _chainedFilter;
-            
+
             _chainedFilter = filter;
         }
     }
@@ -36,10 +34,10 @@ namespace log4cpp {
 
     Filter* Filter::getEndOfChain() {
         Filter* end = this;
-        while(end->getChainedFilter()) {
+        while (end->getChainedFilter()) {
             end = end->getChainedFilter();
         }
-	return end;
+        return end;
     }
 
     void Filter::appendChainedFilter(Filter* filter) {
@@ -56,5 +54,5 @@ namespace log4cpp {
 
         return decision;
     }
-    
-}
+
+} // namespace log4cpp
