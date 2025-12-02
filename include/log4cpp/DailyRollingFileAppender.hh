@@ -1,12 +1,15 @@
 /*
  * DailyRollingFileAppender.hh
  *
+ * Copyright 2015, Alexander Perepelkin. All rights reserved.
+ *
  * See the COPYING file for the terms of usage and distribution.
  */
 
 #ifndef _LOG4CPP_DAILYROLLINGFILEAPPENDER_HH
 #define _LOG4CPP_DAILYROLLINGFILEAPPENDER_HH
 
+#include <ctime>
 #include <log4cpp/Portability.hh>
 #include <log4cpp/FileAppender.hh>
 #include <string>
@@ -37,7 +40,9 @@ namespace log4cpp {
         virtual void _append(const LoggingEvent& event);
 
         unsigned int _maxDaysToKeep;
-        // last log's file creation time (or last modification if appender just created)
+        /**
+         * last log's file creation time (or last modification if appender just created)
+         */
         struct tm _logsTime;
     };
 }

@@ -146,8 +146,14 @@ namespace log4cpp {
 		public:
 		class AppenderMapStorage {
 		public:
-			Appender::AppenderMap* _allAppenders;	// single shared instance, nifty-counter defensed
-	        threading::Mutex _appenderMapMutex;	// mutex protecting map from multiple thread access 
+			/**
+			 * single shared instance, nifty-counter defensed
+			 */
+			Appender::AppenderMap* _allAppenders;
+			/**
+			 * mutex protecting map from multiple thread access
+			 */
+			threading::Mutex _appenderMapMutex;
 
 			AppenderMapStorage();
 			~AppenderMapStorage();
@@ -161,7 +167,10 @@ namespace log4cpp {
         static AppenderMapStorage &_appenderMapStorageInstance;
     };
 
-	static Appender::AppenderMapStorageInitializer appenderMapStorageInitializer; // static initializer for every translation unit
+    /**
+     *  static initializer for every translation unit
+     */
+    static Appender::AppenderMapStorageInitializer appenderMapStorageInitializer;
     typedef std::set<Appender *> AppenderSet;
 
 }
