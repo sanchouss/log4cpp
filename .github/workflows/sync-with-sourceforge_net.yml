@@ -53,12 +53,12 @@ jobs:
           echo "Commit hash: $(git branch --show-current) $(git rev-parse HEAD)"
 
 # (branch A), failing
-#      - name: Push sync branch (GitHub CLI)
-#        run: |
-#          gh auth setup-git
-#          git push origin ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push sync branch (GitHub CLI)
+        run: |
+          gh auth setup-git
+          git push origin ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge fresh upstream changes from ${{ env.GITHUB_BRANCH_TO_BE_SYNC }} into github's master
         run: |
