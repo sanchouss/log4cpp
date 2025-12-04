@@ -19,6 +19,8 @@ jobs:
         with:
           persist-credentials: false
           ref: master
+          fetch-depth: 0     # <--- FULL HISTORY
+          fetch-tags: true   # optional but recommended
 
       - name: Set up Git
         run: |
