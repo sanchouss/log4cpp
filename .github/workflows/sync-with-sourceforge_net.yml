@@ -1,4 +1,5 @@
-# This git branch sync_with_sourceforge exists solely for running Git Action
+# This git branch (sync_with_sourceforge) exists solely for running Git Action
+# if re-run of workflow is not visible, updating and commiting workflow file should help to get re-run back
 name: sync_with_sourceforge_net_workflow    # Workflow works and updates master only if branch master_sync is absent at the moment of starting
 
 env:
@@ -19,7 +20,7 @@ jobs:
         with:
           persist-credentials: false
           ref: master
-          fetch-depth: 0     # <--- FULL HISTORY
+          fetch-depth: 0     # <--- checkout FULL HISTORY, should help to resolve trouble with (branch A) in this script
           fetch-tags: true   # optional but recommended
 
       - name: Set up Git
