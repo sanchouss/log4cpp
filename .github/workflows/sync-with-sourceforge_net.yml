@@ -52,14 +52,16 @@ jobs:
           git rebase sourceforge.net/master
           echo "Commit hash: $(git branch --show-current) $(git rev-parse HEAD)"
 
-# (branch A), (failing without property fetch-depth: 0)
+# (branch A), (was failing without property fetch-depth: 0, now unclear...)
       - name: Push sync branch (GitHub CLI)
         run: |
           gh auth setup-git
+          echo "Will push ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}, this step may fail, see script comments in that case..."
           git push origin ${{ env.GITHUB_BRANCH_TO_BE_SYNC }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+# (branch B) 
       - name: Merge fresh upstream changes from ${{ env.GITHUB_BRANCH_TO_BE_SYNC }} into github's master
         run: |
           # Rebase of master 
