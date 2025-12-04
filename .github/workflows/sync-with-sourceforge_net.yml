@@ -16,55 +16,82 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      #############################
-      # 1. Checkout full repo
-      #############################
+      #################################
+      # 1. Checkout full repository
+      #################################
       - name: Checkout master with full history
         uses: actions/checkout@v4
         with:
           ref: master
-          fetch-depth: 0     # Full history = required
+          fetch-depth: 0
+          fetch-tags: true
           persist-credentials: false
 
-      ###################################
-      # 2. Fetch the sync branch (origin)
-      ###################################
+      ############################################
+      # 2. Fetch sync branch from origin
+      ############################################
       - name: Fetch master_sync branch from origin
         run: |
           git fetch origin ${GITHUB_BRANCH_TO_BE_SYNC}:${GITHUB_BRANCH_TO_BE_SYNC} || \
-          git checkout -b ${GITHUB_BRANCH_TO_BE_SYNC}       # if branch doesn't exist remotely
+          git checkout -b ${GITHUB_BRANCH_TO_BE_SYNC}
 
-      ###################################
-      # 3. Add & fetch SourceForge remote
-      ###################################
+      ############################################
+      # 3. Add and fetch SourceForge remote
+      ############################################
       - name: Add SourceForge remote
         run: git remote add sourceforge git://git.code.sf.net/p/log4cpp/codegit
 
-      - name: Fetch SourceForge branches
-        run: git fetch sourceforge
+      - name: Fetch sourceforge (branches + tags)
+        run: git fetch --tags sourceforge
 
-      ###################################
-      # 4. Rebase sync branch onto upstream
-      ###################################
+      ############################################
+      # 4. Sync tags from SourceForge → GitHub
+      ############################################
+      - name: Sync tags from SourceForge to GitHub
+        run: |
+          # List tags present in SourceForge that GitHub doesn't have
+          echo "Checking for missing or updated tags..."
+          for tag in $(git tag --list --merged sourceforge/master); do
+            # Fetch the tag object from sourceforge to ensure we have it locally
+            git fetch sourceforge tag $tag
+
+            # Compare GitHub's version vs SourceForge version
+            local_hash="$(git rev-parse refs/tags/$tag^{})"
+            sf_hash="$(git rev-parse sourceforge/tags/$tag^{})" || sf_hash="$(git rev-parse $tag^{})"
+
+            if [ "$local_hash" != "$sf_hash" ]; then
+              echo "Tag $tag differs or is missing → updating..."
+              git tag -f $tag $sf_hash
+            fi
+          done
+
+      #################################################
+      # 5. Rebase sync branch on top of sourceforge/master
+      #################################################
       - name: Update sync branch with SourceForge master
         run: |
           git checkout ${GITHUB_BRANCH_TO_BE_SYNC}
           git rebase sourceforge/master
 
-      ###################################
-      # 5. Merge sync into local master
-      ###################################
+      ############################################
+      # 6. Merge updated sync → master
+      ############################################
       - name: Merge sync branch into GitHub master
         run: |
           git checkout master
           git merge ${GITHUB_BRANCH_TO_BE_SYNC}
 
-      ###################################
-      # 6. Push results back to GitHub
-      ###################################
-      - name: Push updated master to GitHub
+      ############################################
+      # 7. Push branches + tags back to GitHub
+      ############################################
+      - name: Push updated master + tags
         run: |
           gh auth setup-git
+
+          # Push branch
           git push origin master
+
+          # Push all tags (updated or new)
+          git push --tags origin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
