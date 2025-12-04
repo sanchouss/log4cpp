@@ -20,8 +20,8 @@ jobs:
         with:
           persist-credentials: false
           ref: master
-          fetch-depth: 0     # <--- checkout FULL HISTORY, should help to resolve trouble with (branch A) in this script
-          fetch-tags: true   # optional but recommended
+#          fetch-depth: 0     # <--- checkout FULL HISTORY, should help to resolve trouble with (branch A) in this script
+#          fetch-tags: true   # optional but recommended
 
       - name: Set up Git
         run: |
@@ -52,7 +52,7 @@ jobs:
           git rebase sourceforge.net/master
           echo "Commit hash: $(git branch --show-current) $(git rev-parse HEAD)"
 
-# (branch A), failing
+# (branch A), (failing without property fetch-depth: 0)
       - name: Push sync branch (GitHub CLI)
         run: |
           gh auth setup-git
