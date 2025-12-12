@@ -1,3 +1,9 @@
+2025-12-12 20:18  sanchouss_
+	* Fix few compilation warnings
+	* Reformat source codebase automatically with clang-format-21
+	* Add .clang-format, BasedOnStyle: LLVM, with only minor tweaks to stay closer to the most of the current files
+	* Mirror git repository at github: https://github.com/log4cpp/log4cpp
+
 2025-11-13 20:48  sanchouss_
 	* CMake script update; support for Embarcadero RAD Studio 12
 
