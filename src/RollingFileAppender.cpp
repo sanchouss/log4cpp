@@ -32,12 +32,12 @@ namespace log4cpp {
     RollingFileAppender::RollingFileAppender(const std::string& name, const std::string& fileName, size_t maxFileSize,
                                              unsigned int maxBackupIndex, bool append, mode_t mode)
         : FileAppender(name, fileName, append, mode), _maxBackupIndex(maxBackupIndex > 0 ? maxBackupIndex : 1),
-          _maxBackupIndexWidth((_maxBackupIndex > 0) ? log10((float)_maxBackupIndex) + 1 : 1),
+          _maxBackupIndexWidth((_maxBackupIndex > 0) ? (unsigned short int)(log10((float)_maxBackupIndex)) + 1 : 1),
           _maxFileSize(maxFileSize) {}
 
     void RollingFileAppender::setMaxBackupIndex(unsigned int maxBackups) {
         _maxBackupIndex = maxBackups;
-        _maxBackupIndexWidth = (_maxBackupIndex > 0) ? log10((float)_maxBackupIndex) + 1 : 1;
+        _maxBackupIndexWidth = (_maxBackupIndex > 0) ? (unsigned short int)(log10((float)_maxBackupIndex)) + 1 : 1;
     }
 
     unsigned int RollingFileAppender::getMaxBackupIndex() const {
