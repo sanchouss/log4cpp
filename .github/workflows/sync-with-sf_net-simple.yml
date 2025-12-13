@@ -31,5 +31,5 @@ jobs:
 
       - name: Push mirror
         run: |
-          git push origin --all
+          git push origin refs/remotes/upstream/master:refs/heads/master --force
           git push origin --tags
