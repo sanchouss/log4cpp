@@ -1,0 +1,30 @@
+name: Sync with sourceforge on cron
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # every 30 minutes
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout mirror repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Add upstream
+        run: |
+          git remote add upstream https://git.code.sf.net/p/log4cpp/codegit
+
+      - name: Fetch upstream
+        run: |
+          git fetch --prune upstream
+
+      - name: Push mirror
+        run: |
+          git push origin --all
+          git push origin --tags
