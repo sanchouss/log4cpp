@@ -1,4 +1,4 @@
-name: Sync with sourceforge on cron
+name: Sync with sourceforge, simper workflow file
 
 on:
   #schedule:
@@ -17,6 +17,7 @@ jobs:
       - name: Checkout mirror repo
         uses: actions/checkout@v4
         with:
+          ref: master
           fetch-depth: 0
           fetch-tags: true
 
