@@ -1,6 +1,6 @@
 # This git branch (sync_with_sourceforge) exists solely for running Git Action
 # if re-run of workflow is not visible, updating and commiting workflow file should help to get re-run back
-name: Sync with sourceforge, simper workflow file
+name: Sync with sourceforge, simpler flow
 
 on:
   #schedule:
@@ -10,6 +10,9 @@ on:
   push:
     branches:
       - sync_with_sourceforge
+
+permissions:
+  contents: write
 
 jobs:
   mirror:
