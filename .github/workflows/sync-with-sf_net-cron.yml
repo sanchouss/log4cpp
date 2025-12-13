@@ -1,9 +1,13 @@
 name: Sync with sourceforge on cron
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"  # every 30 minutes
+  #schedule:
+  # Scheduled workflows only run if the workflow file exists on the default branch.
+  #  - cron: "*/30 * * * *"  # every 30 minutes
   workflow_dispatch:
+  push:
+    branches:
+      - sync_with_sourceforge
 
 jobs:
   mirror:
