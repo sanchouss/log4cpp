@@ -77,13 +77,13 @@ endforeach()
 
 # List of resource files to copy
 set(TEST_RESOURCE_FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/log4cpp.init"
-        "${CMAKE_CURRENT_SOURCE_DIR}/log4cpp.nt.property"
+        "${CMAKE_CURRENT_SOURCE_DIR}/testSimpleConfig.log4cpp.init"
+        "${CMAKE_CURRENT_SOURCE_DIR}/testPropConfig.log4cpp.nt.properties"
         "${CMAKE_CURRENT_SOURCE_DIR}/log4cpp.properties"
-        "${CMAKE_CURRENT_SOURCE_DIR}/log4cpp.property"
-        "${CMAKE_CURRENT_SOURCE_DIR}/testConfig.log4cpp.dailyroll.properties"
-        "${CMAKE_CURRENT_SOURCE_DIR}/testConfig.log4cpp.dailyroll.nt.properties"
-        "${CMAKE_CURRENT_SOURCE_DIR}/testConfig.log4cpp.properties"
+        "${CMAKE_CURRENT_SOURCE_DIR}/testPropConfig.log4cpp.properties"
+        "${CMAKE_CURRENT_SOURCE_DIR}/testDailyRollingFileAppender.log4cpp.properties"
+        "${CMAKE_CURRENT_SOURCE_DIR}/testDailyRollingFileAppender.log4cpp.nt.properties"
+        "${CMAKE_CURRENT_SOURCE_DIR}/testPropertyConfig.log4cpp.properties"
         "${CMAKE_CURRENT_SOURCE_DIR}/testProperties.properties"
 )
 

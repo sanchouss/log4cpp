@@ -52,7 +52,7 @@
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\tests\log4cpp.property ."/>
+				CommandLine="copy ..\..\tests\testPropConfig.log4cpp.properties ."/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -138,7 +138,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\tests\log4cpp.property">
+			RelativePath="..\..\tests\testPropConfig.log4cpp.properties">
 		</File>
 		<File
 			RelativePath=".\log4cpp.xml">

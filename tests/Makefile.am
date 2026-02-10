@@ -1,13 +1,15 @@
 TESTS = testCategory testFixedContextCategory testNDC testPattern \
 	testErrorCollision testPriority testFilter testProperties \
-	testConfig testPropertyConfig testRollingFileAppender testDailyRollingFileAppender
+	testSimpleConfig testPropertyConfig testRollingFileAppender testDailyRollingFileAppender
 
 check_PROGRAMS = $(TESTS)
-check_DATA = log4cpp.init log4cpp.properties testProperties.properties \
-	testConfig.log4cpp.properties
+check_DATA = testSimpleConfig.log4cpp.init log4cpp.properties testProperties.properties \
+	testPropertyConfig.log4cpp.properties testDailyRollingFileAppender.log4cpp.properties \
+	testPropConfig.log4cpp.properties
 
-EXTRA_DIST = log4cpp.init log4cpp.properties testProperties.properties \
-	testConfig.log4cpp.properties \
+EXTRA_DIST = testSimpleConfig.log4cpp.init log4cpp.properties testProperties.properties \
+	testPropertyConfig.log4cpp.properties testDailyRollingFileAppender.log4cpp.properties \
+	testPropConfig.log4cpp.properties \
 	testNTEventLog.cpp
 
 noinst_PROGRAMS = testmain testbench
@@ -32,8 +34,8 @@ testPattern_LDADD = $(top_builddir)/src/liblog4cpp.la
 testPriority_SOURCES = testPriority.cpp
 testPriority_LDADD = $(top_builddir)/src/liblog4cpp.la
 
-testConfig_SOURCES = testConfig.cpp
-testConfig_LDADD = $(top_builddir)/src/liblog4cpp.la
+testSimpleConfig_SOURCES = testSimpleConfig.cpp
+testSimpleConfig_LDADD = $(top_builddir)/src/liblog4cpp.la
 
 testPropertyConfig_SOURCES = testPropertyConfig.cpp
 testPropertyConfig_LDADD = $(top_builddir)/src/liblog4cpp.la

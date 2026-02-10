@@ -1,4 +1,4 @@
-// testConfig.cpp : Derived from testPattern.cpp.
+// testPropConfig.cpp : Derived from testPattern.cpp.
 //
 
 #include <log4cpp/Portability.hh>
@@ -22,9 +22,9 @@
 void testPropConfigRead() {
     std::string initFileName;
 #if defined(WIN32)
-    initFileName = "./log4cpp.nt.property";
+    initFileName = "./testPropConfig.log4cpp.nt.properties";
 #else
-    initFileName = "./log4cpp.property";
+    initFileName = "./testPropConfig.log4cpp.properties";
 #endif
     log4cpp::PropertyConfigurator::configure(initFileName);
 

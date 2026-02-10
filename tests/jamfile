@@ -12,7 +12,7 @@ test-suite log4cpp :
   [ run testPriority.cpp ]
   [ run testFilter.cpp ]
   [ run testProperties.cpp ../src/Properties.cpp ../src/StringUtil.cpp : : : <include>../src ]
-  [ run testConfig.cpp ]
+  [ run testSimpleConfig.cpp ]
   [ run testPropertyConfig.cpp ]
   [ run testmain.cpp ]
   [ run testPropConfig.cpp ]

@@ -132,9 +132,9 @@ int testConfigDailyRollingFileAppender() {
     std::string initFileName;
     try {
 #if defined(WIN32)
-        initFileName = "./testConfig.log4cpp.dailyroll.nt.properties";
+        initFileName = "./testDailyRollingFileAppender.log4cpp.nt.properties";
 #else
-        initFileName = "./testConfig.log4cpp.dailyroll.properties";
+        initFileName = "./testDailyRollingFileAppender.log4cpp.properties";
 #endif
         if (srcdir != NULL) {
             initFileName = std::string(srcdir) + PATHDELIMITER + initFileName;

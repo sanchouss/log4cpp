@@ -83,8 +83,8 @@
       </HeaderFileName>
     </Midl>
     <PostBuildEvent>
-      <Command>copy ..\..\tests\log4cpp.property .</Command>
-      <Command>copy ..\..\tests\log4cpp.nt.property .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.properties .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.nt.properties .</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -128,8 +128,8 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>copy ..\..\tests\log4cpp.property .</Command>
-      <Command>copy ..\..\tests\log4cpp.nt.property .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.properties .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.nt.properties .</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

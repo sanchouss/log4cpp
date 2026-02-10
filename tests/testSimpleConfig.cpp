@@ -1,4 +1,4 @@
-// testConfig.cpp : Derived from testPattern.cpp.
+// testSimpleConfig.cpp : Derived from testPattern.cpp.
 //
 
 #include <log4cpp/Portability.hh>
@@ -45,9 +45,9 @@ int main(int argc, char* argv[]) {
         char* srcdir = getenv("srcdir");
         std::string initFileName;
         if (srcdir == NULL) {
-            initFileName = "./log4cpp.init";
+            initFileName = "./testSimpleConfig.log4cpp.init";
         } else {
-            initFileName = std::string(srcdir) + "/log4cpp.init";
+            initFileName = std::string(srcdir) + "/testSimpleConfig.log4cpp.init";
         }
         log4cpp::SimpleConfigurator::configure(initFileName);
     } catch (log4cpp::ConfigureFailure& f) {

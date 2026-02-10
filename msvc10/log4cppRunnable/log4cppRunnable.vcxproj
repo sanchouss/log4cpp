@@ -106,8 +106,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\tests\log4cpp.property .</Command>
-      <Command>copy ..\..\tests\log4cpp.nt.property .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.properties .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.nt.properties .</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,8 +134,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\tests\log4cpp.property .</Command>
-      <Command>copy ..\..\tests\log4cpp.nt.property .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.properties .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.nt.properties .</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug with Boost|Win32'">
@@ -161,8 +161,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\tests\log4cpp.property .</Command>
-      <Command>copy ..\..\tests\log4cpp.nt.property .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.properties .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.nt.properties .</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release with Boost|Win32'">
@@ -188,8 +188,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\tests\log4cpp.property .</Command>
-      <Command>copy ..\..\tests\log4cpp.nt.property .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.properties .</Command>
+      <Command>copy ..\..\tests\testPropConfig.log4cpp.nt.properties .</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

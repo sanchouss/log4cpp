@@ -76,7 +76,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Ws2_32.lib  ../log4cpp/Debug/log4cppD.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=copy ..\..\tests\log4cpp.property .
+PostBuild_Cmds=copy ..\..\tests\testPropConfig.log4cpp.properties .
 # End Special Build Tool
 
 !ENDIF 
@@ -87,7 +87,7 @@ PostBuild_Cmds=copy ..\..\tests\log4cpp.property .
 # Name "testPropConfig - Win32 Debug"
 # Begin Source File
 
-SOURCE=..\..\tests\log4cpp.property
+SOURCE=..\..\tests\testPropConfig.log4cpp.properties
 # End Source File
 # Begin Source File
 

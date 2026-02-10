@@ -1,4 +1,4 @@
-// testConfig.cpp : Derived from testPattern.cpp.
+// testPropertyConfig.cpp : Derived from testPattern.cpp.
 //
 
 #include <log4cpp/Portability.hh>
@@ -45,9 +45,9 @@ int main(int argc, char* argv[]) {
         char* srcdir = getenv("srcdir");
         std::string initFileName;
         if (srcdir == NULL) {
-            initFileName = "./testConfig.log4cpp.properties";
+            initFileName = "./testPropertyConfig.log4cpp.properties";
         } else {
-            initFileName = std::string(srcdir) + "/testConfig.log4cpp.properties";
+            initFileName = std::string(srcdir) + "/testPropertyConfig.log4cpp.properties";
         }
         log4cpp::PropertyConfigurator::configure(initFileName);
     } catch (log4cpp::ConfigureFailure& f) {
