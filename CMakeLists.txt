@@ -3,7 +3,7 @@
 # Alexander Perepelkin sanchouss@users.sourceforge.net
 #
 # Note:
-# (1) A dummy file include/config.h is required (remnant from configure)
+# (1) A dummy file include/config.h is required (remnant from configure, produced by command ./configure)
 # (2) Default installation directory is /usr/local, override with -DCMAKE_INSTALL_PREFIX="" during cmake
 #     invocation
 # (3) Do the usual "make clean all" to build the library
@@ -20,11 +20,19 @@ INCLUDE ( CMakePackageConfigHelpers )
 SET ( LOG4CPP_LIBRARY_NAME "log4cpp" )
 #SET ( CMAKE_VERBOSE_MAKEFILE ON )
 
+IF ( CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR )
+  SET ( LOG4CPP_IS_TOP_LEVEL ON )
+ELSE ()
+  SET ( LOG4CPP_IS_TOP_LEVEL OFF )
+ENDIF ()
+
 FIND_PACKAGE ( Threads REQUIRED )
 
 IF (NOT CMAKE_BUILD_TYPE)
   SET ( CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." )
 ENDIF ()
+
+OPTION ( LOG4CPP_BUILD_EXAMPLES "Build log4cpp examples" OFF )
 
 # for macOS use var APPLE
 IF (WIN32)
@@ -199,3 +207,7 @@ INSTALL (
   ${CMAKE_CURRENT_BINARY_DIR}/log4cppConfigVersion.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/log4cpp
 )
+
+IF ( LOG4CPP_BUILD_EXAMPLES AND LOG4CPP_IS_TOP_LEVEL )
+  ADD_SUBDIRECTORY ( examples )
+ENDIF ()
