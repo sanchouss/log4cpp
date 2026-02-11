@@ -16,7 +16,7 @@
 
 namespace log4cpp {
 
-    class Properties : public std::map<std::string, std::string> {
+    class LOG4CPP_EXPORT Properties : public std::map<std::string, std::string> {
       public:
         Properties();
         virtual ~Properties();
