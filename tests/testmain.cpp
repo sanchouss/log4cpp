@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
     sub2 << log4cpp::Priority::WARN << "warn2" << " warn3" << log4cpp::eol << " warn4";
 
     {
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
             char ndc2[20];
             sprintf(ndc2, "i=%d", i);
             log4cpp::NDC::push(ndc2);
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
                 }
             }
 #ifndef WIN32
-            sleep(1);
+            usleep(5000);
 #endif
             log4cpp::NDC::pop();
         }

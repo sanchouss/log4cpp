@@ -5,6 +5,7 @@
 
 #ifdef WIN32
 #include <windows.h>
+#include <crtdbg.h>
 #endif
 #ifdef LOG4CPP_HAVE_UNISTD_H
 #include <unistd.h>
@@ -16,7 +17,6 @@
 #include <log4cpp/HierarchyMaintainer.hh>
 #include <log4cpp/PropertyConfigurator.hh>
 
-#include <crtdbg.h>
 #include <stdlib.h>
 
 void testPropConfigRead() {
