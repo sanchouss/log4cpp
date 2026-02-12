@@ -3,7 +3,7 @@ Bastiaan Bakker <bastiaan.bakker@lifeline.nl>. The current development team
 consists of Bastiaan Bakker, Cedric Le Goater, Steve Ostlind, Marcel 
 Harkema, Walter Stroebel, Glenn Scott and Tony Cheung. 
 
-This project would not have existed without Ceki Gülcü <cgu@urbanet.ch>, the 
+This project would not have existed without Ceki Gulcu <cgu@urbanet.ch>, the
 maintainer of LOG4J.
 
 Cedric Le Goater <cedric@legoater.com> (autoconf setup, various improvements).
@@ -11,11 +11,11 @@ Marc Welz <marc@jade.cs.uct.ac.za> (IdsaAppender)
 Lynn Owen <opl@agoby.com> (MSVC++ support)
 Steve Ostlind <s.ostlind@pentasafe.com> (MSVC++ support, various fixes)
 Marcel Harkema <marcel@debian.org> (Debian packaging)
-Uwe Jäger <jaeger@varial.de> (Borland support)
+Uwe Jaeger <jaeger@varial.de> (Borland support)
 Walter Stroebel <walter.stroebel@lifeline.nl> (RemoteSyslogAppender)
 Glen Scott <glen_s@yahoo.com> (PatternLayout, SimpleConfigurator)
 Tony Cheung <dragonman@asiayeah.com> (OpenVMS support)
-Alex Tapaccos <ATapaccos@redfig.com> (DailyRollingFileAppender)
+Alex Tapaccos <ATapaccos@redfig.com> (RollingFileAppender)
 Brendan B. Boerner <bboerner@texas.net> (Multiple Appender support for
          Categories)
 Paulo Pizarro <paulo.pizarro@digitro.com.br> (RollingFileAppender)
@@ -24,4 +24,4 @@ Aaron Ingram <ai8@yahoo.com> (MSThreads support)
 Alan Anderson <alan@rushmore.com> (Win32DebugAppender, PropertyConfigurator)
 Emiliano Martin <emilianomc@terra.es> (PThreads support)
 Harald Wellmann <Harald.Wellmann@gmx.de> (QNX Neutrino support)
-Alexander Perepelkin <sanchouss_@users.sf.net> (Project maintenance, improvements, fixes)
+Alexander Perepelkin <sanchouss_@users.sf.net> (DailyRollingFileAppender. Project maintenance, improvements, fixes)
