@@ -17,6 +17,7 @@
 #include "log4cpp/Priority.hh"
 
 int main(int argc, char** argv) {
+    std::cout << "Hello from " << LOG4CPP_PACKAGE_NAME << " ver." << LOG4CPP_PACKAGE_VERSION << std::endl;
     log4cpp::Appender* appender;
 #ifdef LOG4CPP_HAVE_SYSLOG
     log4cpp::SyslogAppender* syslogAppender;

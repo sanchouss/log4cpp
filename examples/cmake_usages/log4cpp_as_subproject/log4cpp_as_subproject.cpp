@@ -12,6 +12,7 @@ int main() {
     log4cpp::PropertyConfigurator::configure(initFileName);
     log4cpp::Category &root = log4cpp::Category::getRoot();
 
-    root.info("Hello, log4cpp lib as cmake subdirectory!");
+    root.info("Hello, Hello, %s %s library as cmake subdirectory!!",
+        LOG4CPP_PACKAGE_NAME, LOG4CPP_PACKAGE_VERSION);
     return 0;
 }
