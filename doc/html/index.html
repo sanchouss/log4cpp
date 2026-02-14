@@ -15,7 +15,7 @@ for C++ Project
 Page on Sourceforge</a>
 </span> &nbsp;|
 <span>Last Published:
-2025-12-12</span> &nbsp;|</div>
+2026-02-15</span> &nbsp;|</div>
 <hr class="delimiter">
 <div id="projectpage">
 <div id="navigationpanel" class="lightbackground">
@@ -647,6 +647,16 @@ WARNING: releases from the development branch are a 'work in progress' and may f
 </p>
 	<p>Each release will receive a tag named REL_x_y_z or prefixed with REL_x.y.z</p>
 <small>
+
+<dl>
+<dt>1.1.6rc1 - master branch (15 February 2026)</dt>
+<dd>CMake support is enhanced. Building examples is enabled via the CMake's <code>LOG4CPP_BUILD_EXAMPLES</code> option.
+	CMake usage examples are provided for both scenarios: importing a CMake-installed log4cpp library and using
+	log4cpp as a CMake subproject.</dd>
+<dd>Emulate autotools behaviour when building via CMake and generate <code>include/log4cpp/config.h</code> from Autotools-style
+	<code>config.h.in</code></dd>
+<dd>Add test build support using CTest</dd>
+</dl>
 
 <dl>
 <dt>1.1.5 - master branch (01 December 2025)</dt>

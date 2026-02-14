@@ -1,3 +1,29 @@
+2026-02-12 21:39  sanchouss_
+    * Sync lib versions in CMakeLists.txt and configure.in, set 1.1.6
+
+2026-02-12 21:21  sanchouss_
+	* Bunch of renaming for the tests:
+    testConfig.log4cpp.properties -> testPropertyConfig.log4cpp.properties
+    testConfig.log4cpp.dailyroll.properties -> testDailyRollingFileAppender.log4cpp.properties
+    testConfig.log4cpp.dailyroll.nt.properties -> testDailyRollingFileAppender.log4cpp.nt.properties
+    log4cpp.property -> testPropConfig.log4cpp.properties
+    log4cpp.nt.property -> testPropConfig.log4cpp.nt.properties
+    testConfig.cpp -> testSimpleConfig.cpp
+    log4cpp.init -> testSimpleConfig.log4cpp.init
+
+2026-02-11 23:13  sanchouss_
+    * CMake: add test build support using CTest
+      Collect test*.cpp sources, build them against log4cpp (shared or static), and register tests with CTest.
+
+2026-02-09 22:35  sanchouss_
+    * Building examples is enabled via the LOG4CPP_BUILD_EXAMPLES option.
+      CMake usage examples are provided for both scenarios: importing a CMake-installed log4cpp library and using
+      log4cpp as a CMake subproject.
+      Both shared and static library variants are demonstrated.
+      The CMake usage examples can be built either as part of the log4cpp library (when LOG4CPP_BUILD_EXAMPLES is
+      enabled) or as standalone CMake applications that import or include log4cpp from their own directories.
+      Emulate autotools behaviour and generate include/log4cpp/config.h from Autotools-style config.h.in
+
 2025-12-12 20:18  sanchouss_
 	* Fix few compilation warnings
 	* Reformat source codebase automatically with clang-format-21
