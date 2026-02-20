@@ -15,7 +15,6 @@
 #include <log4cpp/LoggingEvent.hh>
 #include <log4cpp/Portability.hh>
 #include <log4cpp/Priority.hh>
-#include <log4cpp/convenience.h>
 #include <log4cpp/threading/Threading.hh>
 
 #include <cstdarg>
