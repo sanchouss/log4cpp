@@ -97,7 +97,9 @@ namespace log4cpp {
     unsigned int StringUtil::split(std::vector<std::string>& v, const std::string& s, char delimiter,
                                    unsigned int maxSegments) {
         v.clear();
-        std::back_insert_iterator<std::vector<std::string>> it(v);
+        // clang-format off
+        std::back_insert_iterator< std::vector<std::string> > it(v);
+        // clang-format on
         return split(it, s, delimiter, maxSegments);
     }
 

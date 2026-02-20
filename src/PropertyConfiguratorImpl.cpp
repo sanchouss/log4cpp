@@ -99,7 +99,9 @@ namespace log4cpp {
             const std::string& key = (*i).first;
             const std::string& value = (*i).second;
             std::list<std::string> propNameParts;
-            std::back_insert_iterator<std::list<std::string>> pnpIt(propNameParts);
+            // clang-format off
+            std::back_insert_iterator< std::list<std::string> > pnpIt(propNameParts);
+            // clang-format on
             StringUtil::split(pnpIt, key, '.');
             std::list<std::string>::const_iterator i2 = propNameParts.begin();
             std::list<std::string>::const_iterator iEnd = propNameParts.end();
@@ -141,7 +143,9 @@ namespace log4cpp {
             (categoryName == "rootCategory") ? Category::getRoot() : Category::getInstance(categoryName);
 
         std::list<std::string> tokens;
-        std::back_insert_iterator<std::list<std::string>> tokIt(tokens);
+        // clang-format off
+        std::back_insert_iterator< std::list<std::string> > tokIt(tokens);
+        // clang-format on
         StringUtil::split(tokIt, (*iter).second, ',');
         std::list<std::string>::const_iterator i = tokens.begin();
         std::list<std::string>::const_iterator iEnd = tokens.end();
