@@ -8,6 +8,7 @@ Compiled source #
 *.lo
 *.la
 *.so
+*.trs
 #auto generated
 Makefile.in
 Makefile
