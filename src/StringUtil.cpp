@@ -41,10 +41,18 @@ namespace log4cpp {
         while (1) {
             va_list args_copy;
 
-#if defined(_MSC_VER) || defined(__BORLANDC__) || !(defined(__cplusplus) && (__cplusplus >= 201103L))
+#if (defined(__cplusplus) && (__cplusplus >= 201103L))
+            // C++11 compatible
+            va_copy(args_copy, args);
+#elif defined(__GNUC__)
+            // On GCC pre-C++11, __va_copy(dest, src) exists instead of va_copy
+            __va_copy(args_copy, args);
+#elif defined(_MSC_VER) || defined(__BORLANDC__)
+            // On older MSVC/Borland, simple assignment works
             args_copy = args;
 #else
-            va_copy(args_copy, args);
+            // fallback to simple copy in any other case
+            args_copy = args;
 #endif
 
             int n = VSNPRINTF(buffer, size, format, args_copy);
