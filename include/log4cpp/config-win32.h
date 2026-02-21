@@ -9,6 +9,7 @@
 #define _INCLUDE_LOG4CPP_CONFIG_WIN32_H 1
  
 /* manually edited from include/log4cpp/config.h */
+#include <log4cpp/config-project-version.h>
 
 /* Define if you have the syslog function.  */
 /* #undef LOG4CPP_HAVE_SYSLOG */
@@ -61,16 +62,6 @@ typedef u_long in_addr_t;
 
 /* Define if you have the `strcasecmp' function. */
 /* #undef LOG4CPP_HAVE_STRCASECMP */
-
-/* Name of package */
-#ifndef LOG4CPP_PACKAGE
-#define LOG4CPP_PACKAGE  "log4cpp"
-#endif
-
-/* Version number of package */
-#ifndef LOG4CPP_VERSION
-#define LOG4CPP_VERSION  "1.0"
-#endif
 
 /* define if the compiler implements namespaces */
 #ifndef LOG4CPP_HAVE_NAMESPACES

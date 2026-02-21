@@ -11,6 +11,7 @@
 /* include/log4cpp/config.h. Generated automatically at end of configure. */
 /* include/config.h.  Generated automatically by configure.  */
 /* include/config.h.in.  Generated automatically from configure.in by autoheader.  */
+#include <log4cpp/config-project-version.h>
 
 /* Define if you have the <dlfcn.h> header file. */
 #ifndef LOG4CPP_HAVE_DLFCN_H 
@@ -60,15 +61,5 @@
 #define LOG4CPP_HAVE_UNISTD_H  1 
 #endif
 
-/* Name of package */
-#ifndef LOG4CPP_PACKAGE 
-#define LOG4CPP_PACKAGE  "log4cpp" 
-#endif
-
-/* Version number of package */
-#ifndef LOG4CPP_VERSION 
-#define LOG4CPP_VERSION  "1.0" 
-#endif
- 
 /* _INCLUDE_LOG4CPP_CONFIG_OPENVMS_H */
 #endif
