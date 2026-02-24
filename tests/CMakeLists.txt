@@ -73,6 +73,10 @@ foreach(test_source IN LISTS TEST_EXECUTABLE_SOURCES)
     # Add test to CTest
     add_test(NAME ${test_name} COMMAND ${test_name})
     set_tests_properties(${test_name} PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    # Add path to the shared library into PATH for the test on windows so CTest can run it
+    if(WIN32)
+        set_tests_properties(${test_name} PROPERTIES ENVIRONMENT "PATH=$<TARGET_FILE_DIR:${LOG4CPP_TEST_LIB}>;$ENV{PATH}")
+    endif()
 endforeach()
 
 # List of resource files to copy
