@@ -27,8 +27,8 @@ Page on Sourceforge</a>
 	<ul>
 		<li><a title="Linux/*nix" href="#buildlinux">Linux/*nix, Autoconf</a> </li>
 		<li><a title="Linux/*nix" href="#buildcmake">Linux/*nix, CMake</a> </li>
-		<li><a title="Windows, prj files" href="#buildwindowsprj">Windows, prj files</a> </li>
 		<li><a title="Windows, CMake" href="#buildwindowscmake">Windows, CMake</a> </li>
+		<li><a title="Windows, prj files" href="#buildwindowsprj">Windows, prj files</a> </li>
 	</ul>
 <li><a title="License" href="#license">License</a>
 </li>
@@ -92,7 +92,7 @@ the source tar-ball is as simple as
 
 <div class="chapter">
 <h2><a id="building">Building Log4cpp</a></h2>
-<h3><a id="buildlinux">Autoconf</a></h3>
+<h3><a id="buildlinux">Linux/*nix, Autoconf</a></h3>
 <p>The project uses <a href="https://www.gnu.org/software/automake/">GNU Autotools</a> as primary build system.
 	<a href="#buildcmake">CMake</a> is secondary option.</p>
 <p>If file <code>./configure</code> is absent in project directory (as when the code is checked out from repository), run the following:</p>
@@ -166,7 +166,69 @@ to draw its graphs.</dd>
 </dl>
 
 <p></p>
-<h3>Build notes for specific platforms</h3>
+<a href="#begin">^</a>
+<p></p>
+
+	<h3><a id="buildcmake">Linux/*nix, CMake</a></h3>
+	<p>Browse into the source code catalog (<code>log4cpp</code>) and run the following for <b>Release build</b>:</p>
+	<pre class="code">
+cmake -S . -B build_release -DCMAKE_BUILD_TYPE=Release<br>
+cmake --build build_release</pre>
+	This will create <code>./build_release</code>, compile and build libraries into it.
+	<p>Optionally, run tests (expected result is 100% tests passed):</p>
+	<pre class="code">
+cd build_release/tests<br>
+ctest</pre>
+
+	<p><b>Debug build</b> is analogous:</p>
+	<pre class="code">
+cmake -S . -B build_debug -DCMAKE_BUILD_TYPE=Debug<br>
+cmake --build build_debug</pre>
+	<p>Run tests for debug build:</p>
+	<pre class="code">
+cd build_debug/tests<br>
+ctest</pre>
+
+	<p></p>
+	<a href="#begin">^</a>
+	<p></p>
+
+	<h3><a id="buildwindowscmake">Windows, CMake</a></h3>
+	<h4>MS Visual Studio 2022</h4>
+	<blockquote>
+		<p><b>MS Visual Studio 2022</b> can open <code>log4cpp</code> directly as a CMake project.
+		<ul>
+			<li>Use <code>File → Open → CMake...</code> menu items to choose <code>log4cpp/CMakeLists.txt</code> file and start CMake generation.</li>
+			<li>After CMake generation is finished, choose <code>Build → Build All</code> to build <code>log4cpp</code> libs.</li>
+			<li>Optionally, run set of tests from <code>Test → Run CTests</code> </li>
+		</ul>
+		<br><small>Note: Native project files intended for older MSVC versions (<code>msvc10, msvc7, msvc6</code>)
+		are archived since log4cpp 1.1.6 into <code>projects</code> directory.</small>
+		</p>
+	</blockquote>
+	<h4>Embarcadero RAD Studio 12</h4>
+	<blockquote>
+		<p><b>Embarcadero RAD Studio 12</b> can build <code>log4cpp</code> project using its bundled version of CMake, provided via the RAD Package Manager.<br>
+			Make sure that Embarcadero's CMake (and not another installation) is used for command line.
+			Ninja generator will be used as build system, you can get <code>ninja-win.zip</code> at
+			<a href="https://ninja-build.org/">Ninja site</a> and extract the executable into catalog included into PATH environment variable.<br>
+			Open <b>RAD Studio Command Prompt</b> and run commands to build <code>log4cpp</code> libs:</p>
+		<p>Release:</p>
+		<pre class="code">
+cmake.exe -G Ninja -S . -B build_release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
+cmake.exe --build build_release --config Release -v	</pre>
+		<p>Debug:</p>
+		<pre class="code">
+cmake.exe -G Ninja -S . -B build_debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
+cmake.exe --build build_debug --config Debug -v	</pre>
+	</blockquote>
+	<p><i>Works since log4cpp 1.1.5. </i></p>
+
+	<p></p>
+	<a href="#begin">^</a>
+	<p></p>
+
+	<h3>Build notes for specific platforms</h3>
 <dl>
 <dt>*nix - g++ compiler</dt>
 <dd>Log4cpp should build without modification on any decent
@@ -185,15 +247,17 @@ Also static libraries appear not to work. In short do:
 </dl>
 <dl>
 <dt><a id="buildwindowsprj">Win32 - VS2010</a></dt>
-<dd>Use the workspace and project files in subdirectory msvc10.
-(You may need to adjust include/log4cpp/config-win32.h and the project
-files to your particular needs)</dd>
+<dd>Use the workspace and project files in subdirectory <code>msvc10</code>.
+You may need to adjust <code>include/log4cpp/config-win32.h</code> and the project
+files to your particular needs. Since log4cpp 1.1.6, directory with project
+files is kept as archive in directory <code>projects</code>. Extract it into project's root to use.</dd>
 </dl>
 <dl>
 <dt>Win32 - MSVC++ 6</dt>
-<dd>Use the workspace and project files in subdirectory msvc6.
-You may need to adjust include/log4cpp/config-win32.h and the project
-files to your particular needs.</dd>
+<dd>Use the workspace and project files in subdirectory <code>msvc6</code>.
+You may need to adjust <code>include/log4cpp/config-win32.h</code> and the project
+files to your particular needs. Since log4cpp 1.1.6, directory with project
+files is kept as archive in directory <code>projects</code>. Extract it into project's root to use.</dd>
 </dl>
 
 <dl>
@@ -205,11 +269,12 @@ code.</dd>
 </dl>
 <dl>
 <dt>Win32 - Borland C++ Builder 5</dt>
-<dd>Use the project and make files in subdirectory bcb5.</dd>
+<dd>Use the project and make files in subdirectory <code>bcb5</code>. Since log4cpp 1.1.6, directory with project
+files is kept as archive in directory <code>projects</code>. Extract it into project's root to use.</dd>
 </dl>
 <dl>
 <dt>Win32 - Cygwin</dt>
-<dd>Use './configure; make; make install'.<br>
+<dd>Use <code>./configure; make; make install</code><br>
 Be warned that there have been very few success or failure reports for
 this platform,
  so either it works very smoothly or noone actively uses log4cpp with
@@ -219,7 +284,7 @@ Cygwin :-)
 <dl>
 <dt>OpenVMS</dt>
 <dt></dt>
-<dd>Edit include/log4cpp/config-openvms.h if you need
+<dd>Edit <code>include/log4cpp/config-openvms.h</code> if you need
 different settings.<br>
 This has been tested on OpenVMS Alpha v7.3 and Compaq C++ V6.3-020
 only.
@@ -249,47 +314,10 @@ A1$DKB0:[USER.TONY.PROJECT.LOG4CPP.REPOSITORY].<br>
 </dl>
 </dl>
 
-<h3><a id="buildcmake">CMake</a></h3>
-	<p>Browse into the source code catalog (<code>log4cpp</code>) and run the following for Release build:</p>
-	<pre class="code">
-cmake -S . -B build_release -DCMAKE_BUILD_TYPE=Release<br>
-cmake --build build_release
-	</pre>
-	This will create <code>./build_release</code>, compile and build libraries into it.
-	<p>Debug build is analogous:</p>
-	<pre class="code">
-cmake -S . -B build_debug -DCMAKE_BUILD_TYPE=Debug<br>
-cmake --build build_debug
-	</pre>
-	<h3><a id="buildwindowscmake">Windows, CMake</a></h3>
-	<h4>MS Visual Studio 2022</h4>
-	<blockquote>
-	<p><b>MS Visual Studio 2022</b> can open <code>log4cpp</code> directly as a CMake project.
-		Use <code>File → Open → CMake...</code> menu items to choose <code>log4cpp/CMakeLists.txt</code> file and start CMake generation.
-		After generation is finished, choose <code>Build → Build All</code> to build <code>log4cpp</code> libs.
-		<br>Note: Make sure not to use project files intended for older MSVC versions (<code>msvc10, msvc7, msvc6</code>).
-		If such files are used, you may encounter build error like: (<code>Platform Toolset = 'v100') cannot be found</code>.
-	</p>
-	</blockquote>
-	<h4>Embarcadero RAD Studio 12</h4>
-	<blockquote>
-	<p><b>Embarcadero RAD Studio 12</b> can build <code>log4cpp</code> project using its bundled version of CMake, provided via the RAD Package Manager.<br>
-		Make sure that Embarcadero's CMake (and not another installation) is used for command line.
-		Ninja generator will be used as build system, you can get <code>ninja-win.zip</code> at
-		<a href="https://ninja-build.org/">Ninja site</a> and extract the executable into catalog included into PATH environment variable.<br>
-		Open <b>RAD Studio Command Prompt</b> and run commands to build <code>log4cpp</code> libs:</p>
-	<p>Release:</p>
-	<pre class="code">
-cmake.exe -G Ninja -S . -B build_release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
-cmake.exe --build build_release --config Release -v	</pre>
-	<p>Debug:</p>
-	<pre class="code">
-cmake.exe -G Ninja -S . -B build_debug -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CROSSCOMPILING=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ASM_COMPILER=bcc64x -DCMAKE_C_COMPILER=bcc64x -DCMAKE_CXX_COMPILER=bcc64x<br>
-cmake.exe --build build_debug --config Debug -v	</pre>
-	</blockquote>
-	<p><i>Works since log4cpp 1.1.5. </i></p>
+	<p></p>
+	<a href="#begin">^</a>
+	<p></p>
 
-<a href="#begin">^</a>
 </div>
 
 <div class="chapter">
