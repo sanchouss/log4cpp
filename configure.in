@@ -153,24 +153,6 @@ include/Makefile
 include/log4cpp/Makefile
 include/log4cpp/threading/Makefile
 tests/Makefile
-msvc6/Makefile
-msvc6/log4cpp/Makefile
-msvc6/log4cppDLL/Makefile
-msvc6/testCategory/Makefile
-msvc6/testDLL/Makefile
-msvc6/testMain/Makefile
-msvc6/testNDC/Makefile
-msvc6/testNTEventLog/Makefile
-msvc6/testPattern/Makefile
-bcb5/Makefile
-bcb5/log4cpp/Makefile
-bcb5/testCategory/Makefile
-bcb5/testConfig/Makefile
-bcb5/testFixedContextCategory/Makefile
-bcb5/testmain/Makefile
-bcb5/testNDC/Makefile
-bcb5/testPattern/Makefile
-openvms/Makefile
 ])
 AC_OUTPUT
 
