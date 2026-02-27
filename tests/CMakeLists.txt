@@ -64,7 +64,7 @@ foreach(test_source IN LISTS TEST_EXECUTABLE_SOURCES)
     # include src dir for "Properties.hh"
     TARGET_INCLUDE_DIRECTORIES ( ${test_name}
             PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../src>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
     # Link against log4cpp (shared or static) and threads; includes are added automatically
