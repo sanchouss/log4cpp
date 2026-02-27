@@ -1,3 +1,14 @@
+2026-02-20 20:37  sanchouss_
+    * Add formatted and streaming log4cpp macros with compile-time stripping
+      - Formatted macros (LOG4CPP_DEBUG, LOG4CPP_INFO, etc.) support variadic arguments
+      - Streaming macros (LOG4CPP_DEBUG_S, LOG4CPP_INFO_S, etc.) take a stream sequence parameter
+      - Runtime priority checks use isPriorityEnabled for all macros
+      - Introduce LOG4CPP_ACTIVE_LEVEL to strip disabled log levels at compile time
+      - Disabled at compile-time levels resolve to ((void)0) for zero-cost logging
+      - All log levels are duplicated as macros in addition to enum values, since the preprocessor cannot compare enum constants
+    * vsnprintf: Use va_copy for C+11 and later; use __va_copy for GCC pre-C++11; fallback to simple copy
+    * Native project files are archived to prevent MS VS from mixing old project files with CMake builds
+
 2026-02-12 21:39  sanchouss_
     * Sync lib versions in CMakeLists.txt and configure.in, set 1.1.6
 

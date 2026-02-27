@@ -398,9 +398,8 @@ For some small examples using log4cpp, see the 'tests' subdirectory.
 Also see the documentation section for a pointer for API documentation
 and more usage information. 
 <h4>3.2. Is log4cpp thread-safe?</h4>
-The same instance of the log4cpp::Category object (a logger) can be used from different threads simultaneously without explicit synchronization. Concurrent access to the appenders will be prevented by the logger object itself. It will lock internal mutex each time when it comes to writing into appenders. So, it is safe, for example, to write from the multiple threads to the same logger which appends to the same file.
-Although, if log4cpp is configured by the user in such a way that two different loggers append to the same appender (it may be a file), then there will be no way for the logging framework to arrange proper addition and things can get mixed up. So this way of configuration is not recommended.
-<h4>3.3. What are possible format characters for the custom log message?</h4>
+	The same instance of a log4cpp::Category object (a logger) can be used simultaneously from multiple threads without explicit synchronization. Concurrent access to appenders is handled by the logger itself. It locks an internal mutex each time it writes to an appender. Therefore, it is safe, for example, for multiple threads to write to the same logger that appends to the same file.
+	However, if log4cpp is configured in such a way that two different loggers append to the same appender (for example, the same file appender), the framework cannot guarantee proper synchronization between them, and log messages may become interleaved or corrupted. Configuring multiple loggers to share the same appender instance is therefore not recommended.<h4>3.3. What are possible format characters for the custom log message?</h4>
 PatternLayout supports following set of format characters:<br>
 <li><b>%%</b> - a single percent sign</li>
 <li><b>%c</b> - the category</li>
