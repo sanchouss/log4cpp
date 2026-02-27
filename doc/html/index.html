@@ -15,7 +15,7 @@ for C++ Project
 Page on Sourceforge</a>
 </span> &nbsp;|
 <span>Last Published:
-2026-02-15</span> &nbsp;|</div>
+2026-02-27</span> &nbsp;|</div>
 <hr class="delimiter">
 <div id="projectpage">
 <div id="navigationpanel" class="lightbackground">
@@ -676,13 +676,16 @@ WARNING: releases from the development branch are a 'work in progress' and may f
 <small>
 
 <dl>
-<dt>1.1.6rc1 - master branch (15 February 2026)</dt>
+<dt>1.1.6rc2 - master branch (27 February 2026)</dt>
 <dd>CMake support is enhanced. Building examples is enabled via the CMake's <code>LOG4CPP_BUILD_EXAMPLES</code> option.
 	CMake usage examples are provided for both scenarios: importing a CMake-installed log4cpp library and using
 	log4cpp as a CMake subproject.</dd>
 <dd>Emulate autotools behaviour when building via CMake and generate <code>include/log4cpp/config.h</code> from Autotools-style
 	<code>config.h.in</code></dd>
 <dd>Add test build support using CTest</dd>
+<dd>Add formatted and streaming log4cpp macros with compile-time stripping</dd>
+<dd>vsnprintf: Use va_copy for C+11 and later; use __va_copy for GCC pre-C++11; fallback to simple copy</dd>
+<dd>Native project files are archived to prevent MS VS from mixing old project files with CMake builds</dd>
 </dl>
 
 <dl>
