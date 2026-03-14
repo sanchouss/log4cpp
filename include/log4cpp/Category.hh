@@ -22,11 +22,40 @@
 #include <stdexcept>
 #include <vector>
 
+/**
+ * \def LOG4CPP_PRINTF_FORMAT_ATTR(fmt, arg)
+ *
+ * Enables compile-time checking of printf-style format strings and arguments
+ * when supported by the compiler.
+ *
+ * \param fmt 1-based index of the format string parameter
+ * \param arg 1-based index of the first argument after the format string
+ *
+ * \note Supporting compilers:
+ *  - GCC/Clang: uses \c __attribute__((format(printf, fmt, arg)))
+ *  - MSVC: uses \c _Printf_format_string_ for static analysis
+ *  - Other compilers: expands to nothing
+ */
+#if defined(__has_attribute)
+#if __has_attribute(format)
+#define LOG4CPP_PRINTF_FORMAT_ATTR(fmt, arg) __attribute__((format(printf, fmt, arg)))
+#endif
+#endif
+
+#ifdef _MSC_VER
+#include <sal.h>
+#define LOG4CPP_PRINTF_FORMAT_ATTR(fmt, arg) _Printf_format_string_
+#endif
+
+#ifndef LOG4CPP_PRINTF_FORMAT_ATTR
+#define LOG4CPP_PRINTF_FORMAT_ATTR(fmt, arg)
+#endif
+
 namespace log4cpp {
 
     /**
-     * This is the central class in the log4j package. One of the distintive
-     * features of log4j (and hence log4cpp) are hierarchal categories and
+     * This is the central class in the log4j package. One of the distinctive
+     * features of log4j (and hence log4cpp) are hierarchical categories and
      * their evaluation.
      **/
     class LOG4CPP_EXPORT Category {
@@ -36,7 +65,7 @@ namespace log4cpp {
         /**
          * Return the root of the Category hierarchy.
          *
-         * <p>The root category is always instantiated and available. It's
+         * <p>The root category is always instantiated and available. Its
          * name is the empty string.
 
          * <p>Unlike in log4j, calling <code>Category.getInstance("")</code>
@@ -147,7 +176,7 @@ namespace log4cpp {
          * Adds an Appender to this Category.
          * This method passes ownership from the caller to the Category.
          * @since 0.2.7
-         * @param appender The Appender to wich this category has to log.
+         * @param appender The Appender to which this category has to log.
          * @exception std::invalid_argument if the appender is NULL.
          **/
         virtual void addAppender(Appender* appender);
@@ -203,7 +232,7 @@ namespace log4cpp {
         virtual Appender* getAppender(const std::string& name) const;
 
         /**
-         * Returns the set of Appenders currently attached to this Catogory.
+         * Returns the set of Appenders currently attached to this Category.
          * @since 0.3.1
          * @returns The set of attached Appenders.
          **/
@@ -243,10 +272,10 @@ namespace log4cpp {
          * warning.
          *
          * <p>This method always calls all the appenders inherited form the
-         * hierracy circumventing any evaluation of whether to log or not to
+         * hierarchy circumventing any evaluation of whether to log or not to
          * log the particular log request.
          *
-         * @param event the LogginEvent to log.
+         * @param event the LoggingEvent to log.
          **/
         virtual void callAppenders(const LoggingEvent& event) LOG4CPP_NOTHROW;
 
@@ -280,8 +309,10 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        virtual void log(Priority::Value priority, const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        virtual void log(Priority::Value priority, const char* stringFormat, ...) LOG4CPP_NOTHROW
+            LOG4CPP_PRINTF_FORMAT_ATTR(3, 4);
 
         /**
          * Log a message with the specified priority.
@@ -297,16 +328,19 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param va The arguments for stringFormat.
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        virtual void logva(Priority::Value priority, const char* stringFormat, va_list va) LOG4CPP_NOTHROW;
+        virtual void logva(Priority::Value priority, const char* stringFormat, va_list va) LOG4CPP_NOTHROW
+            LOG4CPP_PRINTF_FORMAT_ATTR(3, 0);
 
         /**
          * Log a message with trace priority.
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void trace(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void trace(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with trace priority.
@@ -335,8 +369,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void debug(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void debug(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with debug priority.
@@ -365,8 +400,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void info(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void info(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with info priority.
@@ -395,8 +431,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void notice(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void notice(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with notice priority.
@@ -425,8 +462,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void warn(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void warn(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with warn priority.
@@ -455,8 +493,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void error(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void error(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with error priority.
@@ -485,8 +524,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void crit(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void crit(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with crit priority.
@@ -515,8 +555,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void alert(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void alert(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with alert priority.
@@ -545,8 +586,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void emerg(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void emerg(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with emerg priority.
@@ -577,8 +619,9 @@ namespace log4cpp {
          * @param stringFormat Format specifier for the string to write
          * in the log file.
          * @param ... The arguments for stringFormat
+         * @note Checked at compile-time for type/format consistency when supported by compiler.
          **/
-        void fatal(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+        void fatal(const char* stringFormat, ...) LOG4CPP_NOTHROW LOG4CPP_PRINTF_FORMAT_ATTR(2, 3);
 
         /**
          * Log a message with fatal priority.
