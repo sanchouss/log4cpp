@@ -91,6 +91,7 @@ namespace log4cpp {
         case Priority::NOTICE:
         case Priority::INFO:
         case Priority::DEBUG:
+        case Priority::TRACE:
         default:
             ret_val = EVENTLOG_INFORMATION_TYPE;
             break;

@@ -153,6 +153,7 @@ int main(int argc, char** argv) {
     testLogva(root, log4cpp::Priority::INFO, "This contains %d %s", 2, "variable arguments");
     testLogva(root, log4cpp::Priority::NOTICE, "This contains %d %s", 2, "variable arguments");
     testLogva(root, log4cpp::Priority::DEBUG, "This contains %d %s", 2, "variable arguments");
+    testLogva(root, log4cpp::Priority::TRACE, "This contains %d %s", 2, "variable arguments");
 
     char lengthy1[] =
         "Test for variable-arguments lists overflow. Test for variable-arguments lists overflow. Test for "

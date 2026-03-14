@@ -301,6 +301,36 @@ namespace log4cpp {
         virtual void logva(Priority::Value priority, const char* stringFormat, va_list va) LOG4CPP_NOTHROW;
 
         /**
+         * Log a message with trace priority.
+         * @param stringFormat Format specifier for the string to write
+         * in the log file.
+         * @param ... The arguments for stringFormat
+         **/
+        void trace(const char* stringFormat, ...) LOG4CPP_NOTHROW;
+
+        /**
+         * Log a message with trace priority.
+         * @param message string to write in the log file
+         **/
+        void trace(const std::string& message) LOG4CPP_NOTHROW;
+
+        /**
+         * Return true if the Category will log messages with priority TRACE.
+         * @returns Whether the Category will log.
+         **/
+        inline bool isTraceEnabled() const LOG4CPP_NOTHROW {
+            return isPriorityEnabled(Priority::TRACE);
+        };
+
+        /**
+         * Return a CategoryStream with priority TRACE.
+         * @returns The CategoryStream.
+         **/
+        inline CategoryStream traceStream() {
+            return getStream(Priority::TRACE);
+        }
+
+        /**
          * Log a message with debug priority.
          * @param stringFormat Format specifier for the string to write
          * in the log file.

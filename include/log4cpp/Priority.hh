@@ -64,7 +64,7 @@ namespace log4cpp {
 
         /**
          * Predefined Levels of Priorities. These correspond to the
-         * priority levels used by syslog(3).
+         * priority levels used by syslog(3), except TRACE
          **/
         typedef enum {
             EMERG = 0,
@@ -76,7 +76,8 @@ namespace log4cpp {
             NOTICE = 500,
             INFO = 600,
             DEBUG = 700,
-            NOTSET = 800
+            TRACE = 800,
+            NOTSET = 900
         } PriorityLevel;
 
         /**

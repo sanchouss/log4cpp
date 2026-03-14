@@ -29,6 +29,10 @@ int main() {
     std::string moduleName = "CoreModule";
     std::string alertMsg = "High temperature detected";
 
+    LOG4CPP_TRACE(logger, "Trace value: %d", value);
+    std::cout
+        << "Trace value message should have not been printed out, since it should have been removed at compile-time"
+        << std::endl;
     LOG4CPP_DEBUG(logger, "Debug value: %d", value);
     std::cout
         << "Debug value message should have not been printed out, since it should have been removed at compile-time"
@@ -53,6 +57,7 @@ int main() {
     LOG4CPP_NOTICE(logger, "notice level, no variadic support");
     LOG4CPP_INFO(logger, "info level, no variadic support");
     LOG4CPP_DEBUG(logger, "debug level, no variadic support");
+    LOG4CPP_TRACE(logger, "trace level, no variadic support");
     std::cout << "debug level should have not been printed out, since it should have been removed at compile-time"
               << std::endl;
 #endif
@@ -66,8 +71,12 @@ int main() {
     LOG4CPP_NOTICE_S(logger, "notice level via stream macro" << " " << 42);
     LOG4CPP_INFO_S(logger, "info level via stream macro" << "");
     LOG4CPP_DEBUG_S(logger, "debug level via stream macro");
+    LOG4CPP_TRACE_S(logger, "debug level via stream macro");
     std::cout
         << "Debug stream message should have not been printed out, since it should have been removed at compile-time"
+        << std::endl;
+    std::cout
+        << "Trace stream message should have not been printed out, since it should have been removed at compile-time"
         << std::endl;
 
     return 0;

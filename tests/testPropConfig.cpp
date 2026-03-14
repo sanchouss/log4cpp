@@ -4,8 +4,8 @@
 #include <log4cpp/Portability.hh>
 
 #ifdef WIN32
-#include <windows.h>
 #include <crtdbg.h>
+#include <windows.h>
 #endif
 #ifdef LOG4CPP_HAVE_UNISTD_H
 #include <unistd.h>
@@ -20,6 +20,9 @@
 #include <stdlib.h>
 
 void testPropConfigRead() {
+    static int iteration = 0;
+    std::cout << "testPropConfigRead() iter#" << ++iteration << std::endl;
+
     std::string initFileName;
 #if defined(WIN32)
     initFileName = "./testPropConfig.log4cpp.nt.properties";
@@ -41,7 +44,9 @@ void testPropConfigRead() {
     // the following 2 should only be in A1, not A2
     sub1.info("sub1 info");
     sub1.debug("sub1 debug");
+    sub1.trace("sub1 trace");
 
+    sub2.trace("sub2 trace");
     // do a few so that the log rolls over
     sub2.warn("sub2 warn 1");
     sub2.warn("sub2 warn 2");

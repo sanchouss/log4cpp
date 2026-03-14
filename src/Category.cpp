@@ -275,6 +275,20 @@ namespace log4cpp {
         }
     }
 
+    void Category::trace(const char* stringFormat, ...) LOG4CPP_NOTHROW {
+        if (isPriorityEnabled(Priority::TRACE)) {
+            va_list va;
+            va_start(va, stringFormat);
+            _logUnconditionally(Priority::TRACE, stringFormat, va);
+            va_end(va);
+        }
+    }
+
+    void Category::trace(const std::string& message) LOG4CPP_NOTHROW {
+        if (isPriorityEnabled(Priority::TRACE))
+            _logUnconditionally2(Priority::TRACE, message);
+    }
+
     void Category::debug(const char* stringFormat, ...) LOG4CPP_NOTHROW {
         if (isPriorityEnabled(Priority::DEBUG)) {
             va_list va;

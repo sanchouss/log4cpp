@@ -30,6 +30,7 @@
  *
  * log4cpp::Category& logger = log4cpp::Category::getRoot();
  *
+ * LOG4CPP_TRACE(logger, "Trace log for fine-grained debugging");
  * LOG4CPP_DEBUG(logger, "This debug log will be stripped at compile time");
  * LOG4CPP_INFO(logger,  "Application started");
  * LOG4CPP_WARN(logger,  "Low disk space: %d%% remaining", diskPercent);
@@ -49,10 +50,15 @@
 #define LOG4CPP_PRIORITY_NOTICE 500
 #define LOG4CPP_PRIORITY_INFO 600
 #define LOG4CPP_PRIORITY_DEBUG 700
-#define LOG4CPP_PRIORITY_NOTSET 800
+#define LOG4CPP_PRIORITY_TRACE 800
+#define LOG4CPP_PRIORITY_NOTSET 900
 
 // Compile-time stripping
 #ifdef LOG4CPP_ACTIVE_LEVEL
+#if LOG4CPP_ACTIVE_LEVEL < LOG4CPP_PRIORITY_TRACE
+#define LOG4CPP_DISABLE_TRACE
+#define LOG4CPP_DISABLE_TRACE_S
+#endif
 #if LOG4CPP_ACTIVE_LEVEL < LOG4CPP_PRIORITY_DEBUG
 #define LOG4CPP_DISABLE_DEBUG
 #define LOG4CPP_DISABLE_DEBUG_S
@@ -129,6 +135,20 @@
     } while (0)
 
 // Level macros using DISABLE flags
+#ifdef LOG4CPP_DISABLE_TRACE
+#define LOG4CPP_TRACE(logger, ...) ((void)0)
+#else
+/**
+ * @brief Logs a TRACE-level message.
+ *
+ * TRACE is more detailed than DEBUG and used for fine-grained debugging information.
+ *
+ * @example
+ * LOG4CPP_TRACE(logger, "Entering function %s, value=%d", __func__, value);
+ */
+#define LOG4CPP_TRACE(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::TRACE, __VA_ARGS__)
+#endif
+
 #ifdef LOG4CPP_DISABLE_DEBUG
 #define LOG4CPP_DEBUG(logger, ...) ((void)0)
 #else
@@ -246,6 +266,12 @@
         }                                                                                                              \
     } while (0)
 
+#ifdef LOG4CPP_DISABLE_TRACE
+#define LOG4CPP_TRACE(logger, msg) ((void)0)
+#else
+#define LOG4CPP_TRACE(logger, msg) LOG4CPP_LOG_NO_VA(logger, log4cpp::Priority::TRACE, msg)
+#endif
+
 #ifdef LOG4CPP_DISABLE_DEBUG
 #define LOG4CPP_DEBUG(logger, msg) ((void)0)
 #else
@@ -310,6 +336,12 @@
             (logger).getStream(priority) << streamSequence;                                                            \
         }                                                                                                              \
     } while (0)
+
+#ifdef LOG4CPP_DISABLE_TRACE_S
+#define LOG4CPP_TRACE_S(logger, streamSequence) ((void)0)
+#else
+#define LOG4CPP_TRACE_S(logger, streamSequence) LOG4CPP_STREAM(logger, log4cpp::Priority::TRACE, streamSequence)
+#endif
 
 #ifdef LOG4CPP_DISABLE_DEBUG_S
 #define LOG4CPP_DEBUG_S(logger, streamSequence) ((void)0)
