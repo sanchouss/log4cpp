@@ -24,19 +24,21 @@
  * Formatting macros are not available on older compilers that lack variadic macro support.
  * In such cases, only macros accepting static messages are defined.
  *
- * @example
+ * Example:
+ * @code
  * #define LOG4CPP_ACTIVE_LEVEL log4cpp::Priority::INFO
  * #include <log4cpp/LogMacros.hh>
  *
  * log4cpp::Category& logger = log4cpp::Category::getRoot();
  *
- * LOG4CPP_TRACE(logger, "Trace log for fine-grained debugging");
- * LOG4CPP_DEBUG(logger, "This debug log will be stripped at compile time");
+ * LOG4CPP_TRACE(logger, "Trace log for fine-grained debugging, will be stripped at compile time");
+ * LOG4CPP_DEBUG(logger, "This debug log will too be stripped at compile time");
  * LOG4CPP_INFO(logger,  "Application started");
  * LOG4CPP_WARN(logger,  "Low disk space: %d%% remaining", diskPercent);
  * LOG4CPP_ERROR(logger, "Failed to open file: %s", filename.c_str());
  *
  * LOG4CPP_INFO_S(logger, "Value=" << x << std::endl);
+ * @endcode
  */
 
 // Possible values for LOG4CPP_ACTIVE_LEVEL.
@@ -124,8 +126,10 @@
  * @param priority The log4cpp::Priority level
  * @param ... Variadic arguments for formatting
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_LOG(logger, log4cpp::Priority::INFO, "User %d logged in", userId);
+ * @endcode
  */
 #define LOG4CPP_LOG(logger, priority, ...)                                                                             \
     do {                                                                                                               \
@@ -143,8 +147,10 @@
  *
  * TRACE is more detailed than DEBUG and used for fine-grained debugging information.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_TRACE(logger, "Entering function %s, value=%d", __func__, value);
+ * @endcode
  */
 #define LOG4CPP_TRACE(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::TRACE, __VA_ARGS__)
 #endif
@@ -155,8 +161,10 @@
 /**
  * @brief Logs a DEBUG-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_DEBUG(logger, "Debug value: %d", value);
+ * @endcode
  */
 #define LOG4CPP_DEBUG(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::DEBUG, __VA_ARGS__)
 #endif
@@ -167,8 +175,10 @@
 /**
  * @brief Logs an INFO-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_INFO(logger, "Application started");
+ * @endcode
  */
 #define LOG4CPP_INFO(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::INFO, __VA_ARGS__)
 #endif
@@ -179,8 +189,10 @@
 /**
  * @brief Logs a NOTICE-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_NOTICE(logger, "Configuration loaded successfully");
+ * @endcode
  */
 #define LOG4CPP_NOTICE(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::NOTICE, __VA_ARGS__)
 #endif
@@ -191,8 +203,10 @@
 /**
  * @brief Logs a WARN-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_WARN(logger, "Low memory: %d MB remaining", memoryMb);
+ * @endcode
  */
 #define LOG4CPP_WARN(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::WARN, __VA_ARGS__)
 #endif
@@ -203,8 +217,10 @@
 /**
  * @brief Logs an ERROR-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_ERROR(logger, "Failed to open file: %s", filename.c_str());
+ * @endcode
  */
 #define LOG4CPP_ERROR(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::ERROR, __VA_ARGS__)
 #endif
@@ -215,8 +231,10 @@
 /**
  * @brief Logs a CRIT-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_CRIT(logger, "Critical error in module %s", moduleName.c_str());
+ * @endcode
  */
 #define LOG4CPP_CRIT(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::CRIT, __VA_ARGS__)
 #endif
@@ -227,8 +245,10 @@
 /**
  * @brief Logs an ALERT-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_ALERT(logger, "Immediate attention required: %s", alertMsg.c_str());
+ * @endcode
  */
 #define LOG4CPP_ALERT(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::ALERT, __VA_ARGS__)
 #endif
@@ -239,8 +259,10 @@
 /**
  * @brief Logs a FATAL-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_FATAL(logger, "Fatal error, shutting down");
+ * @endcode
  */
 #define LOG4CPP_FATAL(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::FATAL, __VA_ARGS__)
 #endif
@@ -251,8 +273,10 @@
 /**
  * @brief Logs an EMERG-level message.
  *
- * @example
+ * Example:
+ * @code
  * LOG4CPP_EMERG(logger, "System is unusable!");
+ * @endcode
  */
 #define LOG4CPP_EMERG(logger, ...) LOG4CPP_LOG(logger, log4cpp::Priority::EMERG, __VA_ARGS__)
 #endif
