@@ -19,7 +19,7 @@
 
 /* Define to the full name and version of this package. */
 #ifndef LOG4CPP_PACKAGE_STRING
-#define LOG4CPP_PACKAGE_STRING "log4cpp 1.1.6"
+#define LOG4CPP_PACKAGE_STRING "log4cpp 1.1.7"
 #endif
 
 /* Define to the one symbol short name of this package. */
@@ -34,12 +34,12 @@
 
 /* Define to the version of this package. */
 #ifndef LOG4CPP_PACKAGE_VERSION
-#define LOG4CPP_PACKAGE_VERSION "1.1.6"
+#define LOG4CPP_PACKAGE_VERSION "1.1.7"
 #endif
 
 /* Version number of package */
 #ifndef LOG4CPP_VERSION
-#define LOG4CPP_VERSION  "1.1.6"
+#define LOG4CPP_VERSION  "1.1.7"
 #endif
 
 #endif // LOG4CPP_CONFIG_PROJECT_COMMON_H
