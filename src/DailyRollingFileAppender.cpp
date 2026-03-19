@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <errno.h>
 #include <fcntl.h>
 #include <iostream>
 #include <log4cpp/Category.hh>
@@ -31,8 +32,14 @@
 #include <sstream>
 #endif
 
-#ifndef WIN32 // only available on Win32
+#ifndef WIN32
 #include <dirent.h>
+#endif
+
+#ifndef WIN32
+#define PATHDELIMITER "/"
+#else
+#define PATHDELIMITER "\\"
 #endif
 
 namespace log4cpp {
@@ -54,15 +61,22 @@ namespace log4cpp {
         } else {
             t = statBuf.st_mtime;
         }
-#ifndef WIN32 // only available on Win32
-        localtime_r(&t, &_logsTime);
+
+#ifndef WIN32
+        struct tm* lt_res = localtime_r(&t, &_logsTime);
+        if (lt_res == NULL) {
+            std::cerr << "Error converting the specified time to local calendar time" << std::endl;
+        }
 #else
-        localtime_s(&_logsTime, &t);
+        errno_t lt_res = localtime_s(&_logsTime, &t); // only available on Win32
+        if (lt_res != NULL) {
+            std::cerr << "Error converting the specified time to local calendar time: err " << lt_res << std::endl;
+        }
 #endif
     }
 
     void DailyRollingFileAppender::setMaxDaysToKeep(unsigned int maxDaysToKeep) {
-        _maxDaysToKeep = maxDaysToKeep;
+        _maxDaysToKeep = maxDaysToKeep != 0 ? maxDaysToKeep : maxDaysToKeepDefault;
     }
 
     unsigned int DailyRollingFileAppender::getMaxDaysToKeep() const {
@@ -73,37 +87,35 @@ namespace log4cpp {
         std::ostringstream filename_s;
         int res_close = ::close(_fd);
         if (res_close != 0) {
-            std::cerr << "Error closing file " << _fileName << std::endl;
+            std::cerr << "Error closing file " << _fileName << " _fd " << _fd << std::endl;
         }
         filename_s << _fileName << "." << _logsTime.tm_year + 1900 << "-" << std::setfill('0') << std::setw(2)
-                   << _logsTime.tm_mon + 1 << "-" << std::setw(2) << _logsTime.tm_mday << std::ends;
+                   << _logsTime.tm_mon + 1 << "-" << std::setw(2) << _logsTime.tm_mday;
         const std::string lastFn = filename_s.str();
         int res_rename = ::rename(_fileName.c_str(), lastFn.c_str());
         if (res_rename != 0) {
-            std::cerr << "Error renaming file " << _fileName << " to " << lastFn << std::endl;
+            std::cerr << "Error renaming file " << _fileName << " to " << lastFn << " errno: " << errno << std::endl;
         }
 
         _fd = ::open(_fileName.c_str(), _flags, _mode);
         if (_fd == -1) {
-            std::cerr << "Error opening file " << _fileName << std::endl;
+            std::cerr << "Error opening file " << _fileName << " errno: " << errno << std::endl;
         }
 
         const time_t oldest = time(NULL) - _maxDaysToKeep * 60 * 60 * 24;
 
-#ifndef WIN32
-#define PATHDELIMITER "/"
-#else
-#define PATHDELIMITER "\\"
-#endif
         // iterate over files around log file and delete older with same prefix
         const std::string::size_type last_delimiter = _fileName.rfind(PATHDELIMITER);
         const std::string dirname((last_delimiter == std::string::npos) ? "." : _fileName.substr(0, last_delimiter));
-        const std::string filname((last_delimiter == std::string::npos)
-                                      ? _fileName
-                                      : _fileName.substr(last_delimiter + 1, _fileName.size() - last_delimiter - 1));
-#ifndef WIN32 // only available on Win32
+        const std::string filename((last_delimiter == std::string::npos)
+                                       ? _fileName
+                                       : _fileName.substr(last_delimiter + 1, _fileName.size() - last_delimiter - 1));
+        const size_t prefixLen = filename.length();
+
+        // iterate over directory and delete files older than time_t oldest
+#ifndef WIN32
         struct dirent** entries;
-        int nentries = scandir(dirname.c_str(), &entries, 0, alphasort);
+        const int nentries = scandir(dirname.c_str(), &entries, 0, alphasort);
         if (nentries < 0)
             return;
         for (int i = 0; i < nentries; i++) {
@@ -114,9 +126,16 @@ namespace log4cpp {
                 free(entries[i]);
                 continue;
             }
-            if (statBuf.st_mtime < oldest && strstr(entries[i]->d_name, filname.c_str())) {
-                std::cout << " Deleting " << fullfilename.c_str() << std::endl;
-                ::unlink(fullfilename.c_str());
+            if (statBuf.st_mtime < oldest) {
+                // ensure entryName's prefix is filename + '.'
+                const char* entryName = entries[i]->d_name;
+                const size_t entryLen = std::strlen(entryName);
+                if (entryLen > prefixLen && strncmp(entryName, filename.c_str(), prefixLen) == 0 &&
+                    entryName[prefixLen] == '.') {
+                    if (::unlink(fullfilename.c_str())) {
+                        std::cerr << "Error deleting file " << fullfilename.c_str() << " errno: " << errno << std::endl;
+                    }
+                }
             }
             free(entries[i]);
         }
@@ -133,8 +152,9 @@ namespace log4cpp {
                 const std::string fullfilename = dirname + PATHDELIMITER + ffd.cFileName;
                 int res = ::stat(fullfilename.c_str(), &statBuf);
                 if (res != -1 && statBuf.st_mtime < oldest && !(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-                    std::cout << "Deleting " << fullfilename << "\n";
-                    ::unlink(fullfilename.c_str());
+                    if (::unlink(fullfilename.c_str())) {
+                        std::cerr << "Error deleting file " << fullfilename.c_str() << " errno: " << errno << std::endl;
+                    }
                 }
             } while (FindNextFile(hFind, &ffd) != 0);
 
@@ -151,7 +171,7 @@ namespace log4cpp {
         struct tm now;
         time_t t = time(NULL);
 
-#ifndef WIN32 // only available on Win32
+#ifndef WIN32
         bool timeok = localtime_r(&t, &now) != NULL;
 #else
         bool timeok = localtime_s(&now, &t) == 0;

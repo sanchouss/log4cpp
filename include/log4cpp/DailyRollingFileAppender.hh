@@ -18,16 +18,24 @@
 namespace log4cpp {
 
     /**
-       DailyRollingFileAppender is a FileAppender that rolls over the logfile once
-       the next day starts.
-       @since 1.1.2
-    **/
+     * DailyRollingFileAppender is a FileAppender that rolls over the logfile when a log event is recorded on a
+     * different day than the previous log event.
+     * SupportsDailyRollingFileAppender: more detailed documentation, added safety checks to implementation, refine
+     * tests automatic cleanup of old log files based on a configurable retention period. Log files older than (\c
+     * _maxDaysToKeep) are removed. The default value is \c maxDaysToKeepDefault.
+     *
+     * @since 1.1.2
+     */
     class LOG4CPP_EXPORT DailyRollingFileAppender : public FileAppender {
       public:
         DailyRollingFileAppender(const std::string& name, const std::string& fileName,
                                  unsigned int maxDaysToKeep = maxDaysToKeepDefault, bool append = true,
                                  mode_t mode = 00644);
 
+        /**
+         * Set \c _maxDaysToKeep.
+         * @param maxDaysToKeep if not positive, then \c maxDaysToKeepDefault is used instead.
+         */
         virtual void setMaxDaysToKeep(unsigned int maxDaysToKeep);
         virtual unsigned int getMaxDaysToKeep() const;
 
@@ -38,7 +46,11 @@ namespace log4cpp {
       protected:
         virtual void _append(const LoggingEvent& event);
 
+        /**
+         * Maximum number of days to keep log files on disk. Files older than this limit are deleted during rollover.
+         */
         unsigned int _maxDaysToKeep;
+
         /**
          * last log's file creation time (or last modification if appender just created)
          */

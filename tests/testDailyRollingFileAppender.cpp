@@ -33,7 +33,7 @@
 using namespace log4cpp;
 using namespace std;
 static const char* const test_message = "message";
-static const char* const daily_file_prefix = "dailyrolling_file.log";
+static const char* const daily_file_prefix = "dailyrolling_code_config.log";
 #define NESTEDDIR "nesteddir"
 #ifndef WIN32
 #define PATHDELIMITER "/"
@@ -43,7 +43,7 @@ static const char* const daily_file_prefix = "dailyrolling_file.log";
 const char* const nesteddirname = NESTEDDIR PATHDELIMITER;
 
 class DailyRollingTest {
-    DailyRollingFileAppender *dailyApp, *nestedDirDailyApp;
+    DailyRollingFileAppender *workingDirDailyApp, *nestedDirDailyApp;
 
   public:
     bool remove_impl(const char* filename) {
@@ -66,11 +66,13 @@ class DailyRollingTest {
         if (!remove_files())
             return false;
 
+        std::cout << "Configuring instance with code " << std::endl;
+
         Category& root = Category::getRoot();
-        dailyApp = new DailyRollingFileAppender("daily-rolling-appender", daily_file_prefix, 1);
+        workingDirDailyApp = new DailyRollingFileAppender("daily-rolling-appender", daily_file_prefix, 1);
         nestedDirDailyApp = new DailyRollingFileAppender("nesteddir-daily-rolling-appender",
                                                          std::string(nesteddirname).append(daily_file_prefix), 1);
-        root.addAppender(dailyApp);
+        root.addAppender(workingDirDailyApp);
         root.addAppender(nestedDirDailyApp);
         root.setPriority(Priority::DEBUG);
 
@@ -81,10 +83,10 @@ class DailyRollingTest {
         Category::getRoot().debugStream() << test_message << 1;
         Category::getRoot().debugStream() << test_message << 2;
         Category::getRoot().debugStream() << test_message << 3;
-        Category::getRoot().debugStream() << "The message before rolling over attempt";
-        dailyApp->rollOver();
+        Category::getRoot().debugStream() << "This message goes before rolling over attempt";
+        workingDirDailyApp->rollOver();
         nestedDirDailyApp->rollOver();
-        Category::getRoot().debugStream() << "The message after rolling over attempt";
+        Category::getRoot().debugStream() << "This message goes after rolling over attempt";
         Category::getRoot().debugStream() << test_message << 4;
         Category::getRoot().debugStream() << test_message << 5;
     }
@@ -101,10 +103,13 @@ class DailyRollingTest {
         return true;
     }
 
+    void teardown() {
+        std::cout << "Shutdown code configured instance" << std::endl;
+        Category::shutdown();
+    }
+
     bool check_log_files() {
         bool result = exists(daily_file_prefix);
-
-        Category::shutdown();
         return result && remove_files();
     }
 };
@@ -112,16 +117,15 @@ class DailyRollingTest {
 int testOnlyDailyRollingFileAppender() {
     DailyRollingTest dailyTest;
     if (!dailyTest.setup()) {
-        cout << "Setup has failed. Check for permissions on files " << daily_file_prefix << "*'.\n";
+        std::cerr << "Setup has failed. Check for permissions on files " << daily_file_prefix << "*'.\n";
         return -1;
     }
 
     dailyTest.make_log_files();
+    bool check = dailyTest.check_log_files();
+    dailyTest.teardown();
 
-    if (dailyTest.check_log_files())
-        return 0;
-    else
-        return -1;
+    return check ? 0 : -1;
 }
 
 int testConfigDailyRollingFileAppender() {
@@ -140,6 +144,7 @@ int testConfigDailyRollingFileAppender() {
             initFileName = std::string(srcdir) + PATHDELIMITER + initFileName;
         }
 
+        std::cout << "Configuring instance with properties file " << initFileName << std::endl;
         log4cpp::PropertyConfigurator::configure(initFileName);
     } catch (log4cpp::ConfigureFailure& f) {
         std::cout << "Configure Problem " << f.what() << "($srcdir=" << ((srcdir != NULL) ? srcdir : "NULL") << ")"
@@ -156,34 +161,48 @@ int testConfigDailyRollingFileAppender() {
     sub1.error("sub1 error");
     sub1.warn("sub1 warn");
 
+    std::cout << "Shutdown file configured instance" << std::endl;
     log4cpp::Category::shutdown();
     return 0;
 }
 
-//  Note: this test changes system time. Run it only manually
-namespace OnlyManualTesting {
+//  Note: this test changes system time. Run it only manually, will require admin privileges
+class OnlyManualTesting {
 
-    const char* absolutePathCategoryName = "absolutePathCategory";
+    const char* manualTimeTestCategoryName = "manualTimeTestCategory";
     const int maxDaysToKeep = 3;
 
 #if defined(WIN32)
-    const char* logFilename = "C:\\Temp\\log4cpp\\dailyrolling_abs_path_file.log";
-    const char* logPathname = "C:\\Temp\\log4cpp";
+    // absolute paths should pre-exist, mkdir will not create nested dirs
+    // const char* logFilename = "C:\\Temp\\log4cpp\\dailyrolling_time_test_file.log";
+    // const char* logPathname = "C:\\Temp\\log4cpp";
+    const char* logFilename = ".\\logs\\dailyrolling_time_test_file.log";
+    const char* logPathname = ".\\logs";
 #else
-    const char* logFilename = "/var/log/log4cpp/dailyrolling_abs_path_file.log";
-    const char* logPathname = "/var/log/log4cpp";
+    const char* logFilename = "./logs/dailyrolling_time_test_file.log";
+    const char* logPathname = "./logs";
 #endif
 
+  public:
     void setupManualEntryLog() {
+        std::cout << "Configuring instance with code for time jumping tests, using dir " << logPathname << std::endl;
+
+        int dirOk;
 #if defined(WIN32)
-        if (access(logPathname, 0) != 0) {
-            mkdir(logPathname);
+        dirOk = access(logPathname, 0);
+        if (dirOk != 0) {
+            dirOk = mkdir(logPathname);
         }
 #else
-        if (access(logPathname, F_OK) != 0) {
-            mkdir(logPathname, 644);
+        dirOk = access(logPathname, F_OK);
+        if (dirOk != 0) {
+            dirOk = mkdir(logPathname, 0755);
         }
 #endif
+
+        if (dirOk != 0) {
+            std::cerr << "Failed to create dir " << logPathname << std::endl;
+        }
 
         log4cpp::PatternLayout* ostreamLayout = new log4cpp::PatternLayout();
         ostreamLayout->setConversionPattern("%d: %p %c %x: %m %n");
@@ -196,7 +215,8 @@ namespace OnlyManualTesting {
             new log4cpp::DailyRollingFileAppender("fileAppender", logFilename, maxDaysToKeep);
         fileAppender->setLayout(fileLayout);
 
-        log4cpp::Category& absolutePathCategory = log4cpp::Category::getInstance(std::string(absolutePathCategoryName));
+        log4cpp::Category& absolutePathCategory =
+            log4cpp::Category::getInstance(std::string(manualTimeTestCategoryName));
         absolutePathCategory.setAdditivity(false);
 
         absolutePathCategory.addAppender(ostreamAppender);
@@ -204,9 +224,8 @@ namespace OnlyManualTesting {
         absolutePathCategory.setPriority(log4cpp::Priority::DEBUG);
     }
 
-    int checkThatNoMoreThanNLogFilesPresent(const std::string _fileName, int n);
-
     int jumpToFuture(int seconds) {
+        std::cout << "Jumping " << seconds << " seconds in system time..." << std::endl;
 
 #if defined(WIN32)
         SYSTEMTIME now;
@@ -241,31 +260,38 @@ namespace OnlyManualTesting {
             return -1;
         }
 #endif
+        const time_t t = time(NULL);
+        std::cout << "Jumped to " << ctime(&t) << std::endl;
         return 0;
     }
 
     int makeManualEntryLog() {
         const int totalLinesCount = 14, linesPerDay = 3, jumpPeriod = 24 * 60 * 60 + 1;
-        int i = 0, future = 0;
+        int i = 0, jumpedSecondsAlltogether = 0, expectedRollover = 0;
 
-        log4cpp::Category& absolutePathCategory = log4cpp::Category::getInstance(std::string(absolutePathCategoryName));
+        log4cpp::Category& absolutePathCategory =
+            log4cpp::Category::getInstance(std::string(manualTimeTestCategoryName));
 
-        // 1. update system time (eg: use 'date' command on Linux) manually when test program is running here (at least
-        // 4 times)
-        absolutePathCategory.debugStream() << "debug line " << i;
-        while (++i <= totalLinesCount) {
-            if (i % linesPerDay == 0) {
+        std::cout << "Logging some lines... " << std::endl;
+        // 1. Emulate several days uptime:
+        // * log linesPerDay
+        // * update system time (eg: use 'date' command on Linux) manually when test program is running here
+        // * expect file rollover happens on next logging
+        while (expectedRollover < maxDaysToKeep + 1) {
+            if (++i % linesPerDay == 0) {
                 if (jumpToFuture(jumpPeriod) == -1)
                     return -1;
-                future += jumpPeriod;
+                jumpedSecondsAlltogether += jumpPeriod;
+                ++expectedRollover;
             }
             absolutePathCategory.debugStream() << "debug line " << i;
         }
 
-        if (jumpToFuture(0 - future) == -1)
+        if (jumpToFuture(0 - jumpedSecondsAlltogether) == -1)
             return -1;
 
-        // 2. check the number of files in /var/log/log4cpp ( <= maxDaysToKeep) (+1 to allow consequent runs of test)
+        // 2. check that the number of files in dir logPathname is ( <= maxDaysToKeep) (+1 to allow consequent runs of
+        // test)
         if (checkThatNoMoreThanNLogFilesPresent(std::string(logFilename), maxDaysToKeep + 1) == -1)
             return -1;
 
@@ -273,7 +299,7 @@ namespace OnlyManualTesting {
     }
 
     //  Note: this test changes system time. Run it only manually
-    int checkThatNoMoreThanNLogFilesPresent(const std::string _fileName, int n) {
+    int checkThatNoMoreThanNLogFilesPresent(const std::string _fileName, int maxAllowedFileNumber) {
         // iterate over files around log file and count files with same prefix
         const std::string::size_type last_delimiter = _fileName.rfind(PATHDELIMITER);
         const std::string dirname((last_delimiter == std::string::npos) ? "." : _fileName.substr(0, last_delimiter));
@@ -281,7 +307,7 @@ namespace OnlyManualTesting {
                                       ? _fileName
                                       : _fileName.substr(last_delimiter + 1, _fileName.size() - last_delimiter - 1));
         int logFilesCount(0);
-#ifndef WIN32 // only available on Win32
+#ifndef WIN32
         struct dirent** entries;
         int nentries = scandir(dirname.c_str(), &entries, 0, alphasort);
         if (nentries < 0)
@@ -309,29 +335,39 @@ namespace OnlyManualTesting {
             hFind = INVALID_HANDLE_VALUE;
         }
 #endif
-        if (logFilesCount > n) {
-            std::cerr << "Too many log files in the dir " << dirname << ": " << logFilesCount << std::endl;
+        if (logFilesCount > maxAllowedFileNumber) {
+            std::cerr << "Too many log files in the dir " << dirname << ": " << logFilesCount
+                      << ", expected no more than " << maxAllowedFileNumber << std::endl;
         } else {
-            std::cout << "Daily log files in the dir " << dirname << ": " << logFilesCount << std::endl;
+            std::cout << "Daily log files in the dir " << dirname << ": " << logFilesCount << ", expected no more than "
+                      << maxAllowedFileNumber << std::endl;
         }
 
-        return (logFilesCount <= n) ? 0 : -1;
+        return (logFilesCount <= maxAllowedFileNumber) ? 0 : -1;
     }
 
-    int testDailyRollingFileAppenderChangeDateManualOnly() {
-        setupManualEntryLog();
-        return makeManualEntryLog();
+    void teardown() {
+        std::cout << "Shutdown manual run instance" << std::endl;
+        Category::shutdown();
     }
-} // namespace OnlyManualTesting
+};
+
+int testDailyRollingFileAppenderChangeDateManualOnly() {
+    OnlyManualTesting manualTesting;
+    manualTesting.setupManualEntryLog();
+    int res = manualTesting.makeManualEntryLog();
+    manualTesting.teardown();
+    return res;
+}
 
 int main() {
     int res = testOnlyDailyRollingFileAppender();
     if (!res)
         res = testConfigDailyRollingFileAppender();
 
-    //  Note: this test changes system time. Run it only manually
-    //	if (!res)
-    //		res = OnlyManualTesting::testDailyRollingFileAppenderChangeDateManualOnly();
+    //  Note: this test changes system time. Run it only manually, will need admin privileges to change system date
+    // if (!res)
+    //     res = testDailyRollingFileAppenderChangeDateManualOnly();
 
     return res;
 }
