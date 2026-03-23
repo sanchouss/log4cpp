@@ -166,199 +166,202 @@ int testConfigDailyRollingFileAppender() {
     return 0;
 }
 
-//  Note: this test changes system time. Run it only manually, will require admin privileges
-class OnlyManualTesting {
-
-    const char* manualTimeTestCategoryName = "manualTimeTestCategory";
-    const int maxDaysToKeep = 3;
-
+namespace manualTest {
+    static const char* manualTimeTestCategoryName = "manualTimeTestCategory";
+    static const int maxDaysToKeep = 3;
 #if defined(WIN32)
     // absolute paths should pre-exist, mkdir will not create nested dirs
     // const char* logFilename = "C:\\Temp\\log4cpp\\dailyrolling_time_test_file.log";
     // const char* logPathname = "C:\\Temp\\log4cpp";
-    const char* logFilename = ".\\logs\\dailyrolling_time_test_file.log";
-    const char* logPathname = ".\\logs";
+    static const char* logFilename = ".\\logs\\dailyrolling_time_test_file.log";
+    static const char* logPathname = ".\\logs";
 #else
-    const char* logFilename = "./logs/dailyrolling_time_test_file.log";
-    const char* logPathname = "./logs";
+    static const char* logFilename = "./logs/dailyrolling_time_test_file.log";
+    static const char* logPathname = "./logs";
 #endif
 
-  public:
-    void setupManualEntryLog() {
-        std::cout << "Configuring instance with code for time jumping tests, using dir " << logPathname << std::endl;
+    //  Note: this test changes system time. Run it only manually, will require admin privileges
+    class OnlyManualTesting {
+      public:
+        void setupManualEntryLog() {
+            std::cout << "Configuring instance with code for time jumping tests, using dir " << logPathname
+                      << std::endl;
 
-        int dirOk;
+            int dirOk;
 #if defined(WIN32)
-        dirOk = access(logPathname, 0);
-        if (dirOk != 0) {
-            dirOk = mkdir(logPathname);
-        }
+            dirOk = access(logPathname, 0);
+            if (dirOk != 0) {
+                dirOk = mkdir(logPathname);
+            }
 #else
-        dirOk = access(logPathname, F_OK);
-        if (dirOk != 0) {
-            dirOk = mkdir(logPathname, 0755);
-        }
+            dirOk = access(logPathname, F_OK);
+            if (dirOk != 0) {
+                dirOk = mkdir(logPathname, 0755);
+            }
 #endif
 
-        if (dirOk != 0) {
-            std::cerr << "Failed to create dir " << logPathname << std::endl;
+            if (dirOk != 0) {
+                std::cerr << "Failed to create dir " << logPathname << std::endl;
+            }
+
+            log4cpp::PatternLayout* ostreamLayout = new log4cpp::PatternLayout();
+            ostreamLayout->setConversionPattern("%d: %p %c %x: %m %n");
+            log4cpp::Appender* ostreamAppender = new log4cpp::OstreamAppender("ostreamAppender", &std::cout);
+            ostreamAppender->setLayout(ostreamLayout);
+
+            log4cpp::PatternLayout* fileLayout = new log4cpp::PatternLayout();
+            fileLayout->setConversionPattern("%d: %p %c %x: %m %n");
+            log4cpp::Appender* fileAppender =
+                new log4cpp::DailyRollingFileAppender("fileAppender", logFilename, maxDaysToKeep);
+            fileAppender->setLayout(fileLayout);
+
+            log4cpp::Category& absolutePathCategory =
+                log4cpp::Category::getInstance(std::string(manualTimeTestCategoryName));
+            absolutePathCategory.setAdditivity(false);
+
+            absolutePathCategory.addAppender(ostreamAppender);
+            absolutePathCategory.addAppender(fileAppender);
+            absolutePathCategory.setPriority(log4cpp::Priority::DEBUG);
         }
 
-        log4cpp::PatternLayout* ostreamLayout = new log4cpp::PatternLayout();
-        ostreamLayout->setConversionPattern("%d: %p %c %x: %m %n");
-        log4cpp::Appender* ostreamAppender = new log4cpp::OstreamAppender("ostreamAppender", &std::cout);
-        ostreamAppender->setLayout(ostreamLayout);
-
-        log4cpp::PatternLayout* fileLayout = new log4cpp::PatternLayout();
-        fileLayout->setConversionPattern("%d: %p %c %x: %m %n");
-        log4cpp::Appender* fileAppender =
-            new log4cpp::DailyRollingFileAppender("fileAppender", logFilename, maxDaysToKeep);
-        fileAppender->setLayout(fileLayout);
-
-        log4cpp::Category& absolutePathCategory =
-            log4cpp::Category::getInstance(std::string(manualTimeTestCategoryName));
-        absolutePathCategory.setAdditivity(false);
-
-        absolutePathCategory.addAppender(ostreamAppender);
-        absolutePathCategory.addAppender(fileAppender);
-        absolutePathCategory.setPriority(log4cpp::Priority::DEBUG);
-    }
-
-    int jumpToFuture(int seconds) {
-        std::cout << "Jumping " << seconds << " seconds in system time..." << std::endl;
+        int jumpToFuture(int seconds) {
+            std::cout << "Jumping " << seconds << " seconds in system time..." << std::endl;
 
 #if defined(WIN32)
-        SYSTEMTIME now;
-        GetSystemTime(&now);
-        now.wDay += seconds / (24 * 60 * 60);
-        now.wSecond += 1;
-        if (SetSystemTime(&now) == 0) {
-            std::cerr << "Can not change system time. Probably not today... Try running as admin? Err: "
-                      << GetLastError() << std::endl;
-            return -1;
-        }
+            SYSTEMTIME now;
+            GetSystemTime(&now);
+            now.wDay += seconds / (24 * 60 * 60);
+            now.wSecond += 1;
+            if (SetSystemTime(&now) == 0) {
+                std::cerr << "Can not change system time. Probably not today... Try running as admin? Err: "
+                          << GetLastError() << std::endl;
+                return -1;
+            }
 #else
-        time_t now;
-        if (time(&now) == -1)
-            return -1;
+            time_t now;
+            if (time(&now) == -1)
+                return -1;
 
-        now += seconds;
+            now += seconds;
 
 #if defined(__cplusplus) && (__cplusplus >= 201103L)
-        // For c++11 and higher use struct timespec (since C11);
-        struct timespec ts = {};
-        ts.tv_sec = now;
-        if (clock_settime(CLOCK_REALTIME, &ts) == -1) {
+            // For c++11 and higher use struct timespec (since C11);
+            struct timespec ts = {};
+            ts.tv_sec = now;
+            if (clock_settime(CLOCK_REALTIME, &ts) == -1) {
 #elif defined(__GLIBC__) && defined(__GLIBC_MINOR__) && (__GLIBC__ == 2) && (__GLIBC_MINOR__ < 31)
-        // for earlier/not set version use stime if it is present in glibc:
-        if (stime(&now) == -1) {
+            // for earlier/not set version use stime if it is present in glibc:
+            if (stime(&now) == -1) {
 #else
-        // for other cases just an error
-        {
+            // for other cases just an error
+            {
 #endif //__cplusplus
-            std::cerr << "Can not set date. Need admin privileges?" << std::endl;
-            return -1;
-        }
+                std::cerr << "Can not set date. Need admin privileges?" << std::endl;
+                return -1;
+            }
 #endif
-        const time_t t = time(NULL);
-        std::cout << "Jumped to " << ctime(&t) << std::endl;
-        return 0;
-    }
-
-    int makeManualEntryLog() {
-        const int totalLinesCount = 14, linesPerDay = 3, jumpPeriod = 24 * 60 * 60 + 1;
-        int i = 0, jumpedSecondsAlltogether = 0, expectedRollover = 0;
-
-        log4cpp::Category& absolutePathCategory =
-            log4cpp::Category::getInstance(std::string(manualTimeTestCategoryName));
-
-        std::cout << "Logging some lines... " << std::endl;
-        // 1. Emulate several days uptime:
-        // * log linesPerDay
-        // * update system time (eg: use 'date' command on Linux) manually when test program is running here
-        // * expect file rollover happens on next logging
-        while (expectedRollover < maxDaysToKeep + 1) {
-            if (++i % linesPerDay == 0) {
-                if (jumpToFuture(jumpPeriod) == -1)
-                    return -1;
-                jumpedSecondsAlltogether += jumpPeriod;
-                ++expectedRollover;
-            }
-            absolutePathCategory.debugStream() << "debug line " << i;
+            const time_t t = time(NULL);
+            std::cout << "Jumped to " << ctime(&t) << std::endl;
+            return 0;
         }
 
-        if (jumpToFuture(0 - jumpedSecondsAlltogether) == -1)
-            return -1;
+        int makeManualEntryLog() {
+            const int totalLinesCount = 14, linesPerDay = 3, jumpPeriod = 24 * 60 * 60 + 1;
+            int i = 0, jumpedSecondsAlltogether = 0, expectedRollover = 0;
 
-        // 2. check that the number of files in dir logPathname is ( <= maxDaysToKeep) (+1 to allow consequent runs of
-        // test)
-        if (checkThatNoMoreThanNLogFilesPresent(std::string(logFilename), maxDaysToKeep + 1) == -1)
-            return -1;
+            log4cpp::Category& absolutePathCategory =
+                log4cpp::Category::getInstance(std::string(manualTimeTestCategoryName));
 
-        return 0;
-    }
+            std::cout << "Logging some lines... " << std::endl;
+            // 1. Emulate several days uptime:
+            // * log linesPerDay
+            // * update system time (eg: use 'date' command on Linux) manually when test program is running here
+            // * expect file rollover happens on next logging
+            while (expectedRollover < maxDaysToKeep + 1) {
+                if (++i % linesPerDay == 0) {
+                    if (jumpToFuture(jumpPeriod) == -1)
+                        return -1;
+                    jumpedSecondsAlltogether += jumpPeriod;
+                    ++expectedRollover;
+                }
+                absolutePathCategory.debugStream() << "debug line " << i;
+            }
 
-    //  Note: this test changes system time. Run it only manually
-    int checkThatNoMoreThanNLogFilesPresent(const std::string _fileName, int maxAllowedFileNumber) {
-        // iterate over files around log file and count files with same prefix
-        const std::string::size_type last_delimiter = _fileName.rfind(PATHDELIMITER);
-        const std::string dirname((last_delimiter == std::string::npos) ? "." : _fileName.substr(0, last_delimiter));
-        const std::string filname((last_delimiter == std::string::npos)
-                                      ? _fileName
-                                      : _fileName.substr(last_delimiter + 1, _fileName.size() - last_delimiter - 1));
-        int logFilesCount(0);
+            if (jumpToFuture(0 - jumpedSecondsAlltogether) == -1)
+                return -1;
+
+            // 2. check that the number of files in dir logPathname is ( <= maxDaysToKeep) (+1 to allow consequent runs
+            // of test)
+            if (checkThatNoMoreThanNLogFilesPresent(std::string(logFilename), maxDaysToKeep + 1) == -1)
+                return -1;
+
+            return 0;
+        }
+
+        //  Note: this test changes system time. Run it only manually
+        int checkThatNoMoreThanNLogFilesPresent(const std::string _fileName, int maxAllowedFileNumber) {
+            // iterate over files around log file and count files with same prefix
+            const std::string::size_type last_delimiter = _fileName.rfind(PATHDELIMITER);
+            const std::string dirname((last_delimiter == std::string::npos) ? "."
+                                                                            : _fileName.substr(0, last_delimiter));
+            const std::string filname(
+                (last_delimiter == std::string::npos)
+                    ? _fileName
+                    : _fileName.substr(last_delimiter + 1, _fileName.size() - last_delimiter - 1));
+            int logFilesCount(0);
 #ifndef WIN32
-        struct dirent** entries;
-        int nentries = scandir(dirname.c_str(), &entries, 0, alphasort);
-        if (nentries < 0)
-            return -1;
-        for (int i = 0; i < nentries; i++) {
-            if (strstr(entries[i]->d_name, filname.c_str())) {
-                ++logFilesCount;
-            }
-            free(entries[i]);
-        }
-        free(entries);
-#else
-        HANDLE hFind = INVALID_HANDLE_VALUE;
-        WIN32_FIND_DATA ffd;
-        const std::string pattern = _fileName + "*";
-
-        hFind = FindFirstFile(pattern.c_str(), &ffd);
-        if (hFind != INVALID_HANDLE_VALUE) {
-            do {
-                if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+            struct dirent** entries;
+            int nentries = scandir(dirname.c_str(), &entries, 0, alphasort);
+            if (nentries < 0)
+                return -1;
+            for (int i = 0; i < nentries; i++) {
+                if (strstr(entries[i]->d_name, filname.c_str())) {
                     ++logFilesCount;
                 }
-            } while (FindNextFile(hFind, &ffd) != 0);
-            FindClose(hFind);
-            hFind = INVALID_HANDLE_VALUE;
-        }
+                free(entries[i]);
+            }
+            free(entries);
+#else
+            HANDLE hFind = INVALID_HANDLE_VALUE;
+            WIN32_FIND_DATA ffd;
+            const std::string pattern = _fileName + "*";
+
+            hFind = FindFirstFile(pattern.c_str(), &ffd);
+            if (hFind != INVALID_HANDLE_VALUE) {
+                do {
+                    if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                        ++logFilesCount;
+                    }
+                } while (FindNextFile(hFind, &ffd) != 0);
+                FindClose(hFind);
+                hFind = INVALID_HANDLE_VALUE;
+            }
 #endif
-        if (logFilesCount > maxAllowedFileNumber) {
-            std::cerr << "Too many log files in the dir " << dirname << ": " << logFilesCount
-                      << ", expected no more than " << maxAllowedFileNumber << std::endl;
-        } else {
-            std::cout << "Daily log files in the dir " << dirname << ": " << logFilesCount << ", expected no more than "
-                      << maxAllowedFileNumber << std::endl;
+            if (logFilesCount > maxAllowedFileNumber) {
+                std::cerr << "Too many log files in the dir " << dirname << ": " << logFilesCount
+                          << ", expected no more than " << maxAllowedFileNumber << std::endl;
+            } else {
+                std::cout << "Daily log files in the dir " << dirname << ": " << logFilesCount
+                          << ", expected no more than " << maxAllowedFileNumber << std::endl;
+            }
+
+            return (logFilesCount <= maxAllowedFileNumber) ? 0 : -1;
         }
 
-        return (logFilesCount <= maxAllowedFileNumber) ? 0 : -1;
-    }
+        void teardown() {
+            std::cout << "Shutdown manual run instance" << std::endl;
+            Category::shutdown();
+        }
+    };
 
-    void teardown() {
-        std::cout << "Shutdown manual run instance" << std::endl;
-        Category::shutdown();
+    int testDailyRollingFileAppenderChangeDateManualOnly() {
+        OnlyManualTesting manualTesting;
+        manualTesting.setupManualEntryLog();
+        int res = manualTesting.makeManualEntryLog();
+        manualTesting.teardown();
+        return res;
     }
-};
-
-int testDailyRollingFileAppenderChangeDateManualOnly() {
-    OnlyManualTesting manualTesting;
-    manualTesting.setupManualEntryLog();
-    int res = manualTesting.makeManualEntryLog();
-    manualTesting.teardown();
-    return res;
-}
+} // namespace manualTest
 
 int main() {
     int res = testOnlyDailyRollingFileAppender();
@@ -367,7 +370,7 @@ int main() {
 
     //  Note: this test changes system time. Run it only manually, will need admin privileges to change system date
     // if (!res)
-    //     res = testDailyRollingFileAppenderChangeDateManualOnly();
+    //     res = manualTest::testDailyRollingFileAppenderChangeDateManualOnly();
 
     return res;
 }
