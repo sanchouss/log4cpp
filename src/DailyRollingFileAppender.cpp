@@ -6,6 +6,7 @@
  * See the COPYING file for the terms of usage and distribution.
  */
 
+#include "Localtime.hh"
 #include "PortabilityImpl.hh"
 #ifdef LOG4CPP_HAVE_IO_H
 #include <io.h>
@@ -62,17 +63,10 @@ namespace log4cpp {
             t = statBuf.st_mtime;
         }
 
-#ifndef WIN32
-        struct tm* lt_res = localtime_r(&t, &_logsTime);
-        if (lt_res == NULL) {
-            std::cerr << "Error converting the specified time to local calendar time" << std::endl;
-        }
-#else
-        errno_t lt_res = localtime_s(&_logsTime, &t); // only available on Win32
-        if (lt_res != NULL) {
+        int lt_res = localtime_tsafe(&t, &_logsTime);
+        if (lt_res != 0) {
             std::cerr << "Error converting the specified time to local calendar time: err " << lt_res << std::endl;
         }
-#endif
     }
 
     void DailyRollingFileAppender::setMaxDaysToKeep(unsigned int maxDaysToKeep) {
@@ -171,12 +165,9 @@ namespace log4cpp {
         struct tm now;
         time_t t = time(NULL);
 
-#ifndef WIN32
-        bool timeok = localtime_r(&t, &now) != NULL;
-#else
-        bool timeok = localtime_s(&now, &t) == 0;
-#endif
-        if (timeok) {
+        int lt_res = localtime_tsafe(&t, &now);
+
+        if (lt_res == 0) {
             if ((now.tm_mday != _logsTime.tm_mday) || (now.tm_mon != _logsTime.tm_mon) ||
                 (now.tm_year != _logsTime.tm_year)) {
                 rollOver();

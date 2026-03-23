@@ -154,7 +154,7 @@ namespace log4cpp {
         virtual void append(std::ostringstream& out, const LoggingEvent& event) {
             struct std::tm currentTime;
             std::time_t t = event.timeStamp.getSeconds();
-            localtime(&t, &currentTime);
+            localtime_tsafe(&t, &currentTime);
             char formatted[100];
             std::string timeFormat;
             if (_printMillis) {

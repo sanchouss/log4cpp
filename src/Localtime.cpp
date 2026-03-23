@@ -12,21 +12,26 @@
 namespace log4cpp {
 
 #if defined(_MSC_VER) && defined(LOG4CPP_HAVE_LOCALTIME_R)
-    void localtime(const ::time_t* time, ::tm* t) {
-        localtime_s(t, time);
+    int localtime_tsafe(const ::time_t* time, ::tm* t) {
+        errno_t lt_res = localtime_s(t, time);
+        return static_cast<int>(lt_res);
     }
 #endif
 
 #if !defined(_MSC_VER) && defined(LOG4CPP_HAVE_LOCALTIME_R)
-    void localtime(const ::time_t* time, ::tm* t) {
-        localtime_r(time, t);
+    int localtime_tsafe(const ::time_t* time, ::tm* t) {
+        return (localtime_r(time, t) != NULL ? 0 : -1);
     }
 #endif
 
 #if !defined(LOG4CPP_HAVE_LOCALTIME_R)
-    void localtime(const ::time_t* time, ::tm* t) {
+    int localtime_tsafe(const ::time_t* time, ::tm* t) {
         ::tm* tmp = ::localtime(time);
+        if (tmp == NULL) {
+            return -1;
+        }
         memcpy(t, tmp, sizeof(::tm));
+        return 0;
     }
 #endif
 
