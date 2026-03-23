@@ -163,8 +163,10 @@ int main(int argc, char* argv[]) {
 
     {
         clock.start();
-        for (int i = 0; i < count; i++)
-            fprintf(stderr, "%d ERROR someCategory : %s\n", log4cpp::TimeStamp().getSeconds(), buffer);
+        for (int i = 0; i < count; i++) {
+            long seconds = log4cpp::TimeStamp().getSeconds();
+            fprintf(stderr, "%ld ERROR someCategory : %s\n", seconds, buffer);
+        }
         clock.stop();
         std::cout << std::endl << "  fprintf:        " << ((float)clock.elapsed()) / count << " us" << std::endl;
     }

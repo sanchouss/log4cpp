@@ -10,6 +10,7 @@
 #ifndef _LOG4CPP_TIMESTAMP_HH
 #define _LOG4CPP_TIMESTAMP_HH
 
+#include <ctime>
 #include <log4cpp/Portability.hh>
 
 namespace log4cpp {
@@ -28,12 +29,12 @@ namespace log4cpp {
            Constructs a TimeStamp representing the given offset since the
            epoch ( 00:00:00 1970/1/1 UTC).
         **/
-        TimeStamp(unsigned int seconds, unsigned int microSeconds = 0);
+        TimeStamp(time_t seconds, int microSeconds = 0);
 
         /**
            Returns the 'seconds' part of the TimeStamp.
         **/
-        inline int getSeconds() const {
+        inline time_t getSeconds() const {
             return _seconds;
         };
 
@@ -65,7 +66,7 @@ namespace log4cpp {
       protected:
         static TimeStamp _startStamp;
 
-        int _seconds;
+        time_t _seconds;
         int _microSeconds;
     };
 } // namespace log4cpp
