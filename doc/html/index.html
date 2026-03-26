@@ -18,7 +18,8 @@ for C++ Project
 Page on Sourceforge</a>
 </span> &nbsp;|
     <span>Last Published:
-2026-02-27</span> &nbsp;|
+2026-03-26</span> &nbsp;| <span> <a href="https://sourceforge.net/projects/log4cpp/">Sourceforge Home</a>
+</span> &nbsp;|
 </div>
 <hr class="delimiter">
 <div id="projectpage">
@@ -426,42 +427,227 @@ You should have received a copy of the GNU Lesser General Public<br>License alon
                 <h3>3. USAGE</h3>
                 <h4>3.1. I've succesfully compiled log4cpp, now how do I use this
                     stuff?</h4>
-                Have a glance at <a title="Simple example" href="#simpleexample">Simple
-                example</a> and <a title="Properties file example" href="#propfile">Properties file example</a>.
-                For some small examples using log4cpp, see the 'tests' subdirectory.
-                Also see the documentation section for a pointer for API documentation
-                and more usage information.
+                <ul>
+                    <li>Have a glance at <a title="Simple example" href="#simpleexample">Simple
+                        example</a> and <a title="Properties file example" href="#propfile">Properties file example</a>.
+                    </li>
+                    <li>For additional small examples using log4cpp, see the <code>tests</code> subdirectory.</li>
+                    <li>Examples on using log4cpp with CMake enabled projects are in <code>examples/cmake_usages</code>
+                        subdirectory.
+                    </li>
+                    <li>Check the <a href="http://log4cpp.sourceforge.net/api/index.html">Doxygen generated
+                        API</a> section for API reference and more usage information.
+                    </li>
+                </ul>
                 <h4>3.2. Is log4cpp thread-safe?</h4>
-                The same instance of a log4cpp::Category object (a logger) can be used simultaneously from multiple
-                threads without explicit synchronization. Concurrent access to appenders is handled by the logger
-                itself. It locks an internal mutex each time it writes to an appender. Therefore, it is safe, for
-                example, for multiple threads to write to the same logger that appends to the same file.
-                However, if log4cpp is configured in such a way that two different loggers append to the same appender
-                (for example, the same file appender), the framework cannot guarantee proper synchronization between
-                them, and log messages may become interleaved or corrupted. Configuring multiple loggers to share the
-                same appender instance is therefore not recommended.<h4>3.3. What are possible format characters for the
-                custom log message?</h4>
-                PatternLayout supports following set of format characters:<br>
-                <li><b>%%</b> - a single percent sign</li>
-                <li><b>%c</b> - the category</li>
-                <li><b>%d</b> - the date\n
-                    Date format: The date format character may be followed by a date format
-                    specifier enclosed between braces. For example, %d{%H:%M:%S,%l} or %d{%d %m %Y %H:%M:%S,%l}.
-                    If no date format specifier is given then the following format is used:
-                    "Wed Jan 02 02:03:55 1980". The date format specifier admits the same syntax
-                    as the ANSI C function strftime, with 1 addition. The addition is the specifier
-                    %l for milliseconds, padded with zeros to make 3 digits.
-                </li>
-                <li><b>%m</b> - the message</li>
-                <li><b>%n</b> - the platform specific line separator</li>
-                <li><b>%p</b> - the priority</li>
-                <li><b>%r</b> - milliseconds since this layout was created.</li>
-                <li><b>%R</b> - seconds since Jan 1, 1970</li>
-                <li><b>%u</b> - clock ticks since process start</li>
-                <li><b>%x</b> - the NDC</li>
-                <li><b>%t</b> - thread name</li>
 
-                By default, ConversionPattern for PatternLayout is set to "%m%n".<br>
+                <ul>
+                    <li>The same instance of a
+                        <pre class="monospace">log4cpp::Category</pre>
+                        object (a logger) can be used simultaneously from multiple threads without explicit
+                        synchronization.
+                    </li>
+                    <li>Concurrent access to appenders is handled by the logger itself. Logger (category) locks an
+                        internal mutex each time it writes to an appender.
+                    </li>
+                    <li>Therefore, it is safe, for example, for multiple threads to write to the same logger. Log
+                        records will not interleave.
+                    </li>
+                    <li>However, if log4cpp is configured in such a way that two different loggers append to the same
+                        appender instance (for example, the same file appender), then the framework cannot guarantee
+                        proper
+                        synchronization between loggers (categories), and log messages may become interleaved or
+                        corrupted. Configuring multiple loggers to share the same appender instance is therefore not
+                        recommended.
+                    </li>
+                </ul>
+
+                <h4>3.3. What are possible format characters for the
+                    custom log message?</h4>
+                PatternLayout supports following set of format characters:<br>
+                <ul>
+                    <li>
+                        <pre class="monospace">%%</pre>
+                        - a single percent sign
+                    </li>
+                    <li>
+                        <pre class="monospace">%c</pre>
+                        - the category
+                    </li>
+                    <li>
+                        <pre class="monospace">%d</pre>
+                        - the date\n
+                        Date format: The date format character may be followed by a date format
+                        specifier enclosed between braces. For example,
+                        <pre class="monospace">%d{%H:%M:%S,%l} or %d{%d %m %Y %H:%M:%S,%l}</pre>
+                        .
+                        If no date format specifier is given then the following format is used:
+                        <pre class="monospace">"Wed Jan 02 02:03:55 1980"</pre>
+                        . The date format specifier admits the same syntax
+                        as the ANSI C function strftime, with 1 addition. The addition is the specifier
+                        <pre class="monospace">%l</pre>
+                        for milliseconds, padded with zeros to make 3 digits.
+                    </li>
+                    <li>
+                        <pre class="monospace">%m</pre>
+                        - the message
+                    </li>
+                    <li>
+                        <pre class="monospace">%n</pre>
+                        - the platform specific line separator
+                    </li>
+                    <li>
+                        <pre class="monospace">%p</pre>
+                        - the priority
+                    </li>
+                    <li>
+                        <pre class="monospace">%r</pre>
+                        - milliseconds since this layout was created.
+                    </li>
+                    <li>
+                        <pre class="monospace">%R</pre>
+                        - seconds since Jan 1, 1970
+                    </li>
+                    <li>
+                        <pre class="monospace">%u</pre>
+                        - clock ticks since process start
+                    </li>
+                    <li>
+                        <pre class="monospace">%x</pre>
+                        - the NDC
+                    </li>
+                    <li>
+                        <pre class="monospace">%t</pre>
+                        - thread name
+                    </li>
+                </ul>
+                By default, ConversionPattern for PatternLayout is set to
+                <pre class="monospace">"%m%n"</pre>
+                .<br>
+
+                <h4>3.4. What log levels are available?</h4>
+                <p>Log4cpp provides the following log levels (priorities), ordered from lowest to highest severity:</p>
+
+                <ul>
+                    <li>
+                        <pre class="monospace">TRACE </pre>
+                        - very fine-grained diagnostic information.
+                        <i>Usage:</i> Function entry/exit, loop iterations, variable changes, or
+                        high-frequency internal events during deep debugging.
+                    </li>
+
+                    <li>
+                        <pre class="monospace">DEBUG </pre>
+                        - detailed diagnostic information.
+                        <i>Usage:</i> Debugging program logic, inspecting important state, or understanding
+                        code flow during development.
+                    </li>
+
+                    <li>
+                        <pre class="monospace">INFO  </pre>
+                        - general informational messages.
+                        <i>Usage:</i> Normal application behavior such as startup, shutdown, configuration
+                        loading, or key workflow steps.
+                    </li>
+
+                    <li>
+                        <pre class="monospace">NOTICE</pre>
+                        - normal but significant conditions.
+                        <i>Usage:</i> Important events that are not errors but worth highlighting (e.g.,
+                        configuration changes, feature toggles).
+                    </li>
+
+                    <li>
+                        <pre class="monospace">WARN  </pre>
+                        - warning conditions.
+                        <i>Usage:</i> Unexpected situations that are recoverable (e.g., missing optional
+                        data, retries, deprecated API usage).
+                    </li>
+
+                    <li>
+                        <pre class="monospace">ERROR </pre>
+                        - error conditions.
+                        <i>Usage:</i> Failures that affect a specific operation but do not stop the entire
+                        application (e.g., failed request, file read error).
+                    </li>
+
+                    <li>
+                        <pre class="monospace">CRIT  </pre>
+                        - critical conditions.
+                        <i>Usage:</i> Serious failures impacting major components (e.g., subsystem
+                        unavailable, database connection lost).
+                    </li>
+
+                    <li>
+                        <pre class="monospace">ALERT </pre>
+                        - action must be taken immediately.
+                        <i>Usage:</i> Conditions requiring immediate intervention (e.g., data corruption
+                        risk, critical resource exhaustion).
+                    </li>
+
+                    <li>
+                        <pre class="monospace">FATAL </pre>
+                        - severe errors causing program termination.
+                        <i>Usage:</i> Unrecoverable errors leading to shutdown (e.g., inability to initialize
+                        core components).
+                    </li>
+                </ul>
+                <h4>3.5. How can I log a line in log4cpp?</h4>
+
+                <p>There are following ways to log a message:</p>
+
+                <ul>
+                    <li>
+                        <b>Use logging methods</b><br/>
+                        Call a <code>Category</code>'s method corresponding to the log level and pass parameters.
+                        <pre class="code">
+log4cpp::Category& logger = log4cpp::Category::getRoot();
+logger.debug("Debug message");
+logger.info("Info message # %d", 2);</pre>
+                    </li>
+
+                    <li>
+                        <b>Use streaming</b><br/>
+                        Log messages with C++ streams.
+                        <pre class="code">
+logger.debugStream() << "Render " << loginpage << " address";
+logger << log4cpp::Priority::INFO << "Server " << servername << " started up";</pre>
+                    </li>
+
+                    <li>
+                        <b>Use macros</b><br/>
+                        Use formatted or streaming style macros.
+                        <em>Note:</em> If the message's priority is less severe than the logger's priority, then the
+                        arguments are <b>not evaluated</b>, avoiding unnecessary computation.
+                        <pre class="code">
+LOG4CPP_DEBUG(logger, "Items left in stock: %d remaining", calcRemainder());
+LOG4CPP_INFO_S(logger, "Temperature in warehouse: " << readTemperature());</pre>
+                    </li>
+                </ul>
+                <h4>3.6. How can I reduce logging overhead?</h4>
+
+                <p>Building complex log messages can introduce runtime overhead. You can reduce this overhead in several
+                    ways:</p>
+
+                <ul>
+                    <li>
+                        <b>Use macros with appropriate log levels.</b> Log4cpp macros (e.g., <code>LOG4CPP_DEBUG</code>,
+                        <code>LOG4CPP_INFO_S</code>) will compare message's priority to the logger’s level before
+                        evaluating arguments, preventing unnecessary computations when a message is not logged due to
+                        its lower priority.
+                    </li>
+                    <li>
+                        <b>Completely remove lower-severity log messages at compile time.</b> By defining the desired
+                        level before including the macros header, all log macros with a priority lower than <code>LOG4CPP_ACTIVE_LEVEL</code>
+                        are removed at compile time, resulting in zero runtime overhead. For example, to remove all logs
+                        below
+                        <code>INFO</code> level in current compilation unit:
+                        <pre class="code">
+#define LOG4CPP_ACTIVE_LEVEL LOG4CPP_PRIORITY_INFO
+#include &lt;log4cpp/LogMacros.hh&gt;</pre>
+                    </li>
+                </ul>
+
                 <h3>4. PROBLEMS AND ERROR MESSAGES</h3>
                 <h4>4.1. I get 'Naming collision for 'ERROR' detected. Please
                     read the FAQ for a workaround.'</h4>
@@ -697,49 +883,55 @@ A3.log.1
             <div class="chapter">
                 <h2><a id="git">Git Repository</a></h2>
                 <p>
-                    Log4cpp is moved to git <a href="https://sourceforge.net/p/log4cpp/codegit/">SourceForge Git
-                    page</a> since version 1.1.1, CVS repo is stale now.
+                    Log4cpp is hosted in a Git repository on <a href="https://sourceforge.net/p/log4cpp/codegit/">SourceForge</a>
+                    since version 1.1.1.
                 </p>
-                <p>A mirror of the Git repository is also available on GitHub: <a
-                        href="https://github.com/log4cpp/log4cpp?utm_source=log4cpp.sourceforge.net">https://github.com/log4cpp/log4cpp</a>
+
+                <p>
+                    A mirror of the Git repository is also available on GitHub:
+                    <a href="https://github.com/log4cpp/log4cpp?utm_source=log4cpp.sourceforge.net">https://github.com/log4cpp/log4cpp</a>
                 </p>
+
                 <p>
                     To start working with a freshly checked out log4cpp repository, run <b><code>./autogen.sh</code></b>
-                    first. This will create <code>./configure</code> and the necessary <code>Makefile.in</code>'s.
-                    You'll need at least autoconf 2.50, automake 1.6.0 and libtool 1.4 (<a
+                    first.
+                    This will generate the <code>./configure</code> script and the required <code>Makefile.in</code>
+                    files.
+                    You will need at least autoconf 2.50, automake 1.6.0, and libtool 1.4 (the <a
                         href="https://www.gnu.org/software/automake/">GNU Autotools</a> build system).
                 </p>
-                <p>Log4cpp of older versions (prior to version 1.1.1) is available also with CVS, see the <a
-                        href="https://sourceforge.net/p/log4cpp/code/">SourceForge CVS page</a> for instructions.</p>
-                <small>
-                    CVS had two branches:
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td>MAIN</td>
-                            <td>for log4cpp development</td>
-                        </tr>
-                        <tr>
-                            <td>BRANCH_MAINT_0_2</td>
-                            <td>for maintenance of log4cpp-stable (0.2.x)</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br>
-                </small>
-                <a href="#begin">^</a>
+
+                <p>
+                    Older versions of log4cpp (prior to 1.1.1) are available via CVS.
+                    See the <a href="https://sourceforge.net/p/log4cpp/code/">SourceForge CVS page</a> for instructions.
+                    The CVS repository is no longer maintained.
+                </p>                <a href="#begin">^</a>
             </div>
 
             <div class="chapter">
                 <h2><a id="releases">Releases</a></h2>
-                <p>
-                    WARNING: releases from the development branch are a 'work in progress' and may fail to build, crash
-                    or redecorate your desktop.
-                </p>
                 <p>Each release will receive a tag named REL_x_y_z or prefixed with REL_x.y.z</p>
+                <p><a href="https://sourceforge.net/p/log4cpp/codegit/ref/master/tags/">Git tags</a></p>
                 <small>
 
                     <dl>
+                        <dt>master branch (26 March 2026)</dt>
+                        <dd>Fix Y2038 issue in Timestamp class (32-bit seconds field overflow).
+                            Use time_t for seconds to avoid truncation/overflow on platforms where time_t is 64-bit.
+                            Thanks to Adrien Destugues for reporting bug #153.
+                        </dd>
+                        <dd>DailyRollingFileAppender: more detailed documentation, added safety checks to
+                            implementation, refine tests
+                        </dd>
+                        <dd>Add compile-time <code>printf</code> format checking to Category logging methods.
+
+                            Enhance class log4cpp::Category to enable compile-time checking of
+                            printf-style format strings and arguments using compiler attributes.
+                            Fixes bug #155 reported by Adrien Destugues.
+                        </dd>
+                        <dd>New logging level <code>TRACE</code> with priority value <code>800</code> for fine-grained
+                            diagnostic logging, trace-level methods and macros.
+                        </dd>
                         <dt>1.1.6 - master branch (12 March 2026)</dt>
                         <dd>CMake support is enhanced. Building examples is enabled via the CMake's <code>LOG4CPP_BUILD_EXAMPLES</code>
                             option.
@@ -944,7 +1136,6 @@ A3.log.1
                         <dt>0.2.0 (10 December 2000)</dt>
                         <dd>log4cpp now uses autoconf and automake.</dd>
                     </dl>
-                    <p><a href="https://sourceforge.net/p/log4cpp/codegit/ref/master/tags/">Git tags</a></p>
                 </small>
                 <a href="#begin">^</a>
             </div>

@@ -91,3 +91,10 @@ DT {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
+.monospace {
+    display:inline;
+    background-color: rgb(240, 240, 240);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

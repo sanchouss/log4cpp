@@ -1,3 +1,16 @@
+2026-03-26 19:41  sanchouss_
+    * Fix Y2038 issue in Timestamp class (32-bit seconds field overflow).
+      Use time_t for seconds to avoid truncation/overflow on platforms where time_t is 64-bit.
+      Thanks to Adrien Destugues for reporting bug #153.
+
+    * DailyRollingFileAppender: more detailed documentation, added safety checks to implementation, refine tests
+
+    * Add compile-time printf format checking to Category logging methods.
+      Enhance class log4cpp::Category to enable compile-time checking of printf-style format strings and arguments using compiler attributes.
+      Fixes bug #155 reported by Adrien Destugues.
+
+    * New logging level TRACE with priority value 800 for fine-grained diagnostic logging, trace-level methods and macros.
+
 2026-02-20 20:37  sanchouss_
     * Add formatted and streaming log4cpp macros with compile-time stripping
       - Formatted macros (LOG4CPP_DEBUG, LOG4CPP_INFO, etc.) support variadic arguments
