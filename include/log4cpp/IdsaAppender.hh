@@ -55,7 +55,7 @@ namespace log4cpp {
         /**
          * Calls idsa_open().
          **/
-        virtual void open();
+        void open();
 
         /**
          * Sends a LoggingEvent to idsa.

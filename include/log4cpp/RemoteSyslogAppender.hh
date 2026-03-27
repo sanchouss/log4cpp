@@ -108,7 +108,7 @@ namespace log4cpp {
         /**
          * Just creates the socket.
          **/
-        virtual void open();
+        void open();
 
         /**
          * Sends a LoggingEvent to the remote syslog.

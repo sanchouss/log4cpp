@@ -57,7 +57,7 @@ namespace log4cpp {
         /**
          * Calls openlog(3).
          **/
-        virtual void open();
+        void open();
 
         /**
          * Sends a LoggingEvent to syslog.
