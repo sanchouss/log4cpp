@@ -16,6 +16,7 @@ namespace log4cpp {
 
     NTEventLogAppender::NTEventLogAppender(const std::string& name, const std::string& sourceName)
         : AppenderSkeleton(name), _strSourceName(sourceName), _hEventSource(NULL) {
+        addRegistryInfo(_strSourceName.c_str());
         open();
     }
 
@@ -24,7 +25,6 @@ namespace log4cpp {
     }
 
     void NTEventLogAppender::open() {
-        addRegistryInfo(_strSourceName.c_str());
         _hEventSource = ::RegisterEventSource(NULL, _strSourceName.c_str());
     }
 

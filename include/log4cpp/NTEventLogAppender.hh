@@ -82,7 +82,7 @@ namespace log4cpp {
         void regSetDword(HKEY hkey, TCHAR* name, DWORD value);
         void addRegistryInfo(const char* source);
 
-        virtual void open();
+        void open();
 
         /**
          * Sends a LoggingEvent to NT Event log.
@@ -91,12 +91,12 @@ namespace log4cpp {
         virtual void _append(const LoggingEvent& event);
 
         HANDLE _hEventSource;
-        std::string _strSourceName;
+        const std::string _strSourceName;
     };
 } // namespace log4cpp
 
 #else // WIN32
-#error NTEventLoggAppender is not available on on Win32 platforms
+#error NTEventLoggAppender is available only on Win32 platforms
 #endif // WIN32
 
 #endif // _LOG4CPP_NTEVENTLOGAPPENDER_HH
