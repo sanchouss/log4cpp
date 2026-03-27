@@ -1,3 +1,6 @@
+2026-03-27 20:40  sanchouss_
+    * fix for bug #148: remove virtual specifier from open(). Thanks to Jac Goudsmit for reporting and proposals.
+
 2026-03-26 19:41  sanchouss_
     * Fix Y2038 issue in Timestamp class (32-bit seconds field overflow).
       Use time_t for seconds to avoid truncation/overflow on platforms where time_t is 64-bit.
