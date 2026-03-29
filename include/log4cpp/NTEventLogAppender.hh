@@ -72,16 +72,13 @@ namespace log4cpp {
          **/
         virtual bool requiresLayout() const;
 
+        /**
+         * Does nothing.
+         * The NTEventLogAppender does its own Layout.
+         **/
         virtual void setLayout(Layout* layout);
 
       protected:
-        WORD getCategory(Priority::Value priority);
-        WORD getType(Priority::Value priority);
-        HKEY regGetKey(TCHAR* subkey, DWORD* disposition);
-        void regSetString(HKEY hkey, TCHAR* name, TCHAR* value);
-        void regSetDword(HKEY hkey, TCHAR* name, DWORD value);
-        void addRegistryInfo(const char* source);
-
         void open();
 
         /**
@@ -91,6 +88,10 @@ namespace log4cpp {
         virtual void _append(const LoggingEvent& event);
 
         HANDLE _hEventSource;
+        
+        /**
+         * Event Source Name
+         **/
         const std::string _strSourceName;
     };
 } // namespace log4cpp

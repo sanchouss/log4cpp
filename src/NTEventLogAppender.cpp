@@ -11,8 +11,13 @@
 #include <log4cpp/FactoryParams.hh>
 #include <log4cpp/NTEventLogAppender.hh>
 #include <memory>
+#include <string.h>
+#include <string>
 
 namespace log4cpp {
+    WORD getCategory(Priority::Value priority);
+    WORD getType(Priority::Value priority);
+    void addRegistryInfo(const char* source);
 
     NTEventLogAppender::NTEventLogAppender(const std::string& name, const std::string& sourceName)
         : AppenderSkeleton(name), _strSourceName(sourceName), _hEventSource(NULL) {
@@ -31,6 +36,7 @@ namespace log4cpp {
     void NTEventLogAppender::close() {
         if (_hEventSource) {
             ::DeregisterEventSource(_hEventSource);
+            _hEventSource = NULL;
         }
     }
 
@@ -62,7 +68,7 @@ namespace log4cpp {
      * backed by a message resource so that proper category names will
      * be displayed in the NT Event Viewer.
      */
-    WORD NTEventLogAppender::getCategory(Priority::Value priority) {
+    WORD getCategory(Priority::Value priority) {
         // Priority values map directly to EventLog category values
         return (WORD)((priority / 100) + 1);
     }
@@ -72,7 +78,7 @@ namespace log4cpp {
      * supports 8 defined priorites, but the NT EventLog only knows
      * 3 event types of interest to us: ERROR, WARNING, and INFO.
      */
-    WORD NTEventLogAppender::getType(Priority::Value priority) {
+    WORD getType(Priority::Value priority) {
 
         WORD ret_val;
 
@@ -99,33 +105,31 @@ namespace log4cpp {
         return ret_val;
     }
 
-    HKEY NTEventLogAppender::regGetKey(TCHAR* subkey, DWORD* disposition) {
+    HKEY regGetKey(const TCHAR* subkey, DWORD* disposition) {
         HKEY hkey = 0;
         RegCreateKeyEx(HKEY_LOCAL_MACHINE, subkey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &hkey,
                        disposition);
         return hkey;
     }
 
-    void NTEventLogAppender::regSetString(HKEY hkey, TCHAR* name, TCHAR* value) {
-        RegSetValueEx(hkey, name, 0, REG_SZ, (LPBYTE)value, lstrlen(value));
+    void regSetString(HKEY hkey, const TCHAR* name, const TCHAR* value) {
+        RegSetValueEx(hkey, name, 0, REG_SZ, (LPBYTE)value, strlen(value) + 1);
     }
 
-    void NTEventLogAppender::regSetDword(HKEY hkey, TCHAR* name, DWORD value) {
+    void regSetDword(HKEY hkey, const TCHAR* name, DWORD value) {
         RegSetValueEx(hkey, name, 0, REG_DWORD, (LPBYTE)&value, sizeof(DWORD));
     }
 
     /*
      * Add this source with appropriate configuration keys to the registry.
      */
-    void NTEventLogAppender::addRegistryInfo(const char* source) {
-        const TCHAR* prefix = "SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\";
+    void addRegistryInfo(const char* source) {
+        std::string subkey("SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\");
         DWORD disposition;
         HKEY hkey = 0;
-        TCHAR subkey[256];
+        subkey.append(source);
 
-        lstrcpy(subkey, prefix);
-        lstrcat(subkey, source);
-        hkey = regGetKey(subkey, &disposition);
+        hkey = regGetKey(subkey.c_str(), &disposition);
         if (disposition == REG_CREATED_NEW_KEY) {
             regSetString(hkey, "EventMessageFile", "NTEventLogAppender.dll");
             regSetString(hkey, "CategoryMessageFile", "NTEventLogAppender.dll");
