@@ -18,6 +18,7 @@ PROJECT ( LOG4CPP VERSION 1.1.7 LANGUAGES C CXX )
 
 INCLUDE ( GNUInstallDirs )
 INCLUDE ( CMakePackageConfigHelpers )
+INCLUDE ( cmake/NTEventLog.cmake )
 
 SET ( LOG4CPP_LIBRARY_NAME "log4cpp" )
 #SET ( CMAKE_VERBOSE_MAKEFILE ON )
@@ -38,6 +39,8 @@ OPTION ( LOG4CPP_BUILD_EXAMPLES "Build log4cpp examples" OFF )
 
 # for macOS use var APPLE
 IF (WIN32)
+  OPTION ( LOG4CPP_NT_EVENTLOG "Build NT EventLog message DLL" ON )
+  
   SET ( CMAKE_DEBUG_POSTFIX "D" )
   IF (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
     SET ( WIN_DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} )
@@ -169,6 +172,10 @@ IF (WIN32)
     SET_EMBT_TARGET ( log4cpp_shared RTL )
   ENDIF ()
 ENDIF (WIN32)
+
+IF (LOG4CPP_NT_EVENTLOG AND WIN32)
+  log4cpp_add_nt_eventlog(LOG4CPP_INSTALL_TARGETS)
+ENDIF ()
 
 INSTALL (
   DIRECTORY include/log4cpp
