@@ -6,7 +6,7 @@
  * See the COPYING file for the terms of usage and distribution.
  */
 
-#ifdef WIN32 // only available on Win32
+#ifdef WIN32 // macro is only available on Win32
 
 #include <log4cpp/FactoryParams.hh>
 #include <log4cpp/NTEventLogAppender.hh>
@@ -14,10 +14,17 @@
 #include <string.h>
 #include <string>
 
+#ifdef DEBUG
+#include <iostream>
+#define PRINT_CONSOLE_DEBUG(stream, msg) stream << msg;
+#else
+#define PRINT_CONSOLE_DEBUG(stream, msg)
+#endif
+
 namespace log4cpp {
     WORD getCategory(Priority::Value priority);
     WORD getType(Priority::Value priority);
-    void addRegistryInfo(const char* source);
+    LSTATUS addRegistryInfo(const char* source);
 
     NTEventLogAppender::NTEventLogAppender(const std::string& name, const std::string& sourceName)
         : AppenderSkeleton(name), _strSourceName(sourceName), _hEventSource(NULL) {
@@ -105,39 +112,48 @@ namespace log4cpp {
         return ret_val;
     }
 
-    HKEY regGetKey(const TCHAR* subkey, DWORD* disposition) {
-        HKEY hkey = 0;
-        RegCreateKeyEx(HKEY_LOCAL_MACHINE, subkey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &hkey,
-                       disposition);
-        return hkey;
+    LSTATUS regGetKey(HKEY& hkey, const TCHAR* subkey, DWORD* disposition) {
+        LSTATUS res = RegCreateKeyEx(HKEY_LOCAL_MACHINE, subkey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL,
+                                     &hkey, disposition);
+        return res;
     }
 
-    void regSetString(HKEY hkey, const TCHAR* name, const TCHAR* value) {
-        RegSetValueEx(hkey, name, 0, REG_SZ, (LPBYTE)value, strlen(value) + 1);
+    LSTATUS regSetString(HKEY hkey, const TCHAR* name, const TCHAR* value) {
+        return RegSetValueEx(hkey, name, 0, REG_SZ, (LPBYTE)value, strlen(value) + 1);
     }
 
-    void regSetDword(HKEY hkey, const TCHAR* name, DWORD value) {
-        RegSetValueEx(hkey, name, 0, REG_DWORD, (LPBYTE)&value, sizeof(DWORD));
+    LSTATUS regSetDword(HKEY hkey, const TCHAR* name, DWORD value) {
+        return RegSetValueEx(hkey, name, 0, REG_DWORD, (LPBYTE)&value, sizeof(DWORD));
     }
 
     /*
      * Add this source with appropriate configuration keys to the registry.
      */
-    void addRegistryInfo(const char* source) {
+    LSTATUS addRegistryInfo(const char* source) {
         std::string subkey("SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\");
         DWORD disposition;
         HKEY hkey = 0;
         subkey.append(source);
 
-        hkey = regGetKey(subkey.c_str(), &disposition);
-        if (disposition == REG_CREATED_NEW_KEY) {
-            regSetString(hkey, "EventMessageFile", "NTEventLogAppender.dll");
-            regSetString(hkey, "CategoryMessageFile", "NTEventLogAppender.dll");
-            regSetDword(hkey, "TypesSupported", (DWORD)7);
-            regSetDword(hkey, "CategoryCount", (DWORD)8);
+        LSTATUS res = regGetKey(hkey, subkey.c_str(), &disposition);
+        if (res == ERROR_SUCCESS) {
+            PRINT_CONSOLE_DEBUG(std::cout, "disposition: " << disposition << std::endl)
+
+            if (disposition == REG_CREATED_NEW_KEY) {
+                res |= regSetString(hkey, "EventMessageFile", "c:\\usr\\bin\\NTEventLogAppender.dll");
+                res |= regSetString(hkey, "CategoryMessageFile", "c:\\usr\\bin\\NTEventLogAppender.dll");
+                res |= regSetDword(hkey, "TypesSupported", (DWORD)Priority::priority_count - 2);
+                res |= regSetDword(hkey, "CategoryCount", (DWORD)Priority::priority_count - 1);
+
+                PRINT_CONSOLE_DEBUG(std::cout, "regSet* calls cumulative res: " << res << std::endl)
+            }
+        } else if (res == ERROR_ACCESS_DENIED) {
+            PRINT_CONSOLE_DEBUG(std::cerr, "regGetKey err: " << res << "; Admin privileges are required" << std::endl)
+        } else {
+            PRINT_CONSOLE_DEBUG(std::cerr, "regGetKey err: " << res << std::endl)
         }
         RegCloseKey(hkey);
-        return;
+        return res;
     }
 
     std::LOG4CPP_UNIQUE_PTR<Appender> create_nt_event_log_appender(const FactoryParams& params) {

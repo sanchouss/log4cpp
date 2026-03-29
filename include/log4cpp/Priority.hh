@@ -62,6 +62,8 @@ namespace log4cpp {
       public:
         static const int MESSAGE_SIZE; // = 8;
 
+        static const std::size_t priority_count;
+
         /**
          * Predefined Levels of Priorities. These correspond to the
          * priority levels used by syslog(3), except TRACE

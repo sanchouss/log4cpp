@@ -18,7 +18,7 @@
 #include "log4cpp/Priority.hh"
 
 int main(int argc, char* argv[]) {
-    log4cpp::Appender* appender = new log4cpp::NTEventLogAppender("default", "testNTEventLog");
+    log4cpp::Appender* appender = new log4cpp::NTEventLogAppender("default", "log4cppTestNTEventLog");
 
     log4cpp::Category& sub1 = log4cpp::Category::getInstance(std::string("sub1"));
     sub1.addAppender(appender);

@@ -18,7 +18,6 @@ namespace log4cpp {
         const std::string priority_names[] = {"FATAL",  "ALERT", "CRIT",  "ERROR", "WARN",
                                               "NOTICE", "INFO",  "DEBUG", "TRACE", priority_notset_name,
                                               "UNKNOWN"};
-        const std::size_t priority_count = sizeof(priority_names) / sizeof(priority_names[0]);
 
         const std::string* names() {
             return priority_names;
@@ -26,6 +25,7 @@ namespace log4cpp {
     } // namespace
 
     const int log4cpp::Priority::MESSAGE_SIZE = 8;
+    const std::size_t Priority::priority_count = sizeof(priority_names) / sizeof(priority_names[0]);
 
     const std::string& Priority::getPriorityName(int priority) LOG4CPP_NOTHROW {
 
