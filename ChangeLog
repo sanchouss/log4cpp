@@ -1,3 +1,9 @@
+2026-03-29 21:49  sanchouss_
+    * NTEventLogAppender: Avoid potential Unicode-related linking issues when the library and application are built with different define-UNICODE settings.
+      Make implementation safer by considering corner cases.
+      When Windows registry is set up by the appender, print debug info to the console (debug builds only).
+      Add generation of Event Message File "NTEventLogAppender.dll" for Windows Event Viewer with CMake on Win32 platforms.
+
 2026-03-27 20:40  sanchouss_
     * fix for bug #148: remove virtual specifier from open(). Thanks to Jac Goudsmit for reporting and proposals.
 

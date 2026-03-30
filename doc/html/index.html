@@ -18,7 +18,7 @@ for C++ Project
 Page on Sourceforge</a>
 </span> &nbsp;|
     <span>Last Published:
-2026-03-26</span> &nbsp;| <span> <a href="https://sourceforge.net/projects/log4cpp/">Sourceforge Home</a>
+2026-03-30</span> &nbsp;| <span> <a href="https://sourceforge.net/projects/log4cpp/">Sourceforge Home</a>
 </span> &nbsp;|
 </div>
 <hr class="delimiter">
@@ -915,7 +915,16 @@ A3.log.1
                 <small>
 
                     <dl>
-                        <dt>master branch (26 March 2026)</dt>
+                        <dt>master branch (29 March 2026)</dt>
+                        <dd>
+                            NTEventLogAppender: Avoid potential Unicode-related linking issues when the library and application are built with different define-UNICODE settings.<br>
+                            When Windows registry is set up by the appender, print debug info to the console (debug builds only).<br>
+                            Add generation of Event Message File "NTEventLogAppender.dll" for Windows Event Viewer with CMake on Win32 platforms.
+                        </dd>
+
+                        <dd>
+                            fix for bug #148: remove virtual specifier from open(). Thanks to Jac Goudsmit for reporting and proposals.
+                        </dd>
                         <dd>Fix Y2038 issue in Timestamp class (32-bit seconds field overflow).
                             Use time_t for seconds to avoid truncation/overflow on platforms where time_t is 64-bit.
                             Thanks to Adrien Destugues for reporting bug #153.
